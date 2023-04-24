@@ -1,0 +1,98 @@
+﻿<Window
+    x:Class="ValidatorApp.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:ValidatorApp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Name="thisWindow"
+    Title="MainWindow"
+    Width="545"
+    Height="257"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ControlTemplate x:Key="errorTemplate">
+            <DockPanel LastChildFill="true">
+                <Border Background="OrangeRed" DockPanel.Dock="right"
+                    Margin="3,0,0,0" Width="20" Height="20" CornerRadius="5"
+                    ToolTip="{Binding ElementName=adoner,
+                        Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                    <TextBlock Text="!" VerticalAlignment="center" HorizontalAlignment="center"
+                           FontWeight="Bold" Foreground="white" />
+                </Border>
+                <AdornedElementPlaceholder Name="adoner" VerticalAlignment="Center">
+                    <Border BorderBrush="OrangeRed" BorderThickness="1" />
+                </AdornedElementPlaceholder>
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="textBoxError" TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"
+                        Value="{Binding  RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Window.DataContext>
+        <local:ViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Label Content="Wiek:" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Margin="42,119,0,0"/>
+        <Label Content="Nazwisko:" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Margin="18,76,0,0"/>
+        <Label Content="Imię:" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Margin="46,33,0,0"/>
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="81,33,0,0"
+                Name="tbFirstName" VerticalAlignment="Top" Width="155"
+                Validation.ErrorTemplate="{StaticResource errorTemplate}"
+                Style="{StaticResource textBoxError}"
+                Text="{Binding FirstName, UpdateSourceTrigger=LostFocus,
+                ValidatesOnDataErrors=True}" />
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="81,76,0,0"
+                Name="tbLastName" VerticalAlignment="Top" Width="155"
+                Validation.ErrorTemplate="{StaticResource errorTemplate}"
+                Style="{StaticResource textBoxError}"
+                Text="{Binding LastName, UpdateSourceTrigger=LostFocus,
+                ValidatesOnExceptions=True}"/>
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="81,119,0,0"
+         Name="tbAge" VerticalAlignment="Top" Width="93"
+         Validation.ErrorTemplate="{StaticResource errorTemplate}"
+         Style="{StaticResource textBoxError}">
+            <TextBox.Text>
+                <Binding Path="Age" UpdateSourceTrigger="PropertyChanged" >
+                    <Binding.ValidationRules>
+                        <local:IntegerValidation ValidatesOnTargetUpdated="True"
+                                     ValidationStep="RawProposedValue"
+                                     MinValue="18"
+                                     ErrorMessage="Osoba musi być pełnoletnia!" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <Button Content="Zapisz" Height="23" HorizontalAlignment="Left"
+                Margin="105,188,0,0"
+                Name="btSave" VerticalAlignment="Top" Width="75" >
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="IsEnabled" Value="false" />
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <Setter Property="IsEnabled" Value="true" />
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ElementName=tbFirstName,
+                            Path=(Validation.HasError)}" Value="false" />
+                                <Condition Binding="{Binding ElementName=tbLastName,
+                            Path=(Validation.HasError)}" Value="false" />
+                                <Condition Binding="{Binding ElementName=tbAge,
+                            Path=(Validation.HasError)}" Value="false" />
+                            </MultiDataTrigger.Conditions>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</Window>

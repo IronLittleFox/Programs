@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Flag\flag-en-US.png" />
+    <None Remove="Flag\flag-fr.png" />
+    <None Remove="Flag\flag-pl.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Flag\flag-fr.png" />
+    <Resource Include="Flag\flag-pl.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+      <Generator></Generator>
+    </Resource>
+    <Resource Include="Flag\flag-en-US.png">
+      <Generator></Generator>
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Translation\TranslationResource.en-US.xaml">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Page>
+    <Page Update="Translation\TranslationResource.fr.xaml">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Page>
+    <Page Update="Translation\TranslationResource.pl-pl.xaml">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Page>
+  </ItemGroup>
+
+</Project>

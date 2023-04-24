@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="pl-pl">pack://application:,,,/MultiLanguageApp;Component/Flag/flag-pl.png</system:String>
+    <system:String x:Key="en-US">pack://application:,,,/MultiLanguageApp;Component/Flag/flag-en-US.png</system:String>
+    <system:String x:Key="fr">pack://application:,,,/MultiLanguageApp;Component/Flag/flag-fr.png</system:String>
+    
+</ResourceDictionary>

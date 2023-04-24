@@ -1,0 +1,31 @@
+﻿<Window x:Class="DrowLineWpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DrowLineWpfApp"
+        mc:Ignorable="d"
+        Title="Program do tworzenia i edycji prostych rysunków" Height="450" Width="800">
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <Label Content="Kolor linii:" />
+            <ComboBox x:Name="cmbKolor" ItemsSource="{Binding Kolory}" SelectedItem="{Binding WybranyKolor}" />
+            <Label Content="Grubość linii:" />
+            <Slider x:Name="sldGrubosc" Minimum="1" Maximum="10" 
+                    Width="100"
+                    Value="{Binding GruboscLinii}" />
+            <Button x:Name="btnZapisz" Content="Zapisz rysunek" Command="{Binding ZapiszRysunekCommand}" />
+            <Button x:Name="btnOtworz" 
+                    Content="Otwórz rysunek"
+                    Command="{Binding OtworzRysunekCommand}"/>
+        </StackPanel>
+        <Canvas x:Name="canvas" Grid.Row="1" 
+                MouseDown="Canvas_MouseDown" 
+                MouseMove="Canvas_MouseMove"
+                MouseUp="Canvas_MouseUp"
+                Focusable="True"
+                IsHitTestVisible="True"
+                Background="Aquamarine">
+        </Canvas>
+    </DockPanel>
+</Window>
