@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CarouselPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarouselPageApp.MainPage">
+
+    <!--<ContentPage>
+        <StackLayout VerticalOptions="Center">
+            <Label Text="Pies"
+                   FontSize="Large" 
+                   HorizontalOptions="Center"/>
+            <Image Source="https://img.freepik.com/darmowe-wektory/zmeczony-mlody-pies_1308-25268.jpg"
+                   />
+        </StackLayout>
+    </ContentPage>
+    <ContentPage>
+        <StackLayout VerticalOptions="Center">
+            <Label Text="Piesek"
+                   FontSize="Large" 
+                   HorizontalOptions="Center"/>
+            <Image Source="https://img.freepik.com/darmowe-wektory/ladny-pies-ugryzienie-kosci-kreskowka-wektor-ikona-ilustracja-koncepcja-ikona-zywnosci-zwierzat-na-bialym-tle-premium-wektor-plaski-styl-kreskowki_138676-4161.jpg"/>
+        </StackLayout>
+    </ContentPage>
+    <ContentPage>
+        <StackLayout VerticalOptions="Center">
+            <Label Text="Kotki" 
+                   FontSize="Large" 
+                   HorizontalOptions="Center"/>
+            <Image Source="https://img.freepik.com/darmowe-wektory/ladny-kot-i-pies-corgi-kreskowka-wektor-ikona-ilustracja-koncepcja-ikona-przyjaciela-zwierzat-na-bialym-tle-premium-wektor-plaski-styl-kreskowki_138676-3558.jpg"/>
+        </StackLayout>
+    </ContentPage>-->
+
+    <CarouselPage.ItemTemplate>
+        <DataTemplate>
+            <ContentPage>
+                <Frame HorizontalOptions="Center"
+                       VerticalOptions="CenterAndExpand">
+                    <StackLayout VerticalOptions="Center">
+                        <Label Text="{Binding Name}"
+                               FontSize="Large" 
+                               HorizontalOptions="Center"/>
+                        <Image Source="{Binding PhotoUrl}"/>
+                    </StackLayout>
+                </Frame>
+            </ContentPage>
+        </DataTemplate>
+    </CarouselPage.ItemTemplate>
+
+
+</CarouselPage>

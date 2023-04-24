@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DataBindingMobileApp.MainPage"
+             x:Name="thisPage">
+
+    <StackLayout>
+        <!--<Entry  BindingContext="{x:Reference thisPage}" Text="{Binding Testowa}"/>-->
+        <Label 
+            BindingContext="{x:Reference rotateSlider}"
+            Text="{Binding Value, StringFormat='Obrót tekstu o kąt {0:F2} stopni'}"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand"
+        />
+        <Slider Maximum="360" 
+                MaximumTrackColor="#18CD51" 
+                MinimumTrackColor="#BE1010"
+                x:Name="rotateSlider"
+        />
+        <Label 
+            BindingContext="{x:Reference rotateSlider}"
+            Rotation="{Binding Value}"
+            Text="Obracany tekst"
+            HorizontalOptions="Center"
+            VerticalOptions="CenterAndExpand"
+            />
+    </StackLayout>
+
+</ContentPage>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NavigationPageApp.MainPage">
+
+    <StackLayout>
+        <Label Text="Welcome to main page"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+        <Button Text="Go to aboute page" Clicked="Button_Clicked"/>
+        <Label Text="Go to about page by label">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="Button_Clicked"/>
+            </Label.GestureRecognizers>
+        </Label>
+    </StackLayout>
+
+</ContentPage>
