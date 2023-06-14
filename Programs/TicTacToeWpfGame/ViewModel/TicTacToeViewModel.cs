@@ -181,7 +181,7 @@ namespace TicTacToeWpfGame.ViewModel
         public TicTacToeViewModel()
         {
             ShowGameScore = false;
-            RowCount = 3;
+            RowCount = 4;
             ColumnCount = RowCount;
 
             ListOfField = new ObservableCollection<PlayingField>();

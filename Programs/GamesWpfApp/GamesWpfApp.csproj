@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GameUtils\GameUtils.csproj" />
+    <ProjectReference Include="..\MemoWpfGame\MemoWpfGame.csproj" />
     <ProjectReference Include="..\MinesweeperWpfGame\MinesweeperWpfGame.csproj" />
     <ProjectReference Include="..\TicTacToeWpfGame\TicTacToeWpfGame.csproj" />
   </ItemGroup>

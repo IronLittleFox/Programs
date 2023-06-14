@@ -1,0 +1,121 @@
+﻿<Window x:Class="LottoWpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LottoWpfApp"
+        xmlns:utils="clr-namespace:LottoWpfApp.Utils" 
+        xmlns:viewmodel="clr-namespace:LottoWpfApp.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Name="thisWindow">
+    <Window.DataContext>
+        <viewmodel:MainWindowViewModel/>
+    </Window.DataContext>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Label Content="Wylosowane liczby:"/>
+            <ItemsControl ItemsSource="{Binding DrawNumbers}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding}"
+                               Height="50" 
+                               Width="50"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Losuj"
+                    Command="{Binding DrawNumbersCommand}"/>
+        </StackPanel>
+        <DockPanel>
+            <Label Content="Wybierz liczby:"
+                   DockPanel.Dock="Top"/>
+            <ItemsControl ItemsSource="{Binding CollectionOfNumbers}"
+                          DockPanel.Dock="Top">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Margin="2"
+                                Height="50" 
+                                Width="50"
+                            Command="{Binding SelectNumberCommand}"
+                            CommandParameter="{Binding}" >
+                            <Button.Content>
+                                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Number}" />
+                                </Viewbox>
+                            </Button.Content>
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="20" />
+                                </Style>
+                            </Button.Resources>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSelect}" Value="true">
+                                            <Setter Property="Background" Value="BlanchedAlmond"/>
+                                        </DataTrigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="BorderBrush" Value="#FF5798d8" />
+                                            <Setter Property="Background"  Value="Red"/>
+                                            <Setter Property="Foreground" Value="White" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Dodaj liczby do listy zakładów"
+                    Height="50"
+                    FontSize="20"
+                    DockPanel.Dock="Top"
+                    Command="{Binding AddSelectedNumbersCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="IsEnabled" Value="False"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=thisWindow,Path=DataContext.CollectionOfSelectNumbers.Count}" 
+                                         utils:DataTriggerHelper.Value="6" >
+                                <Setter Property="IsEnabled" Value="True"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <ScrollViewer  CanContentScroll="True" DockPanel.Dock="Bottom">
+                <ListView ItemsSource="{Binding ColectionOfSelectedNumbers}" >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding}"
+                                           Height="50" 
+                                           Width="50"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>
+        </DockPanel>
+    </DockPanel>
+</Window>
