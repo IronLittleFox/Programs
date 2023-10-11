@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33529.622
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "C++", "C++", "{A97AB5DF-B45A-4184-848F-450C1772E77A}"
 EndProject
@@ -101,7 +101,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatorWPF", "Calculator
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoWpfGame", "MemoWpfGame\MemoWpfGame.csproj", "{0E63390B-8063-4AF6-B750-84D46163A068}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LottoWpfApp", "LottoWpfApp\LottoWpfApp.csproj", "{161B41F1-9113-47F4-8B73-7597A20D0599}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LottoWpfApp", "LottoWpfApp\LottoWpfApp.csproj", "{161B41F1-9113-47F4-8B73-7597A20D0599}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LangtonAntWpfApp", "LangtonAntWpfApp\LangtonAntWpfApp.csproj", "{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -573,6 +575,18 @@ Global
 		{161B41F1-9113-47F4-8B73-7597A20D0599}.Release|iPhone.Build.0 = Release|Any CPU
 		{161B41F1-9113-47F4-8B73-7597A20D0599}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{161B41F1-9113-47F4-8B73-7597A20D0599}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Release|iPhone.Build.0 = Release|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -626,6 +640,7 @@ Global
 		{0873FC18-8F56-4B7D-8A60-165D7B613795} = {0556CD63-CF4E-4CD6-85F9-95AAEE348764}
 		{0E63390B-8063-4AF6-B750-84D46163A068} = {F06B5F8D-2A24-4FCA-8031-F7FDFB71A385}
 		{161B41F1-9113-47F4-8B73-7597A20D0599} = {0556CD63-CF4E-4CD6-85F9-95AAEE348764}
+		{04F5CF18-B6FD-4664-A52A-29AE9B990A8C} = {0556CD63-CF4E-4CD6-85F9-95AAEE348764}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8EBB06FF-53DB-4F08-9DE3-353E75D845FA}
