@@ -6,8 +6,12 @@
         xmlns:local="clr-namespace:LangtonAntWpfApp"
         xmlns:utils="clr-namespace:GameUtils.Utils;assembly=GameUtils"
         xmlns:viewmodel="clr-namespace:LangtonAntWpfApp.ViewModel"
+        xmlns:converters="clr-namespace:LangtonAntWpfApp.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <converters:ColorStringToSolidColorBrushConverter x:Key="ColorStringToSolidColorBrushConverter"/>
+    </Window.Resources>
     <Window.DataContext>
         <viewmodel:LangtonAntViewModel/>
     </Window.DataContext>
@@ -15,10 +19,7 @@
         <Button Content="Kolejny krok" 
                 DockPanel.Dock="Bottom"
                 Margin="10"
-                Command="{Binding NextAntStepCommand}"/>
-        <TextBlock Text="{Binding StepNumber}"
-                   DockPanel.Dock="Top"
-                   FontSize="20"/>
+                Command="{Binding StartNextAntCommand}"/>
         <ItemsControl ItemsSource="{Binding Board}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -42,7 +43,7 @@
                                         <Setter Property="Background" Value="White"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding IsWhite}" Value="false">
-                                        <Setter Property="Background" Value="Aqua"/>
+                                        <Setter Property="Background" Value="{Binding AntColor,Converter={StaticResource ColorStringToSolidColorBrushConverter}}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

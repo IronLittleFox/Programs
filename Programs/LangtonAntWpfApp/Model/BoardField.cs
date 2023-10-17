@@ -1,11 +1,4 @@
 ﻿using GameUtils.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace LangtonAntWpfApp.Model
 {
@@ -30,7 +23,6 @@ namespace LangtonAntWpfApp.Model
             {
                 columnIndex = value;
                 OnPropertyChanged(nameof(ColumnIndex));
-                Button b;
             }
         }
 
@@ -53,6 +45,17 @@ namespace LangtonAntWpfApp.Model
             {
                 antText = value;
                 OnPropertyChanged(nameof(AntText));
+            }
+        }
+
+        private string antColor;
+        public string AntColor
+        {
+            get { return antColor; }
+            set
+            {
+                antColor = value;
+                OnPropertyChanged(nameof(AntColor));
             }
         }
     }

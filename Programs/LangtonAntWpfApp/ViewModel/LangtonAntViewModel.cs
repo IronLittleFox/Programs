@@ -1,95 +1,59 @@
 ﻿using GameUtils.Utils;
 using LangtonAntWpfApp.Model;
+using LangtonAntWpfApp.Utils;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace LangtonAntWpfApp.ViewModel
 {
     public class LangtonAntViewModel : ViewObserver
     {
-
-        private int stepNumber = 0;
-        public int StepNumber
-        {
-            get { return stepNumber; }
-            set
-            {
-                stepNumber = value;
-                OnPropertyChanged(nameof(StepNumber));
-            }
-        }
-
-        private int columnCount = 40;
+        public ObservableCollection<BoardField> Board { get { return Dane.Board; } }
         public int ColumnCount
         {
-            get { return columnCount; }
-            set
-            {
-                columnCount = value;
-                OnPropertyChanged(nameof(ColumnCount));
-            }
+            get { return Dane.ColumnCount; }
         }
 
-        private int rowCount = 40;
         public int RowCount
         {
-            get { return rowCount; }
-            set
-            {
-                rowCount = value;
-                OnPropertyChanged(nameof(RowCount));
-            }
+            get { return Dane.RowCount; }
         }
 
-        private ICommand? nextAntStepCommand = null;
-        public ICommand NextAntStepCommand
+        private ICommand? startNextAntCommand = null;
+        public ICommand StartNextAntCommand
         {
             get
             {
-                if (nextAntStepCommand == null)
-                    nextAntStepCommand = new RelayCommand<object>(
+                if (startNextAntCommand == null)
+                    startNextAntCommand = new RelayCommand<object>(
                         o =>
                         {
-                            StepNumber++;
-                            currentBoardField.AntText = "";
-                            currentDirection = (currentDirection + (currentBoardField.IsWhite ? 1 : -1) + directions.Count) % directions.Count;
-                            currentBoardField.IsWhite = !currentBoardField.IsWhite;
-
-                            int colNext = (currentBoardField.ColumnIndex + directions[currentDirection].ColumnStep + ColumnCount) % ColumnCount;
-                            int rowNext = (currentBoardField.RowIndex + directions[currentDirection].RowStep + RowCount) % RowCount;
-                            currentBoardField = Board.First(b => b.ColumnIndex == colNext && b.RowIndex == rowNext);
-                            currentBoardField.AntText = "A";
+                            Task.Run(() => 
+                            {
+                                currentAntColor = (currentAntColor + 1) % antcolors.Count;
+                                LangtonAnt langtonAnt = new LangtonAnt(antcolors[currentAntColor]);
+                                while (true)
+                                {
+                                    langtonAnt.Move();
+                                    Application.Current.Dispatcher.Invoke(() => { }, DispatcherPriority.DataBind);
+                                    Thread.Sleep(100);
+                                }
+                            });
+                            
                         }
                         );
-                return nextAntStepCommand;
+                return startNextAntCommand;
             }
         }
 
-        public ObservableCollection<BoardField> Board { get; set; } = new ObservableCollection<BoardField>();
-
-        private BoardField currentBoardField;
-        private List<DirectionChange> directions = new List<DirectionChange>();
-        private int currentDirection = 1;
-
-        public LangtonAntViewModel()
-        {
-            for (int i = 0; i < ColumnCount; i++)
-            {
-                for (int j = 0; j < RowCount; j++)
-                {
-                    Board.Add(new BoardField() { ColumnIndex = i, RowIndex = j, IsWhite = true });
-                }
-            }
-
-            currentBoardField = Board[ColumnCount * RowCount / 2 + RowCount / 2];
-            currentBoardField.AntText = "A";
-
-            directions.Add(new DirectionChange() { ColumnStep = 0, RowStep = -1 }); //Góra
-            directions.Add(new DirectionChange() { ColumnStep = -1, RowStep = 0 }); //Lewo
-            directions.Add(new DirectionChange() { ColumnStep = 0, RowStep = 1 }); //Dół
-            directions.Add(new DirectionChange() { ColumnStep = 1, RowStep = 0 }); //Prawo
-        }
+        private List<string> antcolors = new List<string>() { "Red", "Green", "Blue" };
+        private int currentAntColor = -1;
     }
 }

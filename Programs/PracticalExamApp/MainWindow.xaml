@@ -7,8 +7,9 @@
         xmlns:viewmodel="clr-namespace:PracticalExamApp.ViewModel" 
         xmlns:xamlValidators="clr-namespace:PracticalExamApp.Validation.XamlValidators"
         xmlns:converters="clr-namespace:PracticalExamApp.Converters"
+        xmlns:validation="https://github.com/GuOrg/Gu.Wpf.ValidationScope"
         mc:Ignorable="d"
-        Title="MainWindow" Height="418" Width="1608"
+        Title="MainWindow" Height="600" Width="1608"
         Name="thisWindow">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -27,31 +28,20 @@
                 </AdornedElementPlaceholder>
             </DockPanel>
         </ControlTemplate>
-
-        <Style x:Key="textBoxError" TargetType="TextBox">
-            <Style.Triggers>
-                <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip"
-                        Value="{Binding  RelativeSource={x:Static RelativeSource.Self},
-                        Path=(Validation.Errors)[0].ErrorContent}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="textBlockError" TargetType="TextBlock">
-            <Style.Triggers>
-                <!--<DataTrigger Binding="{Binding ElementName=textBoxAge, Path=(Validation.HasError)}" Value="True">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>-->
-                <DataTrigger Binding="{Binding ElementName=textBoxAge, Path=(Validation.HasError)}" Value="False">
-                    <Setter Property="Visibility" Value="Collapsed"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
     </Window.Resources>
-    <DockPanel LastChildFill="true">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
         <!--#region Wersja z odwołanem poprzez nazwę kontrolek-->
-        <StackPanel DockPanel.Dock="Left">
+        <StackPanel Grid.Column="0" Grid.Row="0">
             <TextBlock Text="Wersja z odwołanem poprzez nazwę kontrolek" 
                    HorizontalAlignment="Center"
                    FontSize="20" 
@@ -75,7 +65,7 @@
         <!--#endregion-->
 
         <!--#region Wersja z bindowaniem-->
-        <StackPanel DockPanel.Dock="Left">
+        <StackPanel Grid.Column="1" Grid.Row="0">
             <TextBlock Text="Wersja z bindowaniem" 
                    HorizontalAlignment="Center"
                    FontSize="20" 
@@ -98,7 +88,7 @@
         <!--#endregion-->
 
         <!--#region Wersja z bindowaniem i wszystkimi błędami-->
-        <StackPanel DockPanel.Dock="Left">
+        <StackPanel Grid.Column="0" Grid.Row="1">
             <TextBlock Text="Wersja z bindowaniem i wszystkimi błędami" 
                    HorizontalAlignment="Center"
                    FontSize="20" 
@@ -127,16 +117,17 @@
         <!--#endregion-->
 
         <!--#region Wersja z bindowaniem i wszystkimi błędami oraz validacja po stronie widoku-->
-        <StackPanel DockPanel.Dock="Left">
+        <StackPanel Grid.Column="1" Grid.Row="1">
             <TextBlock Text="Wersja z bindowaniem i wszystkimi błędami oraz validacja po stronie widoku" 
                    HorizontalAlignment="Center"
                    FontSize="20" 
                    FontWeight="Bold"
                    TextWrapping="Wrap"/>
             <StackPanel>
+                <!--Style="{StaticResource textBoxError}"-->
                 <TextBlock Text="Podaj imie:"/>
-                <TextBox Validation.ErrorTemplate="{StaticResource errorTemplate}"
-                     Style="{StaticResource textBoxError}"
+                <TextBox Name="textBoxFirstName"
+                         Validation.ErrorTemplate="{StaticResource errorTemplate}"
                          Margin="0,0,30,0">
                     <TextBox.Text>
                         <Binding ElementName="thisWindow" Path="OnlyDataVM.Name" UpdateSourceTrigger="PropertyChanged" >
@@ -147,6 +138,17 @@
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox.Text>
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Style.Triggers>
+                                <Trigger Property="Validation.HasError" Value="true">
+                                    <Setter Property="ToolTip"
+                                            Value="{Binding  RelativeSource={x:Static RelativeSource.Self},
+                                            Path=(Validation.Errors)[0].ErrorContent}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
                 </TextBox>
                 <Label Content="Podaj wiek:"/>
                 <TextBox x:Name="textBoxAge"
@@ -170,13 +172,101 @@
                     </TextBox.Text>
                 </TextBox>
                 <TextBlock Text="{Binding ElementName=textBoxAge, Path=(Validation.Errors)[0].ErrorContent}"
-                           Foreground="Red"
-                           Style="{StaticResource textBlockError}"/>
+                           Foreground="Red">
+                    <!--Style="{StaticResource textBlockError}"-->
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=textBoxAge, Path=(Validation.HasError)}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StackPanel>
             <Button Content="Sprawdź (bindowanie, wszystkie błędy)"
                 Command="{Binding ElementName=thisWindow, Path=OnlyDataVM.CommandCheckBinding}"
-                Margin="10"/>
+                Margin="10">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="IsEnabled" Value="false" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <Setter Property="IsEnabled" Value="true" />
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding ElementName=textBoxFirstName,
+                            Path=(Validation.HasError)}" Value="false" />
+                                    <Condition Binding="{Binding ElementName=textBoxAge,
+                            Path=(Validation.HasError)}" Value="false" />
+                                </MultiDataTrigger.Conditions>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
         <!--#endregion-->
-    </DockPanel>
+
+        <!--#region Wersja z bindowaniem i wszystkimi błędami oraz validacja po stronie widoku-->
+        <StackPanel Grid.Column="0" Grid.Row="2">
+            <TextBlock Text="Wersja z bindowaniem i wszystkimi błędami oraz validacja po stronie widoku (zbiorcza)" 
+                   HorizontalAlignment="Center"
+                   FontSize="20" 
+                   FontWeight="Bold"
+                   TextWrapping="Wrap"/>
+            <StackPanel x:Name="Form"
+                        validation:Scope.ForInputTypes="TextBox">
+                <TextBlock Text="Podaj imie:"/>
+                <TextBox Name="tbFirstName"
+                         Validation.ErrorTemplate="{StaticResource errorTemplate}"
+                         Margin="0,0,30,0">
+                    <TextBox.Text>
+                        <Binding ElementName="thisWindow" Path="OnlyDataVM.Name" UpdateSourceTrigger="PropertyChanged" >
+                            <Binding.ValidationRules>
+                                <xamlValidators:ValidateStringEmpty ValidatesOnTargetUpdated="True"
+                                     ValidationStep="RawProposedValue"
+                                     ErrorMessage="Ciąg znaków jest pusty" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+                <Label Content="Podaj wiek:"/>
+                <TextBox x:Name="tbAge"
+                         Margin="0,0,30,0">
+                    <TextBox.Text>
+                        <Binding ElementName="thisWindow" Path="OnlyDataVM.Age" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource StringToIntConverter}">
+                            <Binding.ValidationRules >
+                                <xamlValidators:ValidateStringEmpty ValidatesOnTargetUpdated="True"
+                                     ValidationStep="RawProposedValue"
+                                     ErrorMessage="Ciąg znaków jest pusty" />
+                                <xamlValidators:ValidateStringIsNumber ValidatesOnTargetUpdated="True"
+                                     ValidationStep="RawProposedValue"
+                                     ErrorMessage="Podana wartość nie jest liczbą" />
+                                <xamlValidators:ValidateStringNumberIsInRange ValidatesOnTargetUpdated="True"
+                                     ValidationStep="RawProposedValue"
+                                     ErrorMessage="Wartość jest poza zakresem"
+                                     LowRange="1"
+                                     HighRange="130"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+            </StackPanel>
+            <Button Content="Sprawdź (bindowanie, wszystkie błędy)"
+                    Command="{Binding ElementName=thisWindow, Path=OnlyDataVM.CommandCheckBinding}"
+                    Margin="10"
+                    IsEnabled="{Binding ElementName=Form,Path=(validation:Scope.HasError)}">
+            </Button>
+            <ItemsControl ItemsSource="{Binding Path=(validation:Scope.Errors), ElementName=Form}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type ValidationError}">
+                        <TextBlock Foreground="Red"
+                                   Text="{Binding ErrorContent}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+        <!--#endregion-->
+    </Grid>
 </Window>

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Gu.Wpf.ValidationScope" Version="0.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\UtilsWPF\UtilsWPF.csproj" />
   </ItemGroup>
 
