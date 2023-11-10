@@ -8,7 +8,9 @@
         xmlns:ticTacToeViewModel="clr-namespace:TicTacToeWpfGame.ViewModel;assembly=TicTacToeWpfGame" 
         xmlns:ticTacToeWpfGame="clr-namespace:TicTacToeWpfGame;assembly=TicTacToeWpfGame"
         xmlns:MinesweeperViewModel="clr-namespace:MinesweeperWpfGame.ViewModel;assembly=MinesweeperWpfGame"
-        xmlns:MinesweeperWpfGame="clr-namespace:MinesweeperWpfGame;assembly=MinesweeperWpfGame" xmlns:memowpfgame="clr-namespace:MemoWpfGame;assembly=MemoWpfGame"
+        xmlns:MinesweeperWpfGame="clr-namespace:MinesweeperWpfGame;assembly=MinesweeperWpfGame" 
+        xmlns:memowpfgame="clr-namespace:MemoWpfGame;assembly=MemoWpfGame"
+        xmlns:connectFourWpfGame="clr-namespace:ConnectFourWpfGame;assembly=ConnectFourWpfGame"
         mc:Ignorable="d"
         Title="Gry" Height="450" Width="800">
     <Window.DataContext>
@@ -19,6 +21,7 @@
         <ticTacToeWpfGame:TicTacToeUserControlGame x:Key="TicTacToeUserControlGame"/>
         <MinesweeperWpfGame:MinesweeperUserControl x:Key="MinesweeperUserControl"/>
         <memowpfgame:MemoUserControlGame x:Key="MemoUserControlGame"/>
+        <connectFourWpfGame:ConnectFourUserControl x:Key="ConnectFourUserControl"/>
     </Window.Resources>
 
     <Grid>
@@ -67,6 +70,9 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedGame.NameOfGame}" Value="Memo">
                             <Setter Property="Content" Value="{DynamicResource MemoUserControlGame}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedGame.NameOfGame}" Value="Czwórki">
+                            <Setter Property="Content" Value="{DynamicResource ConnectFourUserControl}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

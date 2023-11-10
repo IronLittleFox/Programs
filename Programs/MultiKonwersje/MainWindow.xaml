@@ -3,36 +3,49 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MultiKonwersje" xmlns:converters="clr-namespace:MultiKonwersje.Converters"
+        xmlns:local="clr-namespace:MultiKonwersje" 
+        xmlns:converters="clr-namespace:MultiKonwersje.Converters"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Name="OknoGlowne">
     <Window.Resources>
-        <converters:IntsToColorConwerters x:Key="IntsToColorConwerters"/>
+        <converters:DoublesToColorConwerters x:Key="DoublesToColorConwerters"/>
+        <converters:HexStringToColorComponent x:Key="HexStringToColorComponent"/>
+        <converters:DoubleColorToDesctriptionConverter x:Key="DoubleColorToDesctriptionConverter"/>
     </Window.Resources>
     <StackPanel>
         <WrapPanel>
             <TextBlock Text="Red:" FontSize="20" FontWeight="Bold" Width="100"/>
             <Slider Height="20" Width="200" Value="{Binding ElementName=OknoGlowne, Path=RedComponent}" Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True"/>
-            <TextBlock Text="{Binding ElementName=OknoGlowne, Path=RedComponent}"/>
+            <TextBlock Text="{Binding ElementName=OknoGlowne, Path=RedComponent,StringFormat=Wartość koloru {0} }"/>
         </WrapPanel>
         <WrapPanel>
             <TextBlock Text="Green:" FontSize="20" FontWeight="Bold" Width="100"/>
             <Slider Height="20" Width="200" Value="{Binding ElementName=OknoGlowne, Path=GreenComponent}" Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True"/>
-            <TextBlock Text="{Binding ElementName=OknoGlowne, Path=GreenComponent}"/>
+            <TextBlock Text="{Binding ElementName=OknoGlowne, Path=GreenComponent, Converter={StaticResource DoubleColorToDesctriptionConverter}}"/>
         </WrapPanel>
         <WrapPanel>
             <TextBlock Text="Blue:" FontSize="20" FontWeight="Bold" Width="100"/>
             <Slider Height="20" Width="200" Value="{Binding ElementName=OknoGlowne, Path=BlueComponent}" Minimum="0" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True"/>
-            <TextBlock Text="{Binding ElementName=OknoGlowne, Path=BlueComponent}"/>
+            <TextBlock Text="{Binding ElementName=OknoGlowne, Path=BlueComponent, Converter={StaticResource DoubleColorToDesctriptionConverter}, ConverterParameter=niebiski}"/>
         </WrapPanel>
         <Rectangle Width="100" Height="100">
             <Rectangle.Fill>
-                <MultiBinding  Converter="{StaticResource  IntsToColorConwerters}">
+                <MultiBinding  Converter="{StaticResource  DoublesToColorConwerters}">
                     <Binding ElementName="OknoGlowne" Path="RedComponent" Mode='OneWay'/>
                     <Binding ElementName="OknoGlowne" Path="GreenComponent" Mode='OneWay'/>
                     <Binding ElementName="OknoGlowne" Path="BlueComponent" Mode='OneWay'/>
                 </MultiBinding>
             </Rectangle.Fill>
         </Rectangle>
+        <Button Content="Ustaw kolor czerwony" Click="ButtonBase_OnClick"/>
+        <TextBox>
+            <TextBox.Text>
+                <MultiBinding Converter="{StaticResource HexStringToColorComponent}" UpdateSourceTrigger="PropertyChanged">
+                    <Binding ElementName="OknoGlowne" Path="RedComponent"/>
+                    <Binding ElementName="OknoGlowne" Path="GreenComponent"/>
+                    <Binding ElementName="OknoGlowne" Path="BlueComponent"/>
+                </MultiBinding>
+            </TextBox.Text>
+        </TextBox>
     </StackPanel>
 </Window>

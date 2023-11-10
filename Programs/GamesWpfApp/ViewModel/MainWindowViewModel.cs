@@ -30,9 +30,10 @@ namespace GamesWpfApp.ViewModel
         {
             ListOfGame = new ObservableCollection<GameInfo>();
 
-            ListOfGame.Add(new GameInfo() { NameOfGame = "Kółko i krzyżyk"/*, GameViewModel = new TicTacToeViewModel()*/ });
-            ListOfGame.Add(new GameInfo() { NameOfGame = "Saper"/*, GameViewModel = new MinesweeperViewModel()*/ });
-            ListOfGame.Add(new GameInfo() { NameOfGame = "Memo"/*, GameViewModel = new MinesweeperViewModel()*/ });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Kółko i krzyżyk"});
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Saper"});
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Memo"});
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Czwórki"});
 
             SelectedGame = ListOfGame.FirstOrDefault();
         }

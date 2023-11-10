@@ -75,5 +75,12 @@ namespace MultiKonwersje
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            RedComponent = 255;
+            GreenComponent = 0;
+            BlueComponent = 0;
+        }
     }
 }
