@@ -39,7 +39,9 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="Program wykonał: Łukasz Felisek"
-                   Grid.Column="0"
+                       Grid.Column="0"
+                       Grid.Row="0"/>
+            <Image Grid.Column="1"
                    Grid.Row="0"/>
         </Grid>
         <StackPanel Grid.Column="0"
