@@ -86,8 +86,6 @@ namespace TicTacToeWpfGame.ViewModel
             }
         }
 
-        public ObservableCollection<PlayerScore> PlayerScoreList { get; set; }
-
         private ICommand boardFieldCommand;
         public ICommand BoardFieldCommand
         {
@@ -102,14 +100,13 @@ namespace TicTacToeWpfGame.ViewModel
                             if (playingField.Text != "")
                                 return;
 
-                            playingField.Text = SelectedPlayer.Name;
+                            playingField.Text = currentPlayer.Name;
 
-                            if (CheckWin(SelectedPlayer.Name))
+                            if (CheckWin(currentPlayer.Name))
                             {
-                                PlayerScoreList.FirstOrDefault(ps => ps.Player == SelectedPlayer).Score++;
                                 ShowGameScore = true;
                                 StartGame = false;
-                                ShowMessageScore = "Koniec gry.\nWygrana " + SelectedPlayer.Name;
+                                ShowMessageScore = "Koniec gry.\nWygrana " + currentPlayer.Name;
                                 return;
                             }
 
@@ -121,7 +118,7 @@ namespace TicTacToeWpfGame.ViewModel
                                 return;
                             }
 
-                            SelectedPlayer = ListOfPlayers.GetNext();
+                            currentPlayer = ListOfPlayers.GetNext();
                         }
                         );
                 return boardFieldCommand;
@@ -137,8 +134,7 @@ namespace TicTacToeWpfGame.ViewModel
                     startGameCommand = new RelayCommand<object>(
                         o =>
                         {
-                            ListOfField.ForAll(pf => pf.Text = "");
-                            StartGame = true;
+                            NewGame();
                         }
                         );
                 return startGameCommand;
@@ -178,11 +174,55 @@ namespace TicTacToeWpfGame.ViewModel
             }
         }
 
+        private int selectedOptionLines;
+        public int SelectedOptionLines
+        {
+            get { return selectedOptionLines; }
+            set
+            {
+                selectedOptionLines = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfLines;
+        public ObservableCollection<int> ListOfLines
+        {
+            get { return listOfLines; }
+            set
+            {
+                listOfLines = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Player currentPlayer;
+
         public TicTacToeViewModel()
         {
             ShowGameScore = false;
-            RowCount = 4;
-            ColumnCount = RowCount;
+
+            ListOfLines = new ObservableCollection<int>() { 3, 4, 5, 6, 7, 8 };
+            SelectedOptionLines = ListOfLines.First();
+            ListOfPlayers = new CircularObservableCollection<Player>()
+            {
+                new Player(){ Name = "X"},
+                new Player(){ Name = "O"},
+            };
+
+            SelectedPlayer = ListOfPlayers.FirstOrDefault();
+
+            NewGame();
+        }
+
+        private void NewGame()
+        {
+            StartGame = true;
+
+            ListOfPlayers.SetCurrent(SelectedPlayer);
+            currentPlayer = SelectedPlayer;
+            RowCount = SelectedOptionLines;
+            ColumnCount = SelectedOptionLines;
 
             ListOfField = new ObservableCollection<PlayingField>();
             for (int row = 0; row < RowCount; row++)
@@ -196,16 +236,6 @@ namespace TicTacToeWpfGame.ViewModel
                         BoardFieldCommand = BoardFieldCommand
                     }); ;
                 }
-
-            ListOfPlayers = new CircularObservableCollection<Player>()
-            {
-                new Player(){ Name = "X"},
-                new Player(){ Name = "O"},
-            };
-
-            SelectedPlayer = ListOfPlayers.FirstOrDefault();
-
-            PlayerScoreList = ListOfPlayers.Select(p => new PlayerScore() { Player = p, Score = 0 }).ToObservableCollectio();
         }
 
         private bool CheckDraw()

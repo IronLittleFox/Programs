@@ -281,12 +281,15 @@ namespace CheckersWpfGame.ViewModel
                                                                     || pf.RowIndex == 3))
                 .ForAll(pf =>
                 {
-                    Pawn pawn = new Pawn() 
+                    Pawn pawn = new Pawn()
                     {
                         PawnColor = _players[0].PlayerColor,
                         Distance = 1,
-                        DirectionsOfMovements = new List<(int col, int row)> { (-1, 1), (1, 1)},
-                        DirectionsOfCapturing = new List<(int col, int row)> { (-1, -1), (1, -1)}
+                        Directions = new List<(TypeOfDirection typeOfDirection, int col, int row)> 
+                        {
+                            (TypeOfDirection .Move, -1, 1), (TypeOfDirection.Move, 1, 1),
+                            (TypeOfDirection.Capturing, -1, -1), (TypeOfDirection.Capturing, 1, -1)
+                        }
                     };
                     _players[0].Pawns.Add(pawn);
                     pf.PlayerPawn = pawn;
@@ -301,12 +304,15 @@ namespace CheckersWpfGame.ViewModel
                                                                     || pf.RowIndex == RowCount - 4))
                 .ForAll(pf =>
                 {
-                    Pawn pawn = new Pawn() 
-                    { 
-                        PawnColor = _players[1].PlayerColor, 
+                    Pawn pawn = new Pawn()
+                    {
+                        PawnColor = _players[1].PlayerColor,
                         Distance = 1,
-                        DirectionsOfMovements = new List<(int row, int col)> { (-1, -1), (1, -1) },
-                        DirectionsOfCapturing = new List<(int col, int row)> { (-1, 1), (1, 1) }
+                        Directions = new List<(TypeOfDirection typeOfDirection, int row, int col)> 
+                        {
+                            (TypeOfDirection .Move, - 1, -1), (TypeOfDirection.Move, 1, -1),
+                            (TypeOfDirection.Capturing, -1, 1), (TypeOfDirection.Capturing, 1, 1)
+                        }
                     };
                     _players[1].Pawns.Add(pawn);
                     pf.PlayerPawn = pawn;
@@ -373,9 +379,9 @@ namespace CheckersWpfGame.ViewModel
                 PlayingField? playingField = ListOfPlayingField.FirstOrDefault(pf => pf.PlayerPawn == pawn);
                 if (playingField != null)
                 {
-                    List<List<PlayingField>> diagonals = GetCollectionOfDiagonal(playingField);
-                    if (diagonals.Count > 0)
-                        pawnsToMove.Add(pawn, diagonals);
+                    //List<List<PlayingField>> diagonals = GetCollectionOfDiagonal(playingField);
+                    /*if (diagonals.Count > 0)
+                        pawnsToMove.Add(pawn, diagonals);*/
                 }
             }
 
@@ -389,9 +395,9 @@ namespace CheckersWpfGame.ViewModel
         {
             Dictionary<Pawn, List<List<PlayingField>>> pawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
 
-            List<List<PlayingField>> diagonals = GetCollectionOfDiagonal(playingField);
-            if (diagonals.Count > 0)
-                pawnsToMove.Add(playingField.PlayerPawn, diagonals);
+            //List<List<PlayingField>> diagonals = GetCollectionOfDiagonal(playingField);
+            /*if (diagonals.Count > 0)
+                pawnsToMove.Add(playingField.PlayerPawn, diagonals);*/
 
 
             if (CheckIsAnyCapturingOnDiagonals(pawnsToMove))
@@ -400,34 +406,29 @@ namespace CheckersWpfGame.ViewModel
             return pawnsToMove;
         }
 
-        private List<List<PlayingField>> GetCollectionOfDiagonal(PlayingField playingField)
+        private List<(TypeOfDirection typeOfDirection, List<PlayingField>)> GetCollectionOfDiagonal(PlayingField playingField)
         {
-            List<List<PlayingField>> diagonals = new List<List<PlayingField>>();
+            List<(TypeOfDirection typeOfDirection, List < PlayingField>)> diagonals = new List<(TypeOfDirection typeOfDirection, List<PlayingField>)>();
 
-            List<PlayingField> diagonal = GetDiagonal(playingField.ColumnIndex - 1, playingField.RowIndex - 1,
-                                                      playingField.ColumnIndex - playingField.PlayerPawn.Distance, playingField.RowIndex - playingField.PlayerPawn.Distance,
-                                                      -1, -1);
-            if (diagonal.Count > 0)
-                diagonals.Add(diagonal);
-
-            diagonal = GetDiagonal(playingField.ColumnIndex + 1, playingField.RowIndex - 1,
-                                   playingField.ColumnIndex + playingField.PlayerPawn.Distance, playingField.RowIndex - playingField.PlayerPawn.Distance,
-                                   1, -1);
-            if (diagonal.Count > 0)
-                diagonals.Add(diagonal);
-
-            diagonal = GetDiagonal(playingField.ColumnIndex - 1, playingField.RowIndex + 1,
-                                   playingField.ColumnIndex - playingField.PlayerPawn.Distance, playingField.RowIndex + playingField.PlayerPawn.Distance,
-                                   -1, 1);
-            if (diagonal.Count > 0)
-                diagonals.Add(diagonal);
-
-            diagonal = GetDiagonal(playingField.ColumnIndex + 1, playingField.RowIndex + 1,
-                                      playingField.ColumnIndex + playingField.PlayerPawn.Distance, playingField.RowIndex + playingField.PlayerPawn.Distance,
-                                      1, 1);
-            if (diagonal.Count > 0)
-                diagonals.Add(diagonal);
-
+            List<PlayingField> diagonal;
+            foreach (var directions in playingField.PlayerPawn.Directions)
+            {
+                diagonal = GetDiagonal(playingField.ColumnIndex + directions.col, playingField.RowIndex + directions.row,
+                                                      playingField.ColumnIndex + playingField.PlayerPawn.Distance * directions.col,
+                                                      playingField.RowIndex + playingField.PlayerPawn.Distance * directions.row,
+                                                      directions.col, directions.row);
+                if (diagonal.Count > 0)
+                    diagonals.Add((directions.typeOfDirection, diagonal));
+            }
+            foreach (var directions in playingField.PlayerPawn.Directions)
+            {
+                diagonal = GetDiagonal(playingField.ColumnIndex + directions.col, playingField.RowIndex + directions.row,
+                                                      playingField.ColumnIndex + playingField.PlayerPawn.Distance * directions.col,
+                                                      playingField.RowIndex + playingField.PlayerPawn.Distance * directions.row,
+                                                      directions.col, directions.row);
+                if (diagonal.Count > 0)
+                    diagonals.Add((directions.typeOfDirection, diagonal));
+            }
             return diagonals;
         }
 

@@ -59,6 +59,7 @@ namespace MemoWpfGame.ViewModel
             {
                 setNumbersOfItem = value;
                 OnPropertyChanged(nameof(SetNumbersOfItem));
+                OnPropertyChanged(nameof(NumberOfSets));
             }
         }
 
@@ -156,10 +157,83 @@ namespace MemoWpfGame.ViewModel
             }
         }
 
+        private int selectedOptionNumberOfItem;
+        public int SelectedOptionNumberOfItem
+        {
+            get { return selectedOptionNumberOfItem; }
+            set
+            {
+                selectedOptionNumberOfItem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfNumbersOfItem;
+        public ObservableCollection<int> ListOfNumbersOfItem
+        {
+            get { return listOfNumbersOfItem; }
+            set
+            {
+                listOfNumbersOfItem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int selectedOptionRow;
+        public int SelectedOptionRow
+        {
+            get { return selectedOptionRow; }
+            set
+            {
+                selectedOptionRow = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfRows;
+        public ObservableCollection<int> ListOfRows
+        {
+            get { return listOfRows; }
+            set
+            {
+                listOfRows = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int selectedOptionCol;
+        public int SelectedOptionCol
+        {
+            get { return selectedOptionCol; }
+            set
+            {
+                selectedOptionCol = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfCols;
+        public ObservableCollection<int> ListOfCols
+        {
+            get { return listOfCols; }
+            set
+            {
+                listOfCols = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MemoViewModel()
         {
             IsEndGame = false;
             RunGame = false;
+            ListOfNumbersOfItem = new ObservableCollection<int>() { 2, 3, 4, 5 };
+            SelectedOptionNumberOfItem = ListOfNumbersOfItem.First();
+
+            ListOfRows = new ObservableCollection<int>() { 4, 5, 6, 7, 8, 9, 10 };
+            SelectedOptionRow = ListOfRows.First();
+            ListOfCols = new ObservableCollection<int>() { 4, 5, 6, 7, 8, 9, 10 };
+            SelectedOptionCol = ListOfCols.First();
             RunNewGame();
         }
 
@@ -171,9 +245,9 @@ namespace MemoWpfGame.ViewModel
             IsEndGame = false;
             RunGame = true;
 
-            RowCount = 3;
-            ColumnCount = 4;
-            SetNumbersOfItem = 3;
+            RowCount = SelectedOptionRow;
+            ColumnCount = SelectedOptionCol;
+            SetNumbersOfItem = SelectedOptionNumberOfItem;
             DiscoverItemCount = 0;
 
             ListOfPlayingField = new ObservableCollection<PlayingField>();

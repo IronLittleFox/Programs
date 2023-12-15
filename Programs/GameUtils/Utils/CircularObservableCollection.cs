@@ -30,5 +30,19 @@ namespace GameUtils.Utils
             }
             return enumerator.Current;
         }
+
+        public void SetCurrent(T value)
+        {
+            while(true)
+            {
+                if (!enumerator.MoveNext())
+                {
+                    enumerator.Reset();
+                    enumerator.MoveNext();
+                }
+                if (enumerator.Current.Equals(value))
+                    return;
+            }
+        }
     }
 }

@@ -23,16 +23,60 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Button Content="Nowa gra"
-                        Command="{Binding NewGameCommand}"/>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <Button Content="Nowa gra"
+                    Command="{Binding NewGameCommand}"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"/>
+            <TextBlock Text="Wybierz wielkość zestawu:"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       Margin="5 0"/>
+            <ComboBox Grid.Column="1"
+                      Grid.Row="1"
+                      ItemsSource="{Binding ListOfNumbersOfItem}"
+                      SelectedItem="{Binding SelectedOptionNumberOfItem}"
+                      HorizontalContentAlignment="Center"
+                      Margin="10 0">
+            </ComboBox>
+            <TextBlock Text="Wybierz ilość wierszy:"
+                       Grid.Row="0"
+                       Grid.Column="2"
+                       Margin="10 0"/>
+            <ComboBox Grid.Column="2"
+                      Grid.Row="1"
+                      ItemsSource="{Binding ListOfRows}"
+                      SelectedItem="{Binding SelectedOptionRow}"
+                      HorizontalContentAlignment="Center"
+                      Margin="10 0">
+            </ComboBox>
+            <TextBlock Text="Wybierz ilość kolumn:"
+                       Grid.Row="0"
+                       Grid.Column="3"
+                       Margin="10 0"/>
+            <ComboBox Grid.Column="3"
+                      Grid.Row="1"
+                      ItemsSource="{Binding ListOfCols}"
+                      SelectedItem="{Binding SelectedOptionCol}"
+                      HorizontalContentAlignment="Center"
+                      Margin="10 0">
+            </ComboBox>
+            <StackPanel Grid.Column="4"
+                        Grid.Row="0"
+                        Grid.RowSpan="2">
                 <Label Content="Znaleziono elementów:"/>
-                <Label Content="{Binding DiscoverItemCount}"/>
-                <Label Content="z"/>
-                <Label Content="{Binding NumberOfSets}"/>
+                <WrapPanel>
+                    <Label Content="{Binding DiscoverItemCount}"/>
+                    <Label Content="z"/>
+                    <Label Content="{Binding NumberOfSets}"/>
+                </WrapPanel>
             </StackPanel>
         </Grid>
         <ItemsControl ItemsSource="{Binding ListOfPlayingField}"

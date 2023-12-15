@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace CheckersWpfGame.Model
 {
+    public enum TypeOfDirection
+    {
+        Move,
+        Capturing
+    }
+
     public class Pawn : ViewObserver
     {
         private string pawnColor = "Transparent";
@@ -33,6 +39,6 @@ namespace CheckersWpfGame.Model
 
         public int Distance { get; set; }
 
-        public List<(int col, int row)> DirectionsOfMovements;
+        public List<(TypeOfDirection typeOfDirection, int col, int row)> Directions;
     }
 }

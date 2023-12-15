@@ -180,7 +180,7 @@ namespace MinesweeperWpfGame.ViewModel
 
                             GameMove(playingField);
 
-                            if (ListOfPlayingField.Where(x=> x.Text == "" || x.Text == "?").Count() == MinesCount)
+                            if (ListOfPlayingField.Where(x => x.Text == "" || x.Text == "?").Count() == MinesCount)
                             {
                                 ShowMessageScore = "Koniec gry.\nWygrana.";
                                 ShowGameScore = true;
@@ -212,11 +212,85 @@ namespace MinesweeperWpfGame.ViewModel
             }
         }
 
+        private int selectedOptionRow;
+        public int SelectedOptionRow
+        {
+            get { return selectedOptionRow; }
+            set
+            {
+                selectedOptionRow = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfRows;
+        public ObservableCollection<int> ListOfRows
+        {
+            get { return listOfRows; }
+            set
+            {
+                listOfRows = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int selectedOptionCol;
+        public int SelectedOptionCol
+        {
+            get { return selectedOptionCol; }
+            set
+            {
+                selectedOptionCol = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfCols;
+        public ObservableCollection<int> ListOfCols
+        {
+            get { return listOfCols; }
+            set
+            {
+                listOfCols = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int selectedOptionPercentMine;
+        public int SelectedOptionPercentMine
+        {
+            get { return selectedOptionPercentMine; }
+            set
+            {
+                selectedOptionPercentMine = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfPercentMins;
+        public ObservableCollection<int> ListOfPercentMins
+        {
+            get { return listOfPercentMins; }
+            set
+            {
+                listOfPercentMins = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MinesweeperViewModel()
         {
             IsEndGame = false;
             ShowGameScore = false;
             RunGame = false;
+
+            ListOfRows = new ObservableCollection<int>() { 4, 5, 6, 7, 8, 9, 10 };
+            SelectedOptionRow = ListOfRows.First();
+            ListOfCols = new ObservableCollection<int>() { 4, 5, 6, 7, 8, 9, 10 };
+            SelectedOptionCol = ListOfCols.First();
+            ListOfPercentMins = new ObservableCollection<int>() { 10, 15, 20, 25, 30, 40, 50 };
+            SelectedOptionPercentMine = ListOfPercentMins.First();
+
         }
 
         private void RunNewGame()
@@ -227,9 +301,9 @@ namespace MinesweeperWpfGame.ViewModel
             IsEndGame = false;
             RunGame = true;
 
-            MinesCount = 3;
-            RowCount = 5;
-            ColumnCount = 5;
+            RowCount = SelectedOptionRow;
+            ColumnCount = SelectedOptionCol;
+            MinesCount = RowCount * ColumnCount * SelectedOptionPercentMine / 100;
 
             ListOfPlayingField = new ObservableCollection<PlayingField>();
             for (int row = 0; row < RowCount; row++)
@@ -298,7 +372,7 @@ namespace MinesweeperWpfGame.ViewModel
         }
 
         #region Time method
-        
+
         private void CountGameTime()
         {
             DateTime startGameDateTime = DateTime.Now;

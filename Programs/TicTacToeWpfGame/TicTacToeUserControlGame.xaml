@@ -29,42 +29,43 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="15"/>
-                <RowDefinition Height="15"/>
+                <RowDefinition Height="30"/>
+                <!--<RowDefinition Height="15"/>-->
             </Grid.RowDefinitions>
 
             <TextBlock Text="Wybierz gracza startowego:"
                        Grid.Row="0"
-                       Grid.Column="0"/>
+                       Grid.Column="0"
+                       Margin="10 0"/>
             <ComboBox Grid.Column="0"
                       Grid.Row="1"
                       ItemsSource="{Binding ListOfPlayers}"
                       SelectedItem="{Binding SelectedPlayer}"
-                      HorizontalContentAlignment="Center">
+                      HorizontalContentAlignment="Center"
+                      Margin="10 0">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <TextBlock Text="Wybierz wielkość planszy:"
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       Margin="10 0"/>
+            <ComboBox Grid.Column="1"
+                      Grid.Row="1"
+                      ItemsSource="{Binding ListOfLines}"
+                      SelectedItem="{Binding SelectedOptionLines}"
+                      HorizontalContentAlignment="Center"
+                      Margin="10 0">
+            </ComboBox>
             <Button Content="Start game"
                     Grid.Row="0"
-                    Grid.Column="1"
+                    Grid.Column="2"
                     Grid.RowSpan="3"
                     Margin="10"
                     Command="{Binding StartGameCommand}"/>
-
-            <DataGrid AutoGenerateColumns="False"
-                      ItemsSource="{Binding PlayerScoreList}"
-                      IsReadOnly="True"
-                      Grid.Column="2"
-                      Grid.Row="0"
-                      Grid.RowSpan="3">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Player.Name}"/>
-                    <DataGridTextColumn Header="Wynik" Binding="{Binding Score}" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
         </Grid>
         <ItemsControl ItemsSource="{Binding ListOfField}">
             <ItemsControl.ItemsPanel>
@@ -82,7 +83,7 @@
             </ItemsControl.ItemContainerStyle>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Margin="10"
+                    <Button Margin="3"
                             Command="{Binding BoardFieldCommand}"
                             CommandParameter="{Binding}">
                         <Button.Content>
