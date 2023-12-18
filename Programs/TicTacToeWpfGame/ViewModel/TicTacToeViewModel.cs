@@ -134,6 +134,8 @@ namespace TicTacToeWpfGame.ViewModel
                     startGameCommand = new RelayCommand<object>(
                         o =>
                         {
+                            if (ShowGameScore)
+                                return;
                             NewGame();
                         }
                         );

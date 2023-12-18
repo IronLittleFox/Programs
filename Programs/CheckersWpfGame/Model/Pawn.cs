@@ -26,6 +26,18 @@ namespace CheckersWpfGame.Model
             }
         }
 
+
+        private string pawnSepcialColor = "Transparent";
+        public string PawnSpecialColor
+        {
+            get { return pawnSepcialColor; }
+            set
+            {
+                pawnSepcialColor = value;
+                OnPropertyChanged(nameof(PawnSpecialColor));
+            }
+        }
+
         private string pawnMustMoveColor = "Transparent";
         public string PawnMustMoveColor
         {

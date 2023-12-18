@@ -28,7 +28,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button Content="Nowa gra"
                     Command="{Binding NewGameCommand}"
@@ -44,7 +44,8 @@
                       ItemsSource="{Binding ListOfNumbersOfItem}"
                       SelectedItem="{Binding SelectedOptionNumberOfItem}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
             </ComboBox>
             <TextBlock Text="Wybierz ilość wierszy:"
                        Grid.Row="0"
@@ -55,7 +56,8 @@
                       ItemsSource="{Binding ListOfRows}"
                       SelectedItem="{Binding SelectedOptionRow}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
             </ComboBox>
             <TextBlock Text="Wybierz ilość kolumn:"
                        Grid.Row="0"
@@ -66,16 +68,20 @@
                       ItemsSource="{Binding ListOfCols}"
                       SelectedItem="{Binding SelectedOptionCol}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
             </ComboBox>
             <StackPanel Grid.Column="4"
                         Grid.Row="0"
                         Grid.RowSpan="2">
                 <Label Content="Znaleziono elementów:"/>
                 <WrapPanel>
-                    <Label Content="{Binding DiscoverItemCount}"/>
-                    <Label Content="z"/>
-                    <Label Content="{Binding NumberOfSets}"/>
+                    <Label Content="{Binding DiscoverItemCount}"
+                           FontSize="30"/>
+                    <Label Content="z"
+                           FontSize="30"/>
+                    <Label Content="{Binding NumberOfSets}"
+                           FontSize="30"/>
                 </WrapPanel>
             </StackPanel>
         </Grid>
@@ -107,6 +113,15 @@
                         </Button.Content>
                         <Button.Style>
                             <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Text}" Value="">
                                         <Setter Property="Background" Value="BlanchedAlmond"/>

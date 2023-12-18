@@ -7,12 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GekonLogo.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CheckersWpfGame\CheckersWpfGame.csproj" />
     <ProjectReference Include="..\ConnectFourWpfGame\ConnectFourWpfGame.csproj" />
     <ProjectReference Include="..\GameUtils\GameUtils.csproj" />
     <ProjectReference Include="..\MemoWpfGame\MemoWpfGame.csproj" />
     <ProjectReference Include="..\MinesweeperWpfGame\MinesweeperWpfGame.csproj" />
     <ProjectReference Include="..\TicTacToeWpfGame\TicTacToeWpfGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="GekonLogo.jpg" />
   </ItemGroup>
 
 </Project>

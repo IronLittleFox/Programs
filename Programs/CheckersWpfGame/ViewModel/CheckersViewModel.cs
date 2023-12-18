@@ -128,6 +128,8 @@ namespace CheckersWpfGame.ViewModel
                     newGameCommand = new RelayCommand<object>(
                         o =>
                         {
+                            if (ShowGameScore)
+                                return;
                             NewGame();
                         }
                         );
@@ -145,6 +147,13 @@ namespace CheckersWpfGame.ViewModel
                         playingField =>
                         {
                             if (isEndGame)
+                                return;
+
+                            if (selectedField != null
+                                && playingField.PlayerPawn != falsePawn
+                                && !_players[currentPlayerNumber].Pawns.Any(p => p == playingField.PlayerPawn)
+                                //&& playingField.PlayerPawn.PawnColor != selectedField.PlayerPawn.PawnColor
+                                )
                                 return;
 
                             //kliknieto możliwy ruch
@@ -195,10 +204,31 @@ namespace CheckersWpfGame.ViewModel
                                     {
                                         currentPlayerPawnsToMove = pawnToMove;
                                         ChangePawnMustMoveColor("aqua");
+                                        SelectCurrentPlayerPawn(playingField);
                                         return;
                                     }
-
                                 }
+
+                                //sprawdzamy czy doszliśmy na koniec planszy i zmieniamy na damkę
+                                if (playingField.RowIndex == playersEndLine[currentPlayerNumber]
+                                    && playingField.PlayerPawn.Distance == 1)
+                                {
+                                    Pawn pawn = new Pawn()
+                                    {
+                                        PawnColor = _players[currentPlayerNumber].PlayerColor,
+                                        PawnSpecialColor = "Aquamarine",
+                                        Distance = ColumnCount,
+                                        Directions = new List<(TypeOfDirection typeOfDirection, int col, int row)>
+                                        {
+                                            (TypeOfDirection .Move, -1, 1), (TypeOfDirection.Move, 1, 1),
+                                            (TypeOfDirection.Move, -1, -1), (TypeOfDirection.Move, 1, -1)
+                                        }
+                                    };
+                                    _players[currentPlayerNumber].Pawns.Add(pawn);
+                                    _players[currentPlayerNumber].Pawns.Remove(playingField.PlayerPawn);
+                                    playingField.PlayerPawn = pawn;
+                                }
+
 
                                 currentPlayerNumber = (currentPlayerNumber + 1) % _players.Count;
                                 CurrentPlayer = _players[currentPlayerNumber];
@@ -214,17 +244,7 @@ namespace CheckersWpfGame.ViewModel
                             if (selectedField != playingField
                                 && currentPlayerPawnsToMove.ContainsKey(playingField.PlayerPawn))
                             {
-                                if (selectedField != null)
-                                {
-                                    ChangeDiagonalColor(currentPlayerPawnsToMove[selectedField.PlayerPawn], selectedField.FieldColor);
-                                    selectedField.PlayerPawn.PawnColor = CurrentPlayer.PlayerColor;
-                                }
-
-                                selectedField = playingField;
-                                selectedField.PlayerPawn.PawnColor = selectColorPawn;
-
-                                ChangeDiagonalColor(currentPlayerPawnsToMove[selectedField.PlayerPawn], possibleMovmentColorField);
-
+                                SelectCurrentPlayerPawn(playingField);
                             }
                         }
                         );
@@ -233,6 +253,7 @@ namespace CheckersWpfGame.ViewModel
         }
 
         private List<Player> _players = new List<Player>();
+        private List<int> playersEndLine = new List<int>();
         private int currentPlayerNumber = 0;
         private bool isEndGame = false;
         private string whiteColorField = "white";
@@ -245,11 +266,12 @@ namespace CheckersWpfGame.ViewModel
 
         private Dictionary<Pawn, List<List<PlayingField>>> currentPlayerPawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
 
-
         public CheckersViewModel()
         {
             _players.Add(new Player() { PlayerColor = "Green" });
+            playersEndLine.Add(RowCount - 1);
             _players.Add(new Player() { PlayerColor = "Blue" });
+            playersEndLine.Add(0);
             currentPlayerNumber = 0;
             CurrentPlayer = _players[currentPlayerNumber];
             NewGame();
@@ -284,6 +306,7 @@ namespace CheckersWpfGame.ViewModel
                     Pawn pawn = new Pawn()
                     {
                         PawnColor = _players[0].PlayerColor,
+                        PawnSpecialColor = _players[0].PlayerColor,
                         Distance = 1,
                         Directions = new List<(TypeOfDirection typeOfDirection, int col, int row)> 
                         {
@@ -307,6 +330,7 @@ namespace CheckersWpfGame.ViewModel
                     Pawn pawn = new Pawn()
                     {
                         PawnColor = _players[1].PlayerColor,
+                        PawnSpecialColor = _players[1].PlayerColor,
                         Distance = 1,
                         Directions = new List<(TypeOfDirection typeOfDirection, int row, int col)> 
                         {
@@ -324,24 +348,56 @@ namespace CheckersWpfGame.ViewModel
             ChangePawnMustMoveColor("aqua");
         }
 
+        private void SelectCurrentPlayerPawn(PlayingField playingField)
+        {
+            if (selectedField != null)
+            {
+                ChangeDiagonalColor(currentPlayerPawnsToMove[selectedField.PlayerPawn], selectedField.FieldColor);
+                selectedField.PlayerPawn.PawnColor = CurrentPlayer.PlayerColor;
+            }
+
+            selectedField = playingField;
+            selectedField.PlayerPawn.PawnColor = selectColorPawn;
+
+            ChangeDiagonalColor(currentPlayerPawnsToMove[selectedField.PlayerPawn], possibleMovmentColorField);
+        }
+
+        private bool CheckIsAnyCapturingOnDiagonals(Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove)
+        {
+            return pawnsToMove.Any(kwp => kwp.Value.Any(tupple => tupple.diagonal.Any(pf => pf.PlayerPawn != falsePawn)));
+        }
+
         private bool CheckIsAnyCapturingOnDiagonals(Dictionary<Pawn, List<List<PlayingField>>> pawnsToMove)
         {
             return pawnsToMove.Any(kwp => kwp.Value.Any(diagonal => diagonal.Any(pf => pf.PlayerPawn != falsePawn)));
         }
 
-        private void DeletePawnsToMoveWithoutCapturing(Dictionary<Pawn, List<List<PlayingField>>> pawnsToMove)
+        private void DeletePawnsToMoveWithoutCapturing(Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove)
         {
             foreach (var kwp in pawnsToMove)
             {
-                kwp.Value.RemoveAll(diagonal => diagonal.All(pf => pf.PlayerPawn == falsePawn));
-                foreach (var diagonal in kwp.Value)
+                kwp.Value.RemoveAll(tupple => tupple.diagonal.All(pf => pf.PlayerPawn == falsePawn));
+                foreach (var tupple in kwp.Value)
                 {
-                    var toRemoveField = diagonal.TakeWhile(pf => pf.PlayerPawn == falsePawn).ToList();
+                    var toRemoveField = tupple.diagonal.TakeWhile(pf => pf.PlayerPawn == falsePawn).ToList();
                     foreach (var item in toRemoveField)
                     {
-                        diagonal.Remove(item);
+                        tupple.diagonal.Remove(item);
                     }
                 }
+            }
+            var toRemowe = pawnsToMove.Where(kwp => kwp.Value.Count == 0);
+            foreach (var kwp in toRemowe)
+            {
+                pawnsToMove.Remove(kwp.Key);
+            }
+        }
+
+        private void DeleteDiagonalCapturingDirection(Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField>)>> pawnsToMove)
+        {
+            foreach (var kwp in pawnsToMove)
+            {
+                kwp.Value.RemoveAll(tupple => tupple.typeOfDirection == TypeOfDirection.Capturing);
             }
             var toRemowe = pawnsToMove.Where(kwp => kwp.Value.Count == 0);
             foreach (var kwp in toRemowe)
@@ -372,43 +428,69 @@ namespace CheckersWpfGame.ViewModel
 
         private Dictionary<Pawn, List<List<PlayingField>>> GetCurrentPlayerPawnsToMove()
         {
-            Dictionary<Pawn, List<List<PlayingField>>> pawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
+            Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove = new Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>>();
 
             foreach (var pawn in CurrentPlayer.Pawns)
             {
                 PlayingField? playingField = ListOfPlayingField.FirstOrDefault(pf => pf.PlayerPawn == pawn);
                 if (playingField != null)
                 {
-                    //List<List<PlayingField>> diagonals = GetCollectionOfDiagonal(playingField);
-                    /*if (diagonals.Count > 0)
-                        pawnsToMove.Add(pawn, diagonals);*/
+                    List<(TypeOfDirection typeOfDirection, List<PlayingField>)> diagonals = GetCollectionOfDiagonal(playingField);
+                    if (diagonals.Count > 0)
+                        pawnsToMove.Add(pawn, diagonals);
                 }
             }
 
             if (CheckIsAnyCapturingOnDiagonals(pawnsToMove))
                 DeletePawnsToMoveWithoutCapturing(pawnsToMove);
+            else
+                DeleteDiagonalCapturingDirection(pawnsToMove);
 
-            return pawnsToMove;
+            Dictionary<Pawn, List<List<PlayingField>>> returnPawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
+            foreach (var kwp in pawnsToMove)
+            {
+                List<List<PlayingField>> returnDiagonals = new List<List<PlayingField>>();
+                foreach (var tupple in kwp.Value)
+                {
+                    returnDiagonals.Add(tupple.diagonal);
+                }
+                returnPawnsToMove.Add(kwp.Key, returnDiagonals);
+            }
+
+            return returnPawnsToMove;
         }
 
         private Dictionary<Pawn, List<List<PlayingField>>> GetCurrentPlayerPawnsToMove(PlayingField playingField)
         {
-            Dictionary<Pawn, List<List<PlayingField>>> pawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
+            Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove = new Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField>)>>();
 
-            //List<List<PlayingField>> diagonals = GetCollectionOfDiagonal(playingField);
-            /*if (diagonals.Count > 0)
-                pawnsToMove.Add(playingField.PlayerPawn, diagonals);*/
+            List<(TypeOfDirection typeOfDirection, List<PlayingField>)> diagonals = GetCollectionOfDiagonal(playingField);
+            if (diagonals.Count > 0)
+                pawnsToMove.Add(playingField.PlayerPawn, diagonals);
 
 
             if (CheckIsAnyCapturingOnDiagonals(pawnsToMove))
                 DeletePawnsToMoveWithoutCapturing(pawnsToMove);
+            else
+                DeleteDiagonalCapturingDirection(pawnsToMove);
 
-            return pawnsToMove;
+            Dictionary<Pawn, List<List<PlayingField>>> returnPawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
+            foreach(var kwp in pawnsToMove)
+            {
+                List<List<PlayingField>> returnDiagonals = new List<List<PlayingField>>();
+                foreach (var tupple in kwp.Value)
+                {
+                    returnDiagonals.Add(tupple.diagonal);
+                }
+                returnPawnsToMove.Add(kwp.Key, returnDiagonals);
+            }
+
+            return returnPawnsToMove;
         }
 
         private List<(TypeOfDirection typeOfDirection, List<PlayingField>)> GetCollectionOfDiagonal(PlayingField playingField)
         {
-            List<(TypeOfDirection typeOfDirection, List < PlayingField>)> diagonals = new List<(TypeOfDirection typeOfDirection, List<PlayingField>)>();
+            List<(TypeOfDirection typeOfDirection, List <PlayingField>)> diagonals = new List<(TypeOfDirection typeOfDirection, List<PlayingField>)>();
 
             List<PlayingField> diagonal;
             foreach (var directions in playingField.PlayerPawn.Directions)

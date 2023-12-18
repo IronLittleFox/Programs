@@ -94,6 +94,8 @@ namespace MemoWpfGame.ViewModel
                     newGameCommand = new RelayCommand<object>(
                         o =>
                         {
+                            if (ShowGameScore)
+                                return;
                             RunNewGame();
                         }
                         );
@@ -114,7 +116,7 @@ namespace MemoWpfGame.ViewModel
                             || DiscoverItemCount == NumberOfSets)
                                 return;
 
-                            if (listOfDiscoverField.Count == SetNumbersOfItem)
+                            if (listOfDiscoverField.Count >= SetNumbersOfItem)
                             {
                                 HideDiscoverField();
                             }
@@ -128,7 +130,6 @@ namespace MemoWpfGame.ViewModel
                                 listOfDiscoverField.Clear();
                                 DiscoverItemCount++;
                             }
-
                         }
                         );
                 return boardFieldCommand;

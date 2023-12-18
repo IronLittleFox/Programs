@@ -150,6 +150,8 @@ namespace MinesweeperWpfGame.ViewModel
                     newGameCommand = new RelayCommand<object>(
                         o =>
                         {
+                            if (ShowGameScore)
+                                return;
                             RunNewGame();
                         }
                         );
@@ -202,6 +204,9 @@ namespace MinesweeperWpfGame.ViewModel
                     mineProbabilityCommand = new RelayCommand<PlayingField>(
                         playingField =>
                         {
+                            if (IsEndGame)
+                                return;
+
                             if (playingField.Text == "")
                                 playingField.Text = "?";
                             else if (playingField.Text == "?")

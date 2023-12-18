@@ -28,7 +28,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="30"/>
                 <!--<RowDefinition Height="15"/>-->
             </Grid.RowDefinitions>
@@ -42,7 +42,8 @@
                       ItemsSource="{Binding ListOfPlayers}"
                       SelectedItem="{Binding SelectedPlayer}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}"/>
@@ -58,7 +59,8 @@
                       ItemsSource="{Binding ListOfLines}"
                       SelectedItem="{Binding SelectedOptionLines}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
             </ComboBox>
             <Button Content="Start game"
                     Grid.Row="0"
@@ -93,6 +95,15 @@
                         </Button.Content>
                         <Button.Style>
                             <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Text}" Value="X">
                                         <Setter Property="Background" Value="Red"/>

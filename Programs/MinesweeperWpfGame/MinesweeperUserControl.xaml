@@ -27,14 +27,14 @@
         </Popup>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.5*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button Content="New game" 
                     Command="{Binding NewGameCommand}"
@@ -42,8 +42,10 @@
                     Grid.Row="0"/>
             <WrapPanel Grid.Column="0"
                        Grid.Row="1">
-                <TextBlock Text="Czas:"/>
-                <TextBlock Text="{Binding GameTime}"/>
+                <TextBlock Text="Czas:"
+                           FontSize="30"/>
+                <TextBlock Text="{Binding GameTime}"
+                           FontSize="30"/>
             </WrapPanel>
             <TextBlock Text="Wybierz ilość wierszy:"
                        Grid.Row="0"
@@ -54,7 +56,8 @@
                       ItemsSource="{Binding ListOfRows}"
                       SelectedItem="{Binding SelectedOptionRow}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
             </ComboBox>
             <TextBlock Text="Wybierz ilość kolumn:"
                        Grid.Row="0"
@@ -65,7 +68,8 @@
                       ItemsSource="{Binding ListOfCols}"
                       SelectedItem="{Binding SelectedOptionCol}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
             </ComboBox>
             <TextBlock Text="Wybierz ilość procent min:"
                        Grid.Row="0"
@@ -76,7 +80,8 @@
                       ItemsSource="{Binding ListOfPercentMins}"
                       SelectedItem="{Binding SelectedOptionPercentMine}"
                       HorizontalContentAlignment="Center"
-                      Margin="10 0">
+                      Margin="10 0"
+                      FontSize="30">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -118,6 +123,15 @@
                         </Button.Content>
                         <Button.Style>
                             <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Text}" Value="">
                                         <Setter Property="Background" Value="BlanchedAlmond"/>

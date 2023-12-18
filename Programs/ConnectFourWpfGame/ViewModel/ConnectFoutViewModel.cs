@@ -24,7 +24,7 @@ namespace ConnectFourWpfGame.ViewModel
             }
         }
 
-        private int _columnCount = 6;
+        private int _columnCount;
         public int ColumnCount
         {
             get { return _columnCount; }
@@ -35,7 +35,7 @@ namespace ConnectFourWpfGame.ViewModel
             }
         }
 
-        private int _rowCount = 7;
+        private int _rowCount;
         public int RowCount
         {
             get { return _rowCount; }
@@ -121,6 +121,8 @@ namespace ConnectFourWpfGame.ViewModel
                     newGameCommand = new RelayCommand<object>(
                         o =>
                         {
+                            if (ShowGameScore)
+                                return;
                             NewGame();
                         }
                         );
@@ -168,6 +170,50 @@ namespace ConnectFourWpfGame.ViewModel
         }
         #endregion
 
+        private int selectedOptionRow;
+        public int SelectedOptionRow
+        {
+            get { return selectedOptionRow; }
+            set
+            {
+                selectedOptionRow = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfRows;
+        public ObservableCollection<int> ListOfRows
+        {
+            get { return listOfRows; }
+            set
+            {
+                listOfRows = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int selectedOptionCol;
+        public int SelectedOptionCol
+        {
+            get { return selectedOptionCol; }
+            set
+            {
+                selectedOptionCol = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<int> listOfCols;
+        public ObservableCollection<int> ListOfCols
+        {
+            get { return listOfCols; }
+            set
+            {
+                listOfCols = value;
+                OnPropertyChanged();
+            }
+        }
+
         private List<Player> _players;
         private string emptyColorField = "white";
         private bool isEndGame = false;
@@ -175,16 +221,24 @@ namespace ConnectFourWpfGame.ViewModel
 
         public ConnectFoutViewModel()
         {
-            NewGame();
+            ListOfRows = new ObservableCollection<int>() { 4, 5, 6, 7, 8, 9, 10 };
+            SelectedOptionRow = ListOfRows.First();
+            ListOfCols = new ObservableCollection<int>() { 4, 5, 6, 7, 8, 9, 10 };
+            SelectedOptionCol = ListOfCols.First();
 
             _players = new List<Player>();
             _players.Add(new Player() { PlayerColor = "Red" });
             _players.Add(new Player() { PlayerColor = "Blue" });
             CurrentPlayer = _players.First();
+
+            NewGame();
         }
 
         private void NewGame()
         {
+            RowCount = SelectedOptionRow;
+            ColumnCount = SelectedOptionCol;
+
             ListOfPlayingField = new ObservableCollection<PlayingField>();
             for (int row = 0; row < RowCount; row++)
                 for (int col = 0; col < ColumnCount; col++)
