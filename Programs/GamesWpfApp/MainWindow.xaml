@@ -12,6 +12,8 @@
         xmlns:memowpfgame="clr-namespace:MemoWpfGame;assembly=MemoWpfGame"
         xmlns:connectFourWpfGame="clr-namespace:ConnectFourWpfGame;assembly=ConnectFourWpfGame"
         xmlns:checkersWpfGame="clr-namespace:CheckersWpfGame;assembly=CheckersWpfGame"
+        xmlns:sudokuWpfGame="clr-namespace:SudokuWpfGame;assembly=SudokuWpfGame"
+        xmlns:goWpfGame="clr-namespace:GoWpfGame;assembly=GoWpfGame"
         mc:Ignorable="d"
         Title="Gry" Height="450" Width="800"
         WindowStyle="None"
@@ -27,6 +29,8 @@
         <memowpfgame:MemoUserControlGame x:Key="MemoUserControlGame"/>
         <connectFourWpfGame:ConnectFourUserControl x:Key="ConnectFourUserControl"/>
         <checkersWpfGame:CheckersUserControl x:Key="CheckersUserControl"/>
+        <sudokuWpfGame:SudokuUserControlGame x:Key="SudokuUserControlGame"/>
+        <goWpfGame:GoUserControl x:Key="GoUserControl"/>
     </Window.Resources>
 
     <Grid>
@@ -40,17 +44,20 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Program napisał: Łukasz Felisek"
+            <TextBlock Text="Autor: Łukasz Felisek"
                        VerticalAlignment="Center"
                        FontSize="20"
                        Grid.Column="0"
-                       Grid.Row="0"
-                       Grid.RowSpan="2"/>
+                       Grid.Row="0"/>
+            <Image Grid.Column="0"
+                   Grid.Row="1"
+                   Source="/IronLittleFoxLogo.png"/>
             <TextBlock Text="Właściciel urządzenia:"
                        FontSize="20"
                        HorizontalAlignment="Center"
@@ -59,6 +66,9 @@
             <Image Grid.Column="1"
                    Grid.Row="1"
                    Source="/GekonLogo.jpg"/>
+            <Image Grid.Column="2"
+                   Grid.Row="1"
+                   Source="/zseLogo.jpg"/>
         </Grid>
         <StackPanel Grid.Column="0"
                     Grid.Row="1"
@@ -94,6 +104,12 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding SelectedGame.NameOfGame}" Value="Warcaby">
                             <Setter Property="Content" Value="{DynamicResource CheckersUserControl}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedGame.NameOfGame}" Value="Sudoku">
+                            <Setter Property="Content" Value="{DynamicResource SudokuUserControlGame}"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding SelectedGame.NameOfGame}" Value="Go">
+                            <Setter Property="Content" Value="{DynamicResource GoUserControl}"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>

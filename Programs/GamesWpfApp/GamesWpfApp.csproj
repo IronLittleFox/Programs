@@ -8,19 +8,25 @@
 
   <ItemGroup>
     <None Remove="GekonLogo.jpg" />
+    <None Remove="IronLittleFoxLogo.png" />
+    <None Remove="zseLogo.jpg" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CheckersWpfGame\CheckersWpfGame.csproj" />
     <ProjectReference Include="..\ConnectFourWpfGame\ConnectFourWpfGame.csproj" />
     <ProjectReference Include="..\GameUtils\GameUtils.csproj" />
+    <ProjectReference Include="..\GoWpfGame\GoWpfGame.csproj" />
     <ProjectReference Include="..\MemoWpfGame\MemoWpfGame.csproj" />
     <ProjectReference Include="..\MinesweeperWpfGame\MinesweeperWpfGame.csproj" />
+    <ProjectReference Include="..\SudokuWpfGame\SudokuWpfGame.csproj" />
     <ProjectReference Include="..\TicTacToeWpfGame\TicTacToeWpfGame.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="GekonLogo.jpg" />
+    <Resource Include="IronLittleFoxLogo.png" />
+    <Resource Include="zseLogo.jpg" />
   </ItemGroup>
 
 </Project>

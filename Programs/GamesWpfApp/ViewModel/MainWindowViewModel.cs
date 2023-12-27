@@ -35,8 +35,10 @@ namespace GamesWpfApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "Memo"});
             ListOfGame.Add(new GameInfo() { NameOfGame = "Czwórki"});
             ListOfGame.Add(new GameInfo() { NameOfGame = "Warcaby"});
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Sudoku"});
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Go"});
 
-            SelectedGame = ListOfGame.FirstOrDefault();
+            SelectedGame = ListOfGame.LastOrDefault();
         }
 
     }

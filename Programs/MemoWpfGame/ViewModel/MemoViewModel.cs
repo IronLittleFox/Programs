@@ -94,8 +94,8 @@ namespace MemoWpfGame.ViewModel
                     newGameCommand = new RelayCommand<object>(
                         o =>
                         {
-                            if (ShowGameScore)
-                                return;
+                            /*if (ShowGameScore)
+                                return;*/
                             RunNewGame();
                         }
                         );
