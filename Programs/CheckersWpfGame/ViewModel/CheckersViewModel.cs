@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using System.Linq.Dynamic.Core;
+using CheckersWpfGame.Enums;
 
 namespace CheckersWpfGame.ViewModel
 {
@@ -406,7 +407,7 @@ namespace CheckersWpfGame.ViewModel
             }
             else
                 boardSquaresToMove = RemoveDiagonals(TypeOfDirection.Capturing, boardSquaresToMove);
-            //boardSquaresToMove.ForAll(x => x.diagonals = x.diagonals.Where(y => y.typeOfDirection == TypeOfDirection.Move).ToList());
+
 
             boardSquaresToMove.RemoveAll(x => x.diagonals.Count == 0);
 
