@@ -148,7 +148,7 @@ namespace GoWpfGame.ViewModel
                             surroundedFields.ForEach(gf =>
                             {
                                 gf.Sign = " ";
-                                gf.ColorPawn = "Transparent";
+                                gf.ColorPawn = "transparent";
                             });
                             PlayersPoints[playersColor[opponentPlayerSign]] += surroundedFields.Count;
 
@@ -156,7 +156,7 @@ namespace GoWpfGame.ViewModel
                             surroundedFields.ForEach(gf =>
                             {
                                 gf.Sign = " ";
-                                gf.ColorPawn = "Transparent";
+                                gf.ColorPawn = "transparent";
                             });
                             PlayersPoints[CurrentPlayerColor] += surroundedFields.Count;
 
@@ -192,7 +192,7 @@ namespace GoWpfGame.ViewModel
         {
             for (int col = 0; col < ColumnCount; col++)
                 for (int row = 0; row < RowCount; row++)
-                    GoBoard.Add(new GoField() { ColIndex = col, RowIndex = row, Sign = " ", ColorPawn = "Transparent", BoardFieldCommand = BoardFieldCommand });
+                    GoBoard.Add(new GoField() { ColIndex = col, RowIndex = row, Sign = " ", ColorPawn = "transparent", BoardFieldCommand = BoardFieldCommand });
 
             PlayersPoints = new ObservableDictionary<string, int>();
             foreach (var playerColor in playersColor)

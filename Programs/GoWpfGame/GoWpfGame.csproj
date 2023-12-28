@@ -7,7 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\blackGoPawn.png" />
+    <None Remove="Images\transparentGoPawn.png" />
+    <None Remove="Images\whiteGoPawn.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GameUtils\GameUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\blackGoPawn.png" />
+    <Resource Include="Images\transparentGoPawn.png" />
+    <Resource Include="Images\whiteGoPawn.png" />
   </ItemGroup>
 
 </Project>
