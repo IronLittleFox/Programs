@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0-windows</TargetFramework>
@@ -7,11 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\blackKing.png" />
+    <None Remove="Images\blackPawn.png" />
+    <None Remove="Images\emptyPawn.png" />
+    <None Remove="Images\whiteKing.png" />
+    <None Remove="Images\whitePawn.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GameUtils\GameUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\blackKing.png" />
+    <Resource Include="Images\blackPawn.png" />
+    <Resource Include="Images\emptyPawn.png" />
+    <Resource Include="Images\whiteKing.png" />
+    <Resource Include="Images\whitePawn.png" />
   </ItemGroup>
 
 </Project>

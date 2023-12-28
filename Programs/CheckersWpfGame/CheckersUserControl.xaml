@@ -6,12 +6,14 @@
              xmlns:local="clr-namespace:CheckersWpfGame"
              xmlns:viewmodel="clr-namespace:CheckersWpfGame.ViewModel"
              xmlns:utils="clr-namespace:GameUtils.Utils;assembly=GameUtils"
+             xmlns:converters ="clr-namespace:CheckersWpfGame.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <viewmodel:CheckersViewModel/>
     </UserControl.DataContext>
     <UserControl.Resources>
+        <converters:PawnDataToImageName x:Key="PawnDataToImageName"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <DockPanel>
@@ -43,12 +45,16 @@
             <Label Content="Aktualny gracz:"
                    Grid.Column="1"
                    Grid.Row="0"/>
-            <Rectangle Fill="{Binding CurrentPlayer.PlayerColor}"
-                       Grid.Column="1"
-                       Grid.Row="1"/>
+            <Border 
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    BorderBrush="Black" 
+                    BorderThickness="1"
+                    Margin="5 0 5 0">
+                <Rectangle Fill="{Binding CurrentGamePlayer.PlayerColor}"/>
+            </Border>
         </Grid>
-        <ItemsControl ItemsSource="{Binding ListOfPlayingField}"
-                      Visibility="{Binding RunGame,Converter={StaticResource BooleanToVisibilityConverter} }"
+        <ItemsControl ItemsSource="{Binding Board}"
                       DockPanel.Dock="Bottom">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -66,9 +72,9 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Margin="2"
-                            Command="{Binding BoardFieldCommand}"
+                            Command="{Binding SquareCommand}"
                             CommandParameter="{Binding}"
-                            Background="{Binding FieldColor}">
+                            Background="{Binding SquareColor}">
                         <Button.Content>
                             <!--<Ellipse Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
                                      Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
@@ -80,10 +86,32 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Ellipse Grid.Row="0" Grid.Column="0" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                <Image>
+                                    <Image.Source>
+                                        <MultiBinding Converter="{StaticResource PawnDataToImageName}">
+                                            <Binding Path="CheckerPiece.Color"/>
+                                            <Binding Path="CheckerPiece.Type"/>
+                                        </MultiBinding>
+                                    </Image.Source>
+                                </Image>
+                                <Rectangle Fill="red" 
+                                           Width="10" 
+                                           Height="10" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"
+                                           Visibility="{Binding IsCheckerPieceMustMove, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <Rectangle Fill="yellow" 
+                                           Width="10" 
+                                           Height="10" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"
+                                           Visibility="{Binding IsPossibleMove, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <!--<Ellipse Grid.Row="0" Grid.Column="0" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
                                      Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
                                          >
-                                    <!--Fill="{Binding PlayerPawn.PawnColor}">-->
+                                    -->
+                                <!--Fill="{Binding PlayerPawn.PawnColor}">-->
+                                <!--
                                     <Ellipse.Fill>
                                         <RadialGradientBrush>
                                             <GradientStop Color="{Binding PlayerPawn.PawnColor}" Offset="0.2"/>
@@ -94,7 +122,7 @@
                                         <TranslateTransform X="0.5" Y="0.5" />
                                     </Ellipse.RenderTransform>
                                 </Ellipse>
-                                <Rectangle Grid.Row="0" Grid.Column="0" Fill="{Binding PlayerPawn.PawnMustMoveColor}" Width="10" Height="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                -->
                             </Grid>
                         </Button.Content>
                         <Button.Style>

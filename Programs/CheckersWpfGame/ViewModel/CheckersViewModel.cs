@@ -5,80 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Linq.Dynamic.Core;
 
 namespace CheckersWpfGame.ViewModel
 {
-    public static class Extensions
+    public class CheckersViewModel : ViewObserver, IGameViewModel
     {
-        public static IEnumerable<IGrouping<bool, T>> Split<T>(
-            this IEnumerable<T> source,
-            Func<T, bool> predicate)
-        {
-            return source.GroupBy(predicate);
-        }
-    }
-
-    internal class CheckersViewModel : ViewObserver, IGameViewModel
-    {
-        private bool runGame = true;
-        public bool RunGame
-        {
-            get { return runGame; }
-            set
-            {
-                runGame = value;
-                OnPropertyChanged(nameof(RunGame));
-            }
-        }
-
-        private int _columnCount = 8;
-        public int ColumnCount
-        {
-            get { return _columnCount; }
-            set
-            {
-                _columnCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private int _rowCount = 10;
-        public int RowCount
-        {
-            get { return _rowCount; }
-            set
-            {
-                _rowCount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<PlayingField>? _listOfField = null;
-        public ObservableCollection<PlayingField> ListOfPlayingField
-        {
-            get { return _listOfField; }
-            set
-            {
-                _listOfField = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Player? currentPlayer = null;
-        public Player CurrentPlayer
-        {
-            get { return currentPlayer; }
-            set
-            {
-                currentPlayer = value;
-                OnPropertyChanged(nameof(CurrentPlayer));
-            }
-        }
-
         #region GameScore
         private bool showGameScore = false;
         public bool ShowGameScore
@@ -119,6 +52,153 @@ namespace CheckersWpfGame.ViewModel
         }
         #endregion
 
+        private int _columnCount = 8;
+        public int ColumnCount
+        {
+            get { return _columnCount; }
+            set
+            {
+                _columnCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int _rowCount = 10;
+        public int RowCount
+        {
+            get { return _rowCount; }
+            set
+            {
+                _rowCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<BoardSquare> board;
+        public ObservableCollection<BoardSquare> Board
+        {
+            get { return board; }
+            set
+            {
+                board = value;
+                OnPropertyChanged(nameof(Board));
+            }
+        }
+
+        private GamePlayer currentGamePlayer;
+        public GamePlayer CurrentGamePlayer
+        {
+            get { return currentGamePlayer; }
+            set
+            {
+                currentGamePlayer = value;
+                OnPropertyChanged(nameof(CurrentGamePlayer));
+            }
+        }
+
+        private ICommand squareCommand;
+        public ICommand SquareCommand
+        {
+            get
+            {
+                if (squareCommand == null)
+                    squareCommand = new RelayCommand<BoardSquare>(
+                        boardSquare =>
+                        {
+                            if (isEndGame)
+                                return;
+
+                            //kliknięto na pionek aktualnego gracza który może się ruszyć
+                            if (boardSquaresToMove.Any(x => x.boardSquare == boardSquare))
+                            {
+                                //odznaczamy możliwe ruchy
+                                boardSquaresToMove.Where(x => x.boardSquare == chooseBoardSquare)?.ForAll(x => x.diagonals.ForAll(y => y.diagonal.ForAll(z => z.IsPossibleMove = false)));
+
+                                //zaznaczamy nowe możliwe ruchy
+                                boardSquaresToMove.Where(x => x.boardSquare == boardSquare)?.ForAll(x => x.diagonals.ForAll(y => y.diagonal.ForAll(z => z.IsPossibleMove = true)));
+
+                                chooseBoardSquare = boardSquare;
+                                return;
+                            }
+
+                            //kliknięto na pole na które można się poruszyć
+                            if (boardSquaresToMove.Where(x => x.boardSquare == chooseBoardSquare)
+                                .Any(x => x.diagonals.Any(y => y.diagonal.Contains(boardSquare)))
+                                && boardSquare.CheckerPiece == falseCheckerPiece)
+                            {
+                                //odznaczamy możliwe ruchy
+                                boardSquaresToMove.Where(x => x.boardSquare == chooseBoardSquare)?.ForAll(x => x.diagonals.ForAll(y => y.diagonal.ForAll(z => z.IsPossibleMove = false)));
+                                boardSquaresToMove.ForAll(x => x.boardSquare.IsCheckerPieceMustMove = false);
+
+                                CheckerPiece? opponentCapturing = boardSquaresToMove
+                                .Where(x => x.boardSquare == chooseBoardSquare)
+                                .First()
+                                .diagonals
+                                .First(x => x.diagonal.Contains(boardSquare))
+                                .diagonal
+                                .FirstOrDefault(x => x.CheckerPiece != falseCheckerPiece)
+                                ?.CheckerPiece;
+
+
+                                boardSquare.CheckerPiece = chooseBoardSquare.CheckerPiece;
+                                chooseBoardSquare.CheckerPiece = falseCheckerPiece;
+
+                                if (opponentCapturing != null)
+                                {
+                                    var findBoardSquare = board.First(bs => bs.CheckerPiece == opponentCapturing);
+                                    findBoardSquare.CheckerPiece = falseCheckerPiece;
+                                    gamePlayers.First(gp => gp.CheckerPieces.Contains(opponentCapturing)).CheckerPieces.Remove(opponentCapturing);
+
+                                    //znalezienie możliwej kontynuacji ruchu
+                                    List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals = FindDiagonals(boardSquare);
+                                    if (diagonals.Any(y => y.diagonal.Any(z => z.CheckerPiece != falseCheckerPiece)))
+                                    {
+                                        boardSquaresToMove.Clear();
+                                        boardSquaresToMove.Add((boardSquare, diagonals));
+
+                                        //boardSquaresToMove.ForEach(x => x.diagonals = x.diagonals.Where(y => y.diagonal.Any(z => z.CheckerPiece != falseCheckerPiece)).ToList());
+                                        boardSquaresToMove = RemoveDiagonalsWithoutCapturing(boardSquaresToMove);
+
+                                        boardSquaresToMove.RemoveAll(x => x.diagonals.Count == 0);
+
+                                        boardSquaresToMove.ForAll(x => x.boardSquare.IsCheckerPieceMustMove = true);
+                                        chooseBoardSquare = boardSquare;
+
+                                        squareCommand?.Execute(boardSquare);
+
+                                        return;
+                                    }
+                                }
+                                else if (endOfPlayerRow[currentGamePlayer] == boardSquare.RowIndex)
+                                {
+                                    CurrentGamePlayer.CheckerPieces.Remove(boardSquare.CheckerPiece);
+                                    boardSquare.CheckerPiece = new CheckerKing(CurrentGamePlayer.PlayerColor, RowCount, listOfPlayerKingDirections[CurrentGamePlayer]);
+                                    CurrentGamePlayer.CheckerPieces.Add(boardSquare.CheckerPiece);
+                                }
+
+                                if (gamePlayers.Where(gp=> gp.PlayerColor!= CurrentGamePlayer.PlayerColor).First().CheckerPieces.Count == 0)
+                                {
+                                    isEndGame = true;
+                                    ShowGameScore = true;
+                                    ShowMessageScore = "Koniec gry.\nWygana.";
+                                    return;
+                                }
+
+                                CurrentGamePlayer = gamePlayers.GetNext();
+                                boardSquaresToMove = FindAllPawnToMove();
+                                boardSquaresToMove.ForAll(x => x.boardSquare.IsCheckerPieceMustMove = true);
+
+                                chooseBoardSquare = null;
+                            }
+                        }
+                        )
+                    {
+
+                    };
+                return squareCommand;
+            }
+        }
+
         private ICommand? newGameCommand = null;
         public ICommand NewGameCommand
         {
@@ -137,389 +217,130 @@ namespace CheckersWpfGame.ViewModel
             }
         }
 
-        private ICommand? boardFieldCommand = null;
-        public ICommand BoardFieldCommand
-        {
-            get
-            {
-                if (boardFieldCommand == null)
-                    boardFieldCommand = new RelayCommand<PlayingField>(
-                        playingField =>
-                        {
-                            if (isEndGame)
-                                return;
-
-                            if (selectedField != null
-                                && playingField.PlayerPawn != falsePawn
-                                && !_players[currentPlayerNumber].Pawns.Any(p => p == playingField.PlayerPawn)
-                                //&& playingField.PlayerPawn.PawnColor != selectedField.PlayerPawn.PawnColor
-                                )
-                                return;
-
-                            //kliknieto możliwy ruch
-                            //wykonanie ruchu, odzanaczenie starych możliwości, i jeśli zbito pionek gracza to sprawdzenie
-                            //czy gracz ten ma kontynuować czy zmiana gracza
-                            if (selectedField != null
-                            && currentPlayerPawnsToMove[selectedField.PlayerPawn].Any(diagonal => diagonal.Any(pf => pf == playingField)))
-                            {
-                                ChangeDiagonalColor(currentPlayerPawnsToMove[selectedField.PlayerPawn], selectedField.FieldColor);
-                                selectedField.PlayerPawn.PawnColor = CurrentPlayer.PlayerColor;
-
-                                bool? isOponentOnMoveDiagonal = currentPlayerPawnsToMove[selectedField.PlayerPawn]
-                                .FirstOrDefault(diagonal => diagonal.Contains(playingField))?.Any(pf => pf.PlayerPawn != falsePawn);
-
-                                //zbito pionek przeciwnika to go usuwamy
-                                if (isOponentOnMoveDiagonal != null && isOponentOnMoveDiagonal.Value)
-                                {
-                                    PlayingField playingFieldWidthOponentPawn = currentPlayerPawnsToMove[selectedField.PlayerPawn]
-                                 .First(diagonal => diagonal.Contains(playingField)).First(pf => pf.PlayerPawn != falsePawn);
-
-                                    _players
-                                    .First(player => player.Pawns.Contains(playingFieldWidthOponentPawn.PlayerPawn))
-                                    ?.Pawns
-                                    ?.Remove(playingFieldWidthOponentPawn.PlayerPawn);
-
-                                    playingFieldWidthOponentPawn.PlayerPawn = falsePawn;
-                                }
-
-                                playingField.PlayerPawn = selectedField.PlayerPawn;
-                                selectedField.PlayerPawn = falsePawn;
-                                ChangePawnMustMoveColor("Transparent");
-
-                                selectedField = null;
-
-                                if (!_players.All(p => p.Pawns.Count > 0))
-                                {
-                                    isEndGame = true;
-                                    ShowGameScore = true;
-                                    ShowMessageScore = "Koniec gry.";
-                                    return;
-                                }
-
-                                if (isOponentOnMoveDiagonal != null && isOponentOnMoveDiagonal.Value)
-                                {
-                                    //sprawdzamy czy pionek na nowym miejscu ma kolejne bicie
-                                    Dictionary<Pawn, List<List<PlayingField>>> pawnToMove = GetCurrentPlayerPawnsToMove(playingField);
-                                    if (CheckIsAnyCapturingOnDiagonals(pawnToMove))
-                                    {
-                                        currentPlayerPawnsToMove = pawnToMove;
-                                        ChangePawnMustMoveColor("aqua");
-                                        SelectCurrentPlayerPawn(playingField);
-                                        return;
-                                    }
-                                }
-
-                                //sprawdzamy czy doszliśmy na koniec planszy i zmieniamy na damkę
-                                if (playingField.RowIndex == playersEndLine[currentPlayerNumber]
-                                    && playingField.PlayerPawn.Distance == 1)
-                                {
-                                    Pawn pawn = new Pawn()
-                                    {
-                                        PawnColor = _players[currentPlayerNumber].PlayerColor,
-                                        PawnSpecialColor = "Aquamarine",
-                                        Distance = ColumnCount,
-                                        Directions = new List<(TypeOfDirection typeOfDirection, int col, int row)>
-                                        {
-                                            (TypeOfDirection .Move, -1, 1), (TypeOfDirection.Move, 1, 1),
-                                            (TypeOfDirection.Move, -1, -1), (TypeOfDirection.Move, 1, -1)
-                                        }
-                                    };
-                                    _players[currentPlayerNumber].Pawns.Add(pawn);
-                                    _players[currentPlayerNumber].Pawns.Remove(playingField.PlayerPawn);
-                                    playingField.PlayerPawn = pawn;
-                                }
-
-
-                                currentPlayerNumber = (currentPlayerNumber + 1) % _players.Count;
-                                CurrentPlayer = _players[currentPlayerNumber];
-
-                                currentPlayerPawnsToMove = GetCurrentPlayerPawnsToMove();
-                                ChangePawnMustMoveColor("aqua");
-                                return;
-
-                            }
-
-                            //kliknięto pionek aktualnego gracza ktory nie był wcześniej wybrany
-                            //odzanaczenie starych możliwośći i zaznaczenie nowych
-                            if (selectedField != playingField
-                                && currentPlayerPawnsToMove.ContainsKey(playingField.PlayerPawn))
-                            {
-                                SelectCurrentPlayerPawn(playingField);
-                            }
-                        }
-                        );
-                return boardFieldCommand;
-            }
-        }
-
-        private List<Player> _players = new List<Player>();
-        private List<int> playersEndLine = new List<int>();
-        private int currentPlayerNumber = 0;
-        private bool isEndGame = false;
+        private CircularObservableCollection<GamePlayer> gamePlayers;
+        private Dictionary<GamePlayer, int> endOfPlayerRow;
+        private Dictionary<GamePlayer, List<(TypeOfDirection typeOfDirection, int col, int row)>> listOfPlayerPawnDirections;
+        private Dictionary<GamePlayer, List<(TypeOfDirection typeOfDirection, int col, int row)>> listOfPlayerKingDirections;
+        private CheckerPiece falseCheckerPiece = new CheckerPawn("empty", null);
         private string whiteColorField = "white";
-        private string darkColorField = "brown";
-        private string possibleMovmentColorField = "gold";
-        private string selectColorPawn = "black";
-        private Pawn falsePawn = new Pawn();
-
-        private PlayingField? selectedField = null;
-
-        private Dictionary<Pawn, List<List<PlayingField>>> currentPlayerPawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
+        private string darkColorField = "#FFC5C5C5";
+        private List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSquaresToMove;
+        private BoardSquare chooseBoardSquare;
+        private bool isEndGame = false;
 
         public CheckersViewModel()
         {
-            _players.Add(new Player() { PlayerColor = "Green" });
-            playersEndLine.Add(RowCount - 1);
-            _players.Add(new Player() { PlayerColor = "Blue" });
-            playersEndLine.Add(0);
-            currentPlayerNumber = 0;
-            CurrentPlayer = _players[currentPlayerNumber];
+            Board = new ObservableCollection<BoardSquare>();
+            gamePlayers = new CircularObservableCollection<GamePlayer>()
+            {
+                new GamePlayer() {PlayerColor = "white", CheckerPieces = new List<CheckerPiece>() },
+                new GamePlayer() {PlayerColor = "black", CheckerPieces = new List<CheckerPiece>() }
+            };
+            endOfPlayerRow = new Dictionary<GamePlayer, int>(){ { gamePlayers[0], RowCount-1}, {gamePlayers[1], 0} };
+            listOfPlayerPawnDirections = new Dictionary<GamePlayer, List<(TypeOfDirection typeOfDirection, int col, int row)>>()
+            {
+                { gamePlayers[0], new List<(TypeOfDirection typeOfDirection, int col, int row)>
+                                    {
+                                        (TypeOfDirection.Move, -1, 1), (TypeOfDirection.Move, 1, 1),
+                                        (TypeOfDirection.Capturing, -1, -1), (TypeOfDirection.Capturing, 1, -1)
+                                    }}, 
+                {gamePlayers[1], new List<(TypeOfDirection typeOfDirection, int col, int row)>
+                                    {
+                                        (TypeOfDirection.Move, - 1, -1), (TypeOfDirection.Move, 1, -1),
+                                        (TypeOfDirection.Capturing, -1, 1), (TypeOfDirection.Capturing, 1, 1)
+                                    }}
+            };
+            listOfPlayerKingDirections = new Dictionary<GamePlayer, List<(TypeOfDirection typeOfDirection, int col, int row)>>()
+            {
+                { gamePlayers[0], new List<(TypeOfDirection typeOfDirection, int col, int row)>
+                                    {
+                                        (TypeOfDirection.Move, -1, 1), (TypeOfDirection.Move, 1, 1),
+                                        (TypeOfDirection.Move, -1, -1), (TypeOfDirection.Move, 1, -1)
+                                    }},
+                {gamePlayers[1], new List<(TypeOfDirection typeOfDirection, int col, int row)>
+                                    {
+                                        (TypeOfDirection.Move, - 1, -1), (TypeOfDirection.Move, 1, -1),
+                                        (TypeOfDirection.Move, -1, 1), (TypeOfDirection.Move, 1, 1)
+                                    }}
+            };
+
+            CurrentGamePlayer = gamePlayers.First();
+
             NewGame();
         }
 
         private void NewGame()
         {
-            ListOfPlayingField = new ObservableCollection<PlayingField>();
+            isEndGame = false;
+            Board.Clear();
             for (int row = 0; row < RowCount; row++)
                 for (int col = 0; col < ColumnCount; col++)
                 {
-                    ListOfPlayingField.Add(new PlayingField()
+                    Board.Add(new BoardSquare()
                     {
                         ColumnIndex = col,
                         RowIndex = row,
-                        FieldColor = ((col + row % 2) % 2) == 0 ? whiteColorField : darkColorField,
-                        SpareColor = ((col + row % 2) % 2) == 0 ? whiteColorField : darkColorField,
-                        BoardFieldCommand = BoardFieldCommand,
-                        PlayerPawn = falsePawn
+                        SquareColor = ((col + row % 2) % 2) == 0 ? whiteColorField : darkColorField,
+                        SquareCommand = SquareCommand,
+                        CheckerPiece = falseCheckerPiece,
+                        IsCheckerPieceMustMove = false,
+                        IsPossibleMove = false
                     });
                 }
-            isEndGame = false;
 
-            _players[0].Pawns = new List<Pawn>();
-            ListOfPlayingField.Where(pf => pf.FieldColor == darkColorField
-                                                                && (pf.RowIndex == 0
-                                                                    || pf.RowIndex == 1
-                                                                    || pf.RowIndex == 2
-                                                                    || pf.RowIndex == 3))
-                .ForAll(pf =>
+            Board.Where(bs => bs.SquareColor == darkColorField
+                                                && (bs.RowIndex == 0
+                                                    || bs.RowIndex == 1
+                                                    || bs.RowIndex == 2
+                                                    || bs.RowIndex == 3))
+                .ForAll(bs =>
                 {
-                    Pawn pawn = new Pawn()
-                    {
-                        PawnColor = _players[0].PlayerColor,
-                        PawnSpecialColor = _players[0].PlayerColor,
-                        Distance = 1,
-                        Directions = new List<(TypeOfDirection typeOfDirection, int col, int row)> 
-                        {
-                            (TypeOfDirection .Move, -1, 1), (TypeOfDirection.Move, 1, 1),
-                            (TypeOfDirection.Capturing, -1, -1), (TypeOfDirection.Capturing, 1, -1)
-                        }
-                    };
-                    _players[0].Pawns.Add(pawn);
-                    pf.PlayerPawn = pawn;
-
+                    CheckerPiece checkerPiece = new CheckerPawn(gamePlayers[0].PlayerColor, listOfPlayerPawnDirections[gamePlayers[0]]);
+                    gamePlayers[0].CheckerPieces.Add(checkerPiece);
+                    bs.CheckerPiece = checkerPiece;
                 });
 
-            _players[1].Pawns = new List<Pawn>();
-            ListOfPlayingField.Where(pf => pf.FieldColor == darkColorField
-                                                                && (pf.RowIndex == RowCount - 1
-                                                                    || pf.RowIndex == RowCount - 2
-                                                                    || pf.RowIndex == RowCount - 3
-                                                                    || pf.RowIndex == RowCount - 4))
-                .ForAll(pf =>
+            Board.Where(bs => bs.SquareColor == darkColorField
+                                                && (bs.RowIndex == RowCount - 1
+                                                    || bs.RowIndex == RowCount - 2
+                                                    || bs.RowIndex == RowCount - 3
+                                                    || bs.RowIndex == RowCount - 4))
+                .ForAll(bs =>
                 {
-                    Pawn pawn = new Pawn()
-                    {
-                        PawnColor = _players[1].PlayerColor,
-                        PawnSpecialColor = _players[1].PlayerColor,
-                        Distance = 1,
-                        Directions = new List<(TypeOfDirection typeOfDirection, int row, int col)> 
-                        {
-                            (TypeOfDirection .Move, - 1, -1), (TypeOfDirection.Move, 1, -1),
-                            (TypeOfDirection.Capturing, -1, 1), (TypeOfDirection.Capturing, 1, 1)
-                        }
-                    };
-                    _players[1].Pawns.Add(pawn);
-                    pf.PlayerPawn = pawn;
+                    CheckerPiece checkerPiece = new CheckerPawn(gamePlayers[1].PlayerColor, listOfPlayerPawnDirections[gamePlayers[1]]);
 
+                    gamePlayers[1].CheckerPieces.Add(checkerPiece);
+                    bs.CheckerPiece = checkerPiece;
                 });
 
-            ChangePawnMustMoveColor("Transparent");
-            currentPlayerPawnsToMove = GetCurrentPlayerPawnsToMove();
-            ChangePawnMustMoveColor("aqua");
+            boardSquaresToMove = FindAllPawnToMove();
+            boardSquaresToMove.ForAll(x => x.boardSquare.IsCheckerPieceMustMove = true);
+            chooseBoardSquare = null;
         }
 
-        private void SelectCurrentPlayerPawn(PlayingField playingField)
+        private List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> FindDiagonals(BoardSquare boardSquare)
         {
-            if (selectedField != null)
+            List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> listOfDiagonals = new List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)>();
+
+            List<BoardSquare> diagonal;
+            foreach (var directions in boardSquare.CheckerPiece.Directions)
             {
-                ChangeDiagonalColor(currentPlayerPawnsToMove[selectedField.PlayerPawn], selectedField.FieldColor);
-                selectedField.PlayerPawn.PawnColor = CurrentPlayer.PlayerColor;
-            }
-
-            selectedField = playingField;
-            selectedField.PlayerPawn.PawnColor = selectColorPawn;
-
-            ChangeDiagonalColor(currentPlayerPawnsToMove[selectedField.PlayerPawn], possibleMovmentColorField);
-        }
-
-        private bool CheckIsAnyCapturingOnDiagonals(Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove)
-        {
-            return pawnsToMove.Any(kwp => kwp.Value.Any(tupple => tupple.diagonal.Any(pf => pf.PlayerPawn != falsePawn)));
-        }
-
-        private bool CheckIsAnyCapturingOnDiagonals(Dictionary<Pawn, List<List<PlayingField>>> pawnsToMove)
-        {
-            return pawnsToMove.Any(kwp => kwp.Value.Any(diagonal => diagonal.Any(pf => pf.PlayerPawn != falsePawn)));
-        }
-
-        private void DeletePawnsToMoveWithoutCapturing(Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove)
-        {
-            foreach (var kwp in pawnsToMove)
-            {
-                kwp.Value.RemoveAll(tupple => tupple.diagonal.All(pf => pf.PlayerPawn == falsePawn));
-                foreach (var tupple in kwp.Value)
-                {
-                    var toRemoveField = tupple.diagonal.TakeWhile(pf => pf.PlayerPawn == falsePawn).ToList();
-                    foreach (var item in toRemoveField)
-                    {
-                        tupple.diagonal.Remove(item);
-                    }
-                }
-            }
-            var toRemowe = pawnsToMove.Where(kwp => kwp.Value.Count == 0);
-            foreach (var kwp in toRemowe)
-            {
-                pawnsToMove.Remove(kwp.Key);
-            }
-        }
-
-        private void DeleteDiagonalCapturingDirection(Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField>)>> pawnsToMove)
-        {
-            foreach (var kwp in pawnsToMove)
-            {
-                kwp.Value.RemoveAll(tupple => tupple.typeOfDirection == TypeOfDirection.Capturing);
-            }
-            var toRemowe = pawnsToMove.Where(kwp => kwp.Value.Count == 0);
-            foreach (var kwp in toRemowe)
-            {
-                pawnsToMove.Remove(kwp.Key);
-            }
-        }
-
-        private void ChangePawnMustMoveColor(string color)
-        {
-            foreach (var kwp in currentPlayerPawnsToMove)
-            {
-                kwp.Key.PawnMustMoveColor = color;
-            }
-        }
-
-        private void ChangeDiagonalColor(List<List<PlayingField>> diagonalsPlayingFields, string color)
-        {
-            foreach (var diagonal in diagonalsPlayingFields)
-            {
-                foreach (var plaingField in diagonal)
-                {
-                    if (plaingField.PlayerPawn == falsePawn)
-                        plaingField.FieldColor = color;
-                }
-            }
-        }
-
-        private Dictionary<Pawn, List<List<PlayingField>>> GetCurrentPlayerPawnsToMove()
-        {
-            Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove = new Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>>();
-
-            foreach (var pawn in CurrentPlayer.Pawns)
-            {
-                PlayingField? playingField = ListOfPlayingField.FirstOrDefault(pf => pf.PlayerPawn == pawn);
-                if (playingField != null)
-                {
-                    List<(TypeOfDirection typeOfDirection, List<PlayingField>)> diagonals = GetCollectionOfDiagonal(playingField);
-                    if (diagonals.Count > 0)
-                        pawnsToMove.Add(pawn, diagonals);
-                }
-            }
-
-            if (CheckIsAnyCapturingOnDiagonals(pawnsToMove))
-                DeletePawnsToMoveWithoutCapturing(pawnsToMove);
-            else
-                DeleteDiagonalCapturingDirection(pawnsToMove);
-
-            Dictionary<Pawn, List<List<PlayingField>>> returnPawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
-            foreach (var kwp in pawnsToMove)
-            {
-                List<List<PlayingField>> returnDiagonals = new List<List<PlayingField>>();
-                foreach (var tupple in kwp.Value)
-                {
-                    returnDiagonals.Add(tupple.diagonal);
-                }
-                returnPawnsToMove.Add(kwp.Key, returnDiagonals);
-            }
-
-            return returnPawnsToMove;
-        }
-
-        private Dictionary<Pawn, List<List<PlayingField>>> GetCurrentPlayerPawnsToMove(PlayingField playingField)
-        {
-            Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField> diagonal)>> pawnsToMove = new Dictionary<Pawn, List<(TypeOfDirection typeOfDirection, List<PlayingField>)>>();
-
-            List<(TypeOfDirection typeOfDirection, List<PlayingField>)> diagonals = GetCollectionOfDiagonal(playingField);
-            if (diagonals.Count > 0)
-                pawnsToMove.Add(playingField.PlayerPawn, diagonals);
-
-
-            if (CheckIsAnyCapturingOnDiagonals(pawnsToMove))
-                DeletePawnsToMoveWithoutCapturing(pawnsToMove);
-            else
-                DeleteDiagonalCapturingDirection(pawnsToMove);
-
-            Dictionary<Pawn, List<List<PlayingField>>> returnPawnsToMove = new Dictionary<Pawn, List<List<PlayingField>>>();
-            foreach(var kwp in pawnsToMove)
-            {
-                List<List<PlayingField>> returnDiagonals = new List<List<PlayingField>>();
-                foreach (var tupple in kwp.Value)
-                {
-                    returnDiagonals.Add(tupple.diagonal);
-                }
-                returnPawnsToMove.Add(kwp.Key, returnDiagonals);
-            }
-
-            return returnPawnsToMove;
-        }
-
-        private List<(TypeOfDirection typeOfDirection, List<PlayingField>)> GetCollectionOfDiagonal(PlayingField playingField)
-        {
-            List<(TypeOfDirection typeOfDirection, List <PlayingField>)> diagonals = new List<(TypeOfDirection typeOfDirection, List<PlayingField>)>();
-
-            List<PlayingField> diagonal;
-            foreach (var directions in playingField.PlayerPawn.Directions)
-            {
-                diagonal = GetDiagonal(playingField.ColumnIndex + directions.col, playingField.RowIndex + directions.row,
-                                                      playingField.ColumnIndex + playingField.PlayerPawn.Distance * directions.col,
-                                                      playingField.RowIndex + playingField.PlayerPawn.Distance * directions.row,
-                                                      directions.col, directions.row);
+                diagonal = FindDiagonal(boardSquare.ColumnIndex + directions.col, boardSquare.RowIndex + directions.row,
+                                       boardSquare.ColumnIndex + boardSquare.CheckerPiece.Distance * directions.col,
+                                       boardSquare.RowIndex + boardSquare.CheckerPiece.Distance * directions.row,
+                                       directions.col, directions.row);
                 if (diagonal.Count > 0)
-                    diagonals.Add((directions.typeOfDirection, diagonal));
+                    listOfDiagonals.Add((directions.typeOfDirection, diagonal));
             }
-            foreach (var directions in playingField.PlayerPawn.Directions)
-            {
-                diagonal = GetDiagonal(playingField.ColumnIndex + directions.col, playingField.RowIndex + directions.row,
-                                                      playingField.ColumnIndex + playingField.PlayerPawn.Distance * directions.col,
-                                                      playingField.RowIndex + playingField.PlayerPawn.Distance * directions.row,
-                                                      directions.col, directions.row);
-                if (diagonal.Count > 0)
-                    diagonals.Add((directions.typeOfDirection, diagonal));
-            }
-            return diagonals;
+            return listOfDiagonals;
         }
 
-        private List<PlayingField> GetDiagonal(int columnStart, int rowStart, int columnEnd, int rowEnd, int sx, int sy)
+        private List<BoardSquare> FindDiagonal(int columnStart, int rowStart, int columnEnd, int rowEnd, int sx, int sy)
         {
             int currColumn = columnStart;
             int currRow = rowStart;
 
-            List<PlayingField> fieldsOnDiagonal = new List<PlayingField>();
+            List<BoardSquare> squaresOnDiagonal = new List<BoardSquare>();
 
             int dx = Math.Abs(columnEnd - currColumn);
             int dy = Math.Abs(rowEnd - currRow);
@@ -527,24 +348,24 @@ namespace CheckersWpfGame.ViewModel
 
             while (true)
             {
-                PlayingField? playingField = ListOfPlayingField
-                    .FirstOrDefault(pf => pf.ColumnIndex == currColumn
-                                        && pf.RowIndex == currRow);
+                BoardSquare? boardSquare = Board
+                    .FirstOrDefault(bs => bs.ColumnIndex == currColumn
+                                        && bs.RowIndex == currRow);
 
-                if (playingField == null
-                    || playingField.PlayerPawn.PawnColor == CurrentPlayer.PlayerColor)
+                if (boardSquare == null
+                    || boardSquare.CheckerPiece.Color == CurrentGamePlayer.PlayerColor)
                     break;
 
-                if (playingField.PlayerPawn == falsePawn)
-                    fieldsOnDiagonal.Add(playingField);
+                if (boardSquare.CheckerPiece == falseCheckerPiece)
+                    squaresOnDiagonal.Add(boardSquare);
 
                 if (oneMoreField)
                     break;
 
                 //jest to przeciwnik to dodajemy jeszcze jedno pole za nim
-                if (playingField.PlayerPawn != falsePawn)
+                if (boardSquare.CheckerPiece != falseCheckerPiece)
                 {
-                    fieldsOnDiagonal.Add(playingField);
+                    squaresOnDiagonal.Add(boardSquare);
                     oneMoreField = true;
                 }
 
@@ -559,11 +380,61 @@ namespace CheckersWpfGame.ViewModel
             }
 
             //ostatnim na liście jest pionek przeciwnika to trzeba go usunąć.
-            PlayingField? latstField = fieldsOnDiagonal.LastOrDefault();
-            if (latstField != null && latstField.PlayerPawn != falsePawn)
-                fieldsOnDiagonal.Remove(latstField);
+            BoardSquare? latstField = squaresOnDiagonal.LastOrDefault();
+            if (latstField != null && latstField.CheckerPiece != falseCheckerPiece)
+                squaresOnDiagonal.Remove(latstField);
 
-            return fieldsOnDiagonal;
+            return squaresOnDiagonal;
+        }
+
+        private List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> FindAllPawnToMove()
+        {
+            List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSquaresToMove = new List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)>();
+
+            List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals;
+            foreach (BoardSquare boardSquare in Board.Where(bs => bs.CheckerPiece.Color == CurrentGamePlayer.PlayerColor))
+            {
+                diagonals = FindDiagonals(boardSquare);
+
+                if (diagonals.Count > 0)
+                    boardSquaresToMove.Add((boardSquare, diagonals));
+            }
+
+            if (boardSquaresToMove.Any(x => x.diagonals.Any(y => y.diagonal.Any(z => z.CheckerPiece != falseCheckerPiece))))
+            {
+                boardSquaresToMove = RemoveDiagonalsWithoutCapturing(boardSquaresToMove);
+            }
+            else
+                boardSquaresToMove = RemoveDiagonals(TypeOfDirection.Capturing, boardSquaresToMove);
+            //boardSquaresToMove.ForAll(x => x.diagonals = x.diagonals.Where(y => y.typeOfDirection == TypeOfDirection.Move).ToList());
+
+            boardSquaresToMove.RemoveAll(x => x.diagonals.Count == 0);
+
+            return boardSquaresToMove;
+        }
+
+        private List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> RemoveDiagonalsWithoutCapturing(List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSquaresToMove)
+        {
+            List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSuaresToMoveCopy = new List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)>();
+            List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals;
+            foreach (var tupple in boardSquaresToMove)
+            {
+                diagonals = tupple.diagonals.Where(y => y.diagonal.Any(z => z.CheckerPiece != falseCheckerPiece)).ToList();
+                boardSuaresToMoveCopy.Add((tupple.boardSquare, diagonals));
+            }
+            return boardSuaresToMoveCopy;
+        }
+
+        private List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> RemoveDiagonals(TypeOfDirection typeOfDirection, List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSquaresToMove)
+        {
+            List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSuaresToMoveCopy = new List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)>();
+            List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals;
+            foreach (var tupple in boardSquaresToMove)
+            {
+                diagonals = tupple.diagonals.Where(y => y.typeOfDirection != typeOfDirection).ToList();
+                boardSuaresToMoveCopy.Add((tupple.boardSquare, diagonals));
+            }
+            return boardSuaresToMoveCopy;
         }
     }
 }

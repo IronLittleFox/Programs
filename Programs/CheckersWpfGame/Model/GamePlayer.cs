@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CheckersWpfGame.Model
 {
-    public class Player : ViewObserver
+    public class GamePlayer : ViewObserver
     {
         private string playerColor;
         public string PlayerColor
@@ -20,6 +20,6 @@ namespace CheckersWpfGame.Model
             }
         }
 
-        public List<Pawn>? Pawns { get; set; } = null;
+        public List<CheckerPiece> CheckerPieces { get; set; }
     }
 }
