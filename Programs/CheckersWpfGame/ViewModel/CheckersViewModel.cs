@@ -116,7 +116,7 @@ namespace CheckersWpfGame.ViewModel
                                 boardSquaresToMove.Where(x => x.boardSquare == chooseBoardSquare)?.ForAll(x => x.diagonals.ForAll(y => y.diagonal.ForAll(z => z.IsPossibleMove = false)));
 
                                 //zaznaczamy nowe możliwe ruchy
-                                boardSquaresToMove.Where(x => x.boardSquare == boardSquare)?.ForAll(x => x.diagonals.ForAll(y => y.diagonal.ForAll(z => z.IsPossibleMove = true)));
+                                boardSquaresToMove.Where(x => x.boardSquare == boardSquare)?.ForAll(x => x.diagonals.ForAll(y => y.diagonal.ForAll(z => { if (z.CheckerPiece == falseCheckerPiece) z.IsPossibleMove = true; })));
 
                                 chooseBoardSquare = boardSquare;
                                 return;
@@ -177,7 +177,7 @@ namespace CheckersWpfGame.ViewModel
                                     CurrentGamePlayer.CheckerPieces.Add(boardSquare.CheckerPiece);
                                 }
 
-                                if (gamePlayers.Where(gp=> gp.PlayerColor!= CurrentGamePlayer.PlayerColor).First().CheckerPieces.Count == 0)
+                                if (gamePlayers.Where(gp => gp.PlayerColor != CurrentGamePlayer.PlayerColor).First().CheckerPieces.Count == 0)
                                 {
                                     isEndGame = true;
                                     ShowGameScore = true;
@@ -237,14 +237,14 @@ namespace CheckersWpfGame.ViewModel
                 new GamePlayer() {PlayerColor = "white", CheckerPieces = new List<CheckerPiece>() },
                 new GamePlayer() {PlayerColor = "black", CheckerPieces = new List<CheckerPiece>() }
             };
-            endOfPlayerRow = new Dictionary<GamePlayer, int>(){ { gamePlayers[0], RowCount-1}, {gamePlayers[1], 0} };
+            endOfPlayerRow = new Dictionary<GamePlayer, int>() { { gamePlayers[0], RowCount - 1 }, { gamePlayers[1], 0 } };
             listOfPlayerPawnDirections = new Dictionary<GamePlayer, List<(TypeOfDirection typeOfDirection, int col, int row)>>()
             {
                 { gamePlayers[0], new List<(TypeOfDirection typeOfDirection, int col, int row)>
                                     {
                                         (TypeOfDirection.Move, -1, 1), (TypeOfDirection.Move, 1, 1),
                                         (TypeOfDirection.Capturing, -1, -1), (TypeOfDirection.Capturing, 1, -1)
-                                    }}, 
+                                    }},
                 {gamePlayers[1], new List<(TypeOfDirection typeOfDirection, int col, int row)>
                                     {
                                         (TypeOfDirection.Move, - 1, -1), (TypeOfDirection.Move, 1, -1),
@@ -384,6 +384,10 @@ namespace CheckersWpfGame.ViewModel
             BoardSquare? latstField = squaresOnDiagonal.LastOrDefault();
             if (latstField != null && latstField.CheckerPiece != falseCheckerPiece)
                 squaresOnDiagonal.Remove(latstField);
+
+            //jesli na liście znajduje się pionek przeciwnika to bierzemy wszystko od tego pionka do końca
+            if (squaresOnDiagonal.Any(bs => bs.CheckerPiece != falseCheckerPiece))
+                squaresOnDiagonal = squaresOnDiagonal.SkipWhile(bs => bs.CheckerPiece == falseCheckerPiece).ToList();
 
             return squaresOnDiagonal;
         }
