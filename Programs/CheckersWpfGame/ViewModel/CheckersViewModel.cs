@@ -170,7 +170,7 @@ namespace CheckersWpfGame.ViewModel
                                         return;
                                     }
                                 }
-                                else if (endOfPlayerRow[currentGamePlayer] == boardSquare.RowIndex)
+                                if (endOfPlayerRow[currentGamePlayer] == boardSquare.RowIndex)
                                 {
                                     CurrentGamePlayer.CheckerPieces.Remove(boardSquare.CheckerPiece);
                                     boardSquare.CheckerPiece = new CheckerKing(CurrentGamePlayer.PlayerColor, RowCount, listOfPlayerKingDirections[CurrentGamePlayer]);
