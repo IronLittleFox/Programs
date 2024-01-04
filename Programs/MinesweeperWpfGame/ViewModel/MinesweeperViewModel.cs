@@ -177,6 +177,7 @@ namespace MinesweeperWpfGame.ViewModel
                                 ShowMessageScore = "Koniec gry.\nPrzegrana.";
                                 ShowGameScore = true;
                                 IsEndGame = true;
+                                ShowAllMines();
                                 return;
                             }
 
@@ -376,6 +377,11 @@ namespace MinesweeperWpfGame.ViewModel
             }
         }
 
+        private void ShowAllMines()
+        {
+            ListOfPlayingField.Where(pf => pf.HiddenText == "M").ForAll(pf => pf.Text = pf.HiddenText);
+        }
+
         #region Time method
 
         private void CountGameTime()
@@ -395,3 +401,4 @@ namespace MinesweeperWpfGame.ViewModel
         #endregion
     }
 }
+
