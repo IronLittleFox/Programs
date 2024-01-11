@@ -7,10 +7,12 @@
              xmlns:utils="clr-namespace:GameUtils.Utils;assembly=GameUtils"
              xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
              xmlns:viewmodel="clr-namespace:MinesweeperWpfGame.ViewModel"
+             xmlns:converters ="clr-namespace:MinesweeperWpfGame.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:NumberToImageName x:Key="NumberToImageName"/>
     </UserControl.Resources>
     <UserControl.DataContext>
         <viewmodel:MinesweeperViewModel/>
@@ -117,9 +119,7 @@
                             </Behaviors:EventTrigger>
                         </Behaviors:Interaction.Triggers>
                         <Button.Content>
-                            <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Text}" Name="textBox"/>
-                            </Viewbox>
+                            <Image Source="{Binding Text, Converter={StaticResource NumberToImageName}}"/>
                         </Button.Content>
                         <Button.Style>
                             <Style TargetType="Button">
@@ -132,7 +132,7 @@
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
-                                <Style.Triggers>
+                                <!--<Style.Triggers>
                                     <DataTrigger Binding="{Binding Text}" Value="">
                                         <Setter Property="Background" Value="BlanchedAlmond"/>
                                     </DataTrigger>
@@ -151,7 +151,7 @@
                                     <DataTrigger Binding="{Binding Text}" Value="3">
                                         <Setter Property="Foreground" Value="Beige"/>
                                     </DataTrigger>
-                                </Style.Triggers>
+                                </Style.Triggers>-->
                             </Style>
                         </Button.Style>
                     </Button>
