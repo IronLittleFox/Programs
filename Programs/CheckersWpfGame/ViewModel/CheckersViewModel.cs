@@ -222,7 +222,7 @@ namespace CheckersWpfGame.ViewModel
         private Dictionary<GamePlayer, int> endOfPlayerRow;
         private Dictionary<GamePlayer, List<(TypeOfDirection typeOfDirection, int col, int row)>> listOfPlayerPawnDirections;
         private Dictionary<GamePlayer, List<(TypeOfDirection typeOfDirection, int col, int row)>> listOfPlayerKingDirections;
-        private CheckerPiece falseCheckerPiece = new CheckerPawn("empty", null);
+        private CheckerPiece falseCheckerPiece = new CheckerPawn("empty", new List<(TypeOfDirection typeOfDirection, int col, int row)>());
         private string whiteColorField = "white";
         private string darkColorField = "#FFC5C5C5";
         private List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSquaresToMove;
@@ -231,7 +231,9 @@ namespace CheckersWpfGame.ViewModel
 
         public CheckersViewModel()
         {
-            Board = new ObservableCollection<BoardSquare>();
+            board = new ObservableCollection<BoardSquare>();
+            Board = board;
+
             gamePlayers = new CircularObservableCollection<GamePlayer>()
             {
                 new GamePlayer() {PlayerColor = "white", CheckerPieces = new List<CheckerPiece>() },

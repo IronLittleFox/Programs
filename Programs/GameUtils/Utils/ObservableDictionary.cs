@@ -73,7 +73,7 @@ namespace GameUtils.Utils
             return !Equals(default(ObservableKeyValuePair<TKey, TValue>), r);
         }
 
-        bool Equals<TKey>(TKey a, TKey b)
+        bool Equals(TKey a, TKey b)
         {
             return EqualityComparer<TKey>.Default.Equals(a, b);
         }

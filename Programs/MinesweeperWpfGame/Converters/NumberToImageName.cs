@@ -13,7 +13,7 @@ namespace MinesweeperWpfGame.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string? strNumber = value?.ToString()?.ToLower();
+            string strNumber = value?.ToString()?.ToLower();
             if (strNumber == "")
                 strNumber = "empty";
             if (strNumber == "m")
