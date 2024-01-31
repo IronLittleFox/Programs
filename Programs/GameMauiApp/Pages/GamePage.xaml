@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GameMauiApp.Pages.GamePage"
+             xmlns:utils="clr-namespace:GameMauiApp.Utils"
+             xmlns:viewModel="clr-namespace:GameMauiApp.ViewModel"
+             xmlns:local="clr-namespace:GameMauiApp"
+             xmlns:TicTacToeView ="clr-namespace:TicTacToeMauiGame.View;assembly=TicTacToeMauiGame"
+             Title="Game">
+    <ContentPage.BindingContext>
+        <viewModel:GameViewModel/>
+    </ContentPage.BindingContext>
+    <!--<ContentPage.Resources>
+        <TicTacToeView:TicTacToeView x:Key="TicTacToeView"/>
+    </ContentPage.Resources>-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Column="0"
+              Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <utils:ViewBox Grid.Column="0"
+                           Grid.Row="0"
+                           Margin="8"
+                           HorizontalOptions="Center">
+                <Label Text="Autor: Łukasz Felisek"/>
+            </utils:ViewBox>
+            <Image Grid.Column="0"
+                   Grid.Row="1"
+                   Source="iron_little_fox_logo.png"/>
+            <utils:ViewBox Grid.Column="1"
+                           Grid.Row="0"
+                           Margin="8"
+                           HorizontalOptions="Center">
+                <Label Text="Właściciel urządzenia:"/>
+            </utils:ViewBox>
+            <Image Grid.Column="1"
+                   Grid.Row="1"
+                   Source="gekon_logo.jpg"/>
+            <Image Grid.Column="2"
+                   Grid.Row="1"
+                   Source="zse_logo.jpg"/>
+        </Grid>
+
+        <StackLayout Grid.Column="0"
+            Grid.Row="1"
+            Margin="10">
+            <Label Text="Wybierz grę:"/>
+
+            <Picker FontSize="20"
+                    HorizontalOptions="FillAndExpand"
+                    ItemsSource="{Binding ListOfGame}"
+                    ItemDisplayBinding="{Binding NameOfGame}"
+                    SelectedItem="{Binding SelectedGame}"/>
+
+        </StackLayout>
+
+        <ContentView Grid.Column="0"
+                     Grid.Row="2"
+                     Content="{Binding SelectedGameView}"/>
+    </Grid>
+</ContentPage>

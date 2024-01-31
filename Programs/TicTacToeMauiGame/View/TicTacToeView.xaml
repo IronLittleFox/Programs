@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TicTacToeMauiGame.View.TicTacToeView"
+             xmlns:viewModel="clr-namespace:TicTacToeMauiGame.ViewModel"
+             xmlns:utils="clr-namespace:UtilsMaui.Utils;assembly=UtilsMaui"
+             xmlns:converters="clr-namespace:TicTacToeMauiGame.Converters">
+    <!--<ContentView.BindingContext>
+        <viewModel:TicTacToeViewModel/>
+    </ContentView.BindingContext>-->
+    <ContentView.Resources>
+        <converters:DataToImageName x:Key="DataToImageName"/>
+    </ContentView.Resources>
+    <StackLayout>
+        <!--<toolkit:Popup Placement="Center"
+           IsOpen="{Binding ShowGameScore}">
+            <Border Background="Coral" Padding="10">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="{Binding ShowMessageScore}" TextWrapping="Wrap"/>
+                    <Button Content="Close" Command="{Binding CloseGameScoreCommand}"/>
+                </StackPanel>
+            </Border>
+        </toolkit:Popup>-->
+        
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+
+            <Label Text="Wybierz gracza startowego:"
+                   Grid.Row="0"
+                   Grid.Column="0"/>
+            <Picker Grid.Column="0"
+                    Grid.Row="1"
+                    ItemsSource="{Binding ListOfPlayers}"
+                    SelectedItem="{Binding SelectedPlayer}"
+                    ItemDisplayBinding="{Binding Name}"
+                    HorizontalTextAlignment="Center"
+                    FontSize="30"
+                    Margin="10,0"/>
+            <Label Text="Wybierz wielkość planszy:"
+                   Grid.Row="0"
+                   Grid.Column="1"/>
+            <Picker Grid.Column="1"
+                  Grid.Row="1"
+                  ItemsSource="{Binding ListOfLines}"
+                  SelectedItem="{Binding SelectedOptionLines}"
+                  HorizontalTextAlignment="Center"
+                  FontSize="30"
+                  Margin="10,0"/>
+            <Button Text="Start game"
+                Grid.Row="0"
+                Grid.Column="2"
+                Grid.RowSpan="3"
+                Margin="10"
+                Command="{Binding StartGameCommand}"/>
+        </Grid>
+
+        <Grid utils:GridHelpers.RowCount="{Binding RowCount}"
+              utils:GridHelpers.ColumnCount="{Binding ColumnCount}"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand"
+              BindableLayout.ItemsSource="{Binding ListOfField}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <ImageButton Source="{Binding Text, Converter={StaticResource DataToImageName}}"
+                                 Grid.Column="{Binding ColumnIndex}"
+                                 Grid.Row="{Binding RowIndex}"
+                                 Command="{Binding BoardFieldCommand}"
+                                 CommandParameter="{Binding}"
+                                 Margin="10"
+                                 Background="BlanchedAlmond"/>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+    </StackLayout>
+</ContentView>
