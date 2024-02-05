@@ -1,6 +1,12 @@
-﻿using System.Windows.Input;
+﻿using Microsoft.Maui.Controls;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
-namespace TicTacToeMauiGame.Model
+namespace MinesweeperMauiGame.Model
 {
     public class PlayingField : BindableObject
     {
@@ -18,6 +24,10 @@ namespace TicTacToeMauiGame.Model
             }
         }
 
-        public ICommand BoardFieldCommand { get; set; } = new Command<object>(o => { });
+        public string HiddenText { get; set; } = "";
+
+        public ICommand? BoardFieldCommand { get; set; }
+
+        public ICommand? MineProbabilityCommand { get; set; }
     }
 }

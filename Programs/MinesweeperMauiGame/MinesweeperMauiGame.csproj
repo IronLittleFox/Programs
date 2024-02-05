@@ -32,16 +32,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="View\TicTacToePopupPage.xaml.cs">
-	    <DependentUpon>TicTacToePopupPage.xaml</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="View\TicTacToePopupPage.xaml">
+	  <MauiXaml Update="View\MinesweeperPopupView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\TicTacToeView.xaml">
+	  <MauiXaml Update="View\MinesweeperView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

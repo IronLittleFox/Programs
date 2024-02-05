@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using MinesweeperMauiGame.View;
 using TicTacToeMauiGame.View;
 using TicTacToeMauiGame.ViewModel;
+using MinesweeperMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -29,8 +31,11 @@ namespace GameMauiApp
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
                 .Services.AddTransientPopup< TicTacToePopupPage, TicTacToePopupViewModel>()
+                .AddTransientPopup<MinesweeperPopupView, MinesweeperPopupViewModel>()
                 .AddTransient<TicTacToeViewModel>()
-                .AddTransient<TicTacToeView>();
+                .AddTransient<TicTacToeView>()
+                .AddTransient<MinesweeperView>()
+                .AddTransient<MinesweeperViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();

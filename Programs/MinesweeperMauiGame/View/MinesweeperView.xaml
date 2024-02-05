@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MinesweeperMauiGame.View.MinesweeperView"
+             xmlns:converters="clr-namespace:MinesweeperMauiGame.Converters"
+             xmlns:viewModel="clr-namespace:MinesweeperMauiGame.ViewModel"
+             xmlns:utils="clr-namespace:UtilsMaui.Utils;assembly=UtilsMaui"
+             >
+    <ContentView.Resources>
+        <converters:NumberToImageName x:Key="NumberToImageName"/>
+    </ContentView.Resources>
+    <StackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Text="New game" 
+                    Command="{Binding NewGameCommand}"
+                    Grid.Column="0"
+                    Grid.Row="0"/>
+            <StackLayout Grid.Column="0"
+                         Grid.Row="1">
+                <Label Text="Czas:"
+                       FontSize="30"/>
+                <Label Text="{Binding GameTime}"
+                       FontSize="30"/>
+            </StackLayout>
+            <Label Text="Wybierz ilość wierszy:"
+                   Grid.Row="0"
+                   Grid.Column="1"
+                   Margin="10"/>
+            <Picker Grid.Column="1"
+                    Grid.Row="1"
+                    ItemsSource="{Binding ListOfRows}"
+                    SelectedItem="{Binding SelectedOptionRow}"
+                    HorizontalTextAlignment="Center"
+                    Margin="10"
+                    FontSize="30">
+            </Picker>
+            <Label Text="Wybierz ilość kolumn:"
+                   Grid.Row="0"
+                   Grid.Column="2"
+                   Margin="10"/>
+            <Picker Grid.Column="2"
+                    Grid.Row="1"
+                    ItemsSource="{Binding ListOfCols}"
+                    SelectedItem="{Binding SelectedOptionCol}"
+                    HorizontalTextAlignment="Center"
+                    Margin="10"
+                    FontSize="30">
+            </Picker>
+            <Label Text="Wybierz ilość procent min:"
+                   Grid.Row="0"
+                   Grid.Column="3"
+                   Margin="10"/>
+            <Picker Grid.Column="3"
+                    Grid.Row="1"
+                    ItemsSource="{Binding ListOfPercentMins}"
+                    SelectedItem="{Binding SelectedOptionPercentMine}"
+                    HorizontalTextAlignment="Center"
+                    Margin="10"
+                    FontSize="30">
+                <Picker.ItemDisplayBinding>
+                    <Binding StringFormat="{}{0} %" />
+                </Picker.ItemDisplayBinding>
+            </Picker>
+        </Grid>
+
+        <Grid utils:GridHelpers.RowCount="{Binding RowCount}"
+              utils:GridHelpers.ColumnCount="{Binding ColumnCount}"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand"
+              IsVisible="{Binding RunGame}"
+              BindableLayout.ItemsSource="{Binding ListOfPlayingField}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <ImageButton Source="{Binding Text, Converter={StaticResource NumberToImageName}}"
+                         Grid.Column="{Binding ColumnIndex}"
+                         Grid.Row="{Binding RowIndex}"
+                         Command="{Binding BoardFieldCommand}"
+                         CommandParameter="{Binding}"
+                         Margin="10"
+                         Background="BlanchedAlmond">
+                        <ImageButton.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding MineProbabilityCommand}" 
+                                                  CommandParameter="{Binding}"/>
+                        </ImageButton.GestureRecognizers>
+                        <!--<ImageButton.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ImageButton}">
+                                            <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ImageButton.Style>-->
+                    </ImageButton>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+    </StackLayout>
+</ContentView>

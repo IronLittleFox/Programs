@@ -10,9 +10,6 @@
     <ContentPage.BindingContext>
         <viewModel:GameViewModel/>
     </ContentPage.BindingContext>
-    <!--<ContentPage.Resources>
-        <TicTacToeView:TicTacToeView x:Key="TicTacToeView"/>
-    </ContentPage.Resources>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>

@@ -4,7 +4,7 @@ namespace TicTacToeMauiGame.Converters
 {
     public class DataToImageName : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             string imageName = "empty.png";
 
@@ -29,7 +29,7 @@ namespace TicTacToeMauiGame.Converters
             return imageName;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
         }

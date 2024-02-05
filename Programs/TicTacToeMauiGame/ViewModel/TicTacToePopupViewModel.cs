@@ -8,7 +8,7 @@ namespace TicTacToeMauiGame.ViewModel
 {
     public class TicTacToePopupViewModel : BindableObject
     {
-        private string message;
+        private string message = "";
         public string Message
         {
             get { return message; }
@@ -19,7 +19,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private string imageSymbol;
+        private string imageSymbol = "";
         public string ImageSymbol
         {
             get { return imageSymbol; }

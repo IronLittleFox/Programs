@@ -37,7 +37,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private CircularObservableCollection<Player> listOfPlayers;
+        private CircularObservableCollection<Player> listOfPlayers = new CircularObservableCollection<Player>();
         public CircularObservableCollection<Player> ListOfPlayers
         {
             get { return listOfPlayers; }
@@ -48,7 +48,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private Player selectedPlayer;
+        private Player selectedPlayer = new Player();
         public Player SelectedPlayer
         {
             get { return selectedPlayer; }
@@ -59,7 +59,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private ObservableCollection<int> listOfLines;
+        private ObservableCollection<int> listOfLines = new ObservableCollection<int>();
         public ObservableCollection<int> ListOfLines
         {
             get { return listOfLines; }
@@ -81,7 +81,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private ICommand startGameCommand;
+        private ICommand? startGameCommand;
         public ICommand StartGameCommand
         {
             get
@@ -97,7 +97,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private ObservableCollection<PlayingField> listOfField;
+        private ObservableCollection<PlayingField> listOfField = new ObservableCollection<PlayingField>();
         public ObservableCollection<PlayingField> ListOfField
         {
             get { return listOfField; }
@@ -108,7 +108,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private ICommand boardFieldCommand;
+        private ICommand? boardFieldCommand;
         public ICommand BoardFieldCommand
         {
             get
@@ -128,8 +128,8 @@ namespace TicTacToeMauiGame.ViewModel
                             {
                                 StartGame = false;
                                 popupService.ShowPopupAsync<TicTacToePopupViewModel>(
-                                    onPresenting: vm => 
-                                    { 
+                                    onPresenting: vm =>
+                                    {
                                         vm.Message = "Koniec gry.\nWygrywa:\n";
                                         vm.ImageSymbol = currentPlayer.Name;
                                     });
@@ -156,7 +156,7 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private bool startGame;
+        private bool startGame = false;
         public bool StartGame
         {
             get { return startGame; }
@@ -167,13 +167,12 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
-        private Player currentPlayer;
+        private Player currentPlayer = new Player();
         IPopupService popupService;
 
         public TicTacToeViewModel(IPopupService popupService)
         {
             this.popupService = popupService;
-            
 
             ListOfPlayers = new CircularObservableCollection<Player>()
             {
@@ -181,7 +180,7 @@ namespace TicTacToeMauiGame.ViewModel
                 new Player(){ Name = "O"},
             };
 
-            SelectedPlayer = ListOfPlayers.FirstOrDefault();
+            SelectedPlayer = ListOfPlayers.First();
 
             ListOfLines = new ObservableCollection<int>() { 3, 4, 5, 6, 7, 8 };
             SelectedOptionLines = ListOfLines.First();

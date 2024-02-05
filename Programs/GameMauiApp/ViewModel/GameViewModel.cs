@@ -1,5 +1,6 @@
 ﻿using GameMauiApp.Model;
 using Microsoft.Maui.Controls;
+using MinesweeperMauiGame.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,7 +25,6 @@ namespace GameMauiApp.ViewModel
                 selectedGame = value;
                 SelectedGameView?.Dispose();
                 SelectedGameView = ServiceHelper.Services.GetService(selectedGame.GameType) as IDisposableGameView;
-                //SelectedGameView = Activator.CreateInstance(selectedGame.GameType) as IDisposableGameView;
                 OnPropertyChanged();
             }
         }
@@ -45,14 +45,15 @@ namespace GameMauiApp.ViewModel
             ListOfGame = new ObservableCollection<GameInfo>();
 
             ListOfGame.Add(new GameInfo() { NameOfGame = "Kółko i krzyżyk", GameType = typeof(TicTacToeView) });
-            /*ListOfGame.Add(new GameInfo() { NameOfGame = "Saper", PathToGame="MinesweeperGame" });
-            ListOfGame.Add(new GameInfo() { NameOfGame = "Memory", PathToGame="MemoryGame" });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Saper", GameType = typeof(MinesweeperView) });
+            /*ListOfGame.Add(new GameInfo() { NameOfGame = "Memory", PathToGame="MemoryGame" });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Połącz czwórki", PathToGame="ConnectFourGame" });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Warcaby", PathToGame="CheckersGame" });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Sudoku", PathToGame="SudokuGame" });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Go", PathToGame="GoGame" });*/
 
-            SelectedGame = ListOfGame.FirstOrDefault();
+            //SelectedGame = ListOfGame.FirstOrDefault();
+            SelectedGame = ListOfGame.LastOrDefault();
         }
     }
 }

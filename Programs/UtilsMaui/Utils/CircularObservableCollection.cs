@@ -14,6 +14,7 @@ namespace UtilsMaui.Utils
 
         public CircularObservableCollection()
         {
+            enumerator = GetEnumerator();
             CollectionChanged += (s, e) =>
             {
                 enumerator = GetEnumerator();
@@ -33,6 +34,8 @@ namespace UtilsMaui.Utils
 
         public void SetCurrent(T value)
         {
+            if (enumerator.Current == null)
+                return;
             while(true)
             {
                 if (!enumerator.MoveNext())

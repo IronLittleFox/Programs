@@ -102,7 +102,7 @@ namespace GameMauiApp.Utils
     {
         private ViewBox _viewBox;
 
-        private View? InternalChild => _viewBox.Children.FirstOrDefault() as View;
+        private View InternalChild => _viewBox.Children.FirstOrDefault() as View;
 
         public ViewBoxLayoutManager(ViewBox viewBox)
         {
@@ -112,7 +112,7 @@ namespace GameMauiApp.Utils
         public Size Measure(double widthConstraint, double heightConstraint)
         {
             Size constraint = new(widthConstraint, heightConstraint);
-            View? child = InternalChild;
+            View child = InternalChild;
             Size parentSize = new();
 
             try
@@ -143,7 +143,7 @@ namespace GameMauiApp.Utils
         public Size ArrangeChildren(Rect bounds)
         {
             Size arrangeSize = bounds.Size;
-            View? child = InternalChild;
+            View child = InternalChild;
             double xOffset;
             double yOffset;
 

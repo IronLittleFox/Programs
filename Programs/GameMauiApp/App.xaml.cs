@@ -8,7 +8,6 @@ namespace GameMauiApp
         {
             InitializeComponent();
             MainPage = new GamePage();
-            //MainPage = new AppShell();
         }
     }
 }
