@@ -1,4 +1,5 @@
-﻿using GameMauiApp.Model;
+﻿using ConnectFourMauiGame.View;
+using GameMauiApp.Model;
 using MemoryMauiGame.View;
 using Microsoft.Maui.Controls;
 using MinesweeperMauiGame.View;
@@ -47,10 +48,9 @@ namespace GameMauiApp.ViewModel
 
             ListOfGame.Add(new GameInfo() { NameOfGame = "Kółko i krzyżyk", GameType = typeof(TicTacToeView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Saper", GameType = typeof(MinesweeperView) });
-            //ListOfGame.Add(new GameInfo() { NameOfGame = "Memory", GameType = typeof(MinesweeperView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Memory", GameType = typeof(MemoryView) });
-            /*ListOfGame.Add(new GameInfo() { NameOfGame = "Połącz czwórki", PathToGame="ConnectFourGame" });
-            ListOfGame.Add(new GameInfo() { NameOfGame = "Warcaby", PathToGame="CheckersGame" });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Połącz czwórki", GameType=typeof(ConnectFourView) });
+            /*ListOfGame.Add(new GameInfo() { NameOfGame = "Warcaby", PathToGame="CheckersGame" });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Sudoku", PathToGame="SudokuGame" });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Go", PathToGame="GoGame" });*/
 
