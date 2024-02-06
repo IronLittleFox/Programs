@@ -64,6 +64,7 @@
 
 
 	<ItemGroup>
+	  <ProjectReference Include="..\MemoryMauiGame\MemoryMauiGame.csproj" />
 	  <ProjectReference Include="..\MinesweeperMauiGame\MinesweeperMauiGame.csproj" />
 	  <ProjectReference Include="..\TicTacToeMauiGame\TicTacToeMauiGame.csproj" />
 	  <ProjectReference Include="..\UtilsMaui\UtilsMaui.csproj" />

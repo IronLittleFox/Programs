@@ -1,6 +1,7 @@
 ﻿using Microsoft.Maui.Layouts;
+using Microsoft.Maui.Controls;
 
-namespace GameMauiApp.Utils
+namespace UtilsMaui.Utils
 {
     #region StretchDirection
 
@@ -68,7 +69,7 @@ namespace GameMauiApp.Utils
 
         protected override void OnChildAdded(Element child)
         {
-            if (!(child is View view))
+            if (!(child is Microsoft.Maui.Controls.View view))
                 throw new ArgumentException(nameof(child));
 
             view.PropertyChanged += ViewPropertyChanged;
@@ -77,15 +78,15 @@ namespace GameMauiApp.Utils
 
         protected override void OnChildRemoved(Element child, int oldLogicalIndex)
         {
-            if (child is View view)
+            if (child is Microsoft.Maui.Controls.View view)
                 view.PropertyChanged -= ViewPropertyChanged;
 
             base.OnChildRemoved(child, oldLogicalIndex);
         }
 
-        private void ViewPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void ViewPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (!(sender is View view))
+            if (!(sender is Microsoft.Maui.Controls.View view))
                 return;
 
             if (e.PropertyName == "VerticalOptions" || e.PropertyName == "HorizontalOptions")
@@ -102,7 +103,7 @@ namespace GameMauiApp.Utils
     {
         private ViewBox _viewBox;
 
-        private View InternalChild => _viewBox.Children.FirstOrDefault() as View;
+        private Microsoft.Maui.Controls.View InternalChild => _viewBox.Children.FirstOrDefault() as Microsoft.Maui.Controls.View;
 
         public ViewBoxLayoutManager(ViewBox viewBox)
         {
@@ -112,7 +113,7 @@ namespace GameMauiApp.Utils
         public Size Measure(double widthConstraint, double heightConstraint)
         {
             Size constraint = new(widthConstraint, heightConstraint);
-            View child = InternalChild;
+            Microsoft.Maui.Controls.View child = InternalChild;
             Size parentSize = new();
 
             try
@@ -143,7 +144,7 @@ namespace GameMauiApp.Utils
         public Size ArrangeChildren(Rect bounds)
         {
             Size arrangeSize = bounds.Size;
-            View child = InternalChild;
+            Microsoft.Maui.Controls.View child = InternalChild;
             double xOffset;
             double yOffset;
 

@@ -18,7 +18,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button Text="New game" 
@@ -27,15 +27,21 @@
                     Grid.Row="0"/>
             <StackLayout Grid.Column="0"
                          Grid.Row="1">
-                <Label Text="Czas:"
-                       FontSize="30"/>
-                <Label Text="{Binding GameTime}"
-                       FontSize="30"/>
+                <Label Text="Czas:"/>
+                <utils:ViewBox Stretch="Fill"
+                               HorizontalOptions="Fill"
+                               VerticalOptions="Fill">
+                    <Label Text="{Binding GameTime}"/>
+                </utils:ViewBox>
             </StackLayout>
-            <Label Text="Wybierz ilość wierszy:"
-                   Grid.Row="0"
-                   Grid.Column="1"
-                   Margin="10"/>
+            <utils:ViewBox Stretch="Fill"
+                           Grid.Row="0"
+                           Grid.Column="1"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           Margin="10">
+                <Label Text="Wybierz ilość wierszy:"/>
+            </utils:ViewBox>
             <Picker Grid.Column="1"
                     Grid.Row="1"
                     ItemsSource="{Binding ListOfRows}"
@@ -44,10 +50,14 @@
                     Margin="10"
                     FontSize="30">
             </Picker>
-            <Label Text="Wybierz ilość kolumn:"
-                   Grid.Row="0"
-                   Grid.Column="2"
-                   Margin="10"/>
+            <utils:ViewBox Stretch="Fill"
+                           Grid.Row="0"
+                           Grid.Column="2"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           Margin="10">
+                <Label Text="Wybierz ilość kolumn:"/>
+            </utils:ViewBox>
             <Picker Grid.Column="2"
                     Grid.Row="1"
                     ItemsSource="{Binding ListOfCols}"
@@ -56,10 +66,14 @@
                     Margin="10"
                     FontSize="30">
             </Picker>
-            <Label Text="Wybierz ilość procent min:"
-                   Grid.Row="0"
-                   Grid.Column="3"
-                   Margin="10"/>
+            <utils:ViewBox Stretch="Fill"
+                           Grid.Row="0"
+                           Grid.Column="3"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           Margin="10">
+                <Label Text="Wybierz ilość procent min:"/>
+            </utils:ViewBox>
             <Picker Grid.Column="3"
                     Grid.Row="1"
                     ItemsSource="{Binding ListOfPercentMins}"
@@ -82,29 +96,18 @@
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
                     <ImageButton Source="{Binding Text, Converter={StaticResource NumberToImageName}}"
-                         Grid.Column="{Binding ColumnIndex}"
-                         Grid.Row="{Binding RowIndex}"
-                         Command="{Binding BoardFieldCommand}"
-                         CommandParameter="{Binding}"
-                         Margin="10"
-                         Background="BlanchedAlmond">
-                        <ImageButton.GestureRecognizers>
+                                 Grid.Column="{Binding ColumnIndex}"
+                                 Grid.Row="{Binding RowIndex}"
+                                 Command="{Binding BoardFieldCommand}"
+                                 CommandParameter="{Binding}"
+                                 Margin="1"
+                                 Background="BlanchedAlmond">
+                        <!--<ImageButton.GestureRecognizers>
                             <TapGestureRecognizer Command="{Binding MineProbabilityCommand}" 
-                                                  CommandParameter="{Binding}"/>
-                        </ImageButton.GestureRecognizers>
-                        <!--<ImageButton.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type ImageButton}">
-                                            <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ImageButton.Style>-->
+                                                  CommandParameter="{Binding}"
+                                                  Buttons="Secondary"
+                                                  NumberOfTapsRequired="2"/>
+                        </ImageButton.GestureRecognizers>-->
                     </ImageButton>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
