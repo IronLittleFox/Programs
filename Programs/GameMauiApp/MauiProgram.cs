@@ -10,6 +10,8 @@ using GameMauiApp.Pages;
 using GameMauiApp.ViewModel;
 using ConnectFourMauiGame.View;
 using ConnectFourMauiGame.ViewModel;
+using CheckersMauiGame.View;
+using CheckersMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -39,6 +41,7 @@ namespace GameMauiApp
                 .Services.AddTransientPopup< TicTacToePopupPage, TicTacToePopupViewModel>()
                 .AddTransientPopup<MinesweeperPopupView, MinesweeperPopupViewModel>()
                 .AddTransientPopup<ConnectFourPopupView, ConnectFourPopupViewModel>()
+                .AddTransientPopup<CheckersPopupView, CheckersPopupViewModel>()
                 .AddTransient<GamePage>()
                 .AddTransient<GameViewModel>()
                 .AddTransient<TicTacToeViewModel>()
@@ -48,7 +51,9 @@ namespace GameMauiApp
                 .AddTransient<MemoryView>()
                 .AddTransient<MemoryViewModel>()
                 .AddTransient<ConnectFourView>()
-                .AddTransient<ConnectFourViewModel>();
+                .AddTransient<ConnectFourViewModel>()
+                .AddTransient<CheckersView>()
+                .AddTransient<CheckersViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
