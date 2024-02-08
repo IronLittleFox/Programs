@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SudokuMauiGame.View.SudokuView"
+             xmlns:utils="clr-namespace:UtilsMaui.Utils;assembly=UtilsMaui"
+             xmlns:ctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <StackLayout>
+        <Grid Height="80">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="9*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="7*"/>
+            </Grid.RowDefinitions>
+
+            <ctk:UniformItemsLayout Grid.Column="0"
+                                    Grid.Row="0"
+                                    Grid.RowSpan="2">
+                <Button Text="Nowa plansza"
+                        Margin="10"
+                        Command="{Binding NewGameCommand}"/>
+                <Button Text="Wyczyść"                    
+                        Margin="10"
+                        Command="{Binding ResetBoardCommand}"/>
+            </ctk:UniformItemsLayout>
+
+            <utils:ViewBox Stretch="Fill"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           Margin="5"
+                           Grid.Column="1"
+                           Grid.Row="0">
+                <Label Text="Wybierz liczbę do wstawienia na planszę:"
+                       FontSize="15"/>
+            </utils:ViewBox>
+
+            <ctk:UniformItemsLayout BindableLayout.ItemsSource="{Binding ListOfNumbers}"
+                                    Grid.Column="1"
+                                    Grid.Row="1"
+                                    VerticalOptions="FillAndExpand"
+                                    HorizontalOptions="FillAndExpand">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <utils:ViewBox Stretch="Fill"
+                                       HorizontalOptions="Fill"
+                                       VerticalOptions="Fill"
+                                       Margin="5">
+                            <Button Command="{Binding NumberToChooseCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="{Binding Number}">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding IsChoose}" 
+                                                 Value="true">
+                                        <Setter Property="Background" Value="Red"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Button"
+                                                 Binding="{Binding IsChoose}" 
+                                                 Value="false">
+                                        <Setter Property="Background" Value="Green"/>
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </utils:ViewBox>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </ctk:UniformItemsLayout>
+        </Grid>
+
+        <Grid utils:GridHelpers.ColumnCount="3"
+              utils:GridHelpers.RowCount="3"
+              BindableLayout.ItemsSource="{Binding ListOfSqure}"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Border Stroke="Black" 
+                            StrokeThickness="1"
+                            Margin="5"
+                            Grid.Column="{Binding ColumnIndex}"
+                            Grid.Row="{Binding RowIndex}">
+                        <Grid utils:GridHelpers.ColumnCount="3"
+                              utils:GridHelpers.RowCount="3"
+                              BindableLayout.ItemsSource="{Binding Fields}"
+                              VerticalOptions="FillAndExpand"
+                              HorizontalOptions="FillAndExpand">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <utils:ViewBox Stretch="Fill"
+                                                   HorizontalOptions="Fill"
+                                                   VerticalOptions="Fill"
+                                                   Margin="5"
+                                                   Grid.Column="{Binding ColumnIndex}"
+                                                   Grid.Row="{Binding RowIndex}">
+                                        <Button Command="{Binding BoardFieldCommand}"
+                                                CommandParameter="{Binding}"
+                                                Text="{Binding Number}">
+                                            <Button.Triggers>
+                                                <DataTrigger TargetType="Button"
+                                                             Binding="{Binding IsEmptyWhenStart}" 
+                                                             Value="true">
+                                                    <Setter Property="Background" Value="Bisque"/>
+                                                    <Setter Property="TextColor" Value="maroon"/>
+                                                </DataTrigger>
+                                            </Button.Triggers>
+                                        </Button>
+                                    </utils:ViewBox>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+    </StackLayout>
+</ContentView>
