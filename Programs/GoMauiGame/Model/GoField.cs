@@ -1,4 +1,5 @@
-﻿using GameUtils.Utils;
+﻿
+using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Windows.Input;
 
 namespace GoMauiGame.Model
 {
-    public class GoField : ViewObserver
+    public class GoField : BindableObject
     {
         private int colIndex;
         public int ColIndex
@@ -32,7 +33,7 @@ namespace GoMauiGame.Model
             }
         }
 
-        private string sign = "";
+        private string sign;
         public string Sign
         {
             get { return sign; }
@@ -43,7 +44,7 @@ namespace GoMauiGame.Model
             }
         }
 
-        private string colorPawn = "";
+        private string colorPawn;
         public string ColorPawn
         {
             get { return colorPawn; }
@@ -54,6 +55,6 @@ namespace GoMauiGame.Model
             }
         }
 
-        public ICommand? BoardFieldCommand { get; set; }
+        public ICommand BoardFieldCommand { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
-namespace GoWpfGame.Converters
+namespace GoMauiGame.Converters
 {
     public class PawnDataToImageName : IValueConverter
     {

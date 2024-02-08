@@ -1,6 +1,7 @@
 ﻿using CheckersMauiGame.View;
 using ConnectFourMauiGame.View;
 using GameMauiApp.Model;
+using GoMauiGame.View;
 using MemoryMauiGame.View;
 using Microsoft.Maui.Controls;
 using MinesweeperMauiGame.View;
@@ -54,7 +55,7 @@ namespace GameMauiApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "Połącz czwórki", GameType = typeof(ConnectFourView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Warcaby", GameType = typeof(CheckersView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Sudoku", GameType=typeof(SudokuView) });
-            //ListOfGame.Add(new GameInfo() { NameOfGame = "Go", PathToGame="GoGame" });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Go", GameType = typeof(GoView) });
 
             //SelectedGame = ListOfGame.FirstOrDefault();
             SelectedGame = ListOfGame.LastOrDefault();

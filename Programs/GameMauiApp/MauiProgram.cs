@@ -14,6 +14,8 @@ using CheckersMauiGame.View;
 using CheckersMauiGame.ViewModel;
 using SudokuMauiGame.View;
 using SudokuMauiGame.ViewModel;
+using GoMauiGame.View;
+using GoMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -58,7 +60,9 @@ namespace GameMauiApp
                 .AddTransient<CheckersView>()
                 .AddTransient<CheckersViewModel>()
                 .AddTransient<SudokuView>()
-                .AddTransient<SudokuViewModel>();
+                .AddTransient<SudokuViewModel>()
+                .AddTransient<GoView>()
+                .AddTransient<GoViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
