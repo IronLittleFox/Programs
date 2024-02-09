@@ -2,6 +2,7 @@
 using ConnectFourMauiGame.View;
 using GameMauiApp.Model;
 using GoMauiGame.View;
+using ImportantDatesMauiGame.View;
 using MemoryMauiGame.View;
 using Microsoft.Maui.Controls;
 using MinesweeperMauiGame.View;
@@ -49,6 +50,7 @@ namespace GameMauiApp.ViewModel
         {
             ListOfGame = new ObservableCollection<GameInfo>();
 
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Ważne daty", GameType = typeof(ImportantDatesView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Kółko i krzyżyk", GameType = typeof(TicTacToeView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Saper", GameType = typeof(MinesweeperView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Memory", GameType = typeof(MemoryView) });
@@ -57,8 +59,8 @@ namespace GameMauiApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "Sudoku", GameType=typeof(SudokuView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Go", GameType = typeof(GoView) });
 
-            //SelectedGame = ListOfGame.FirstOrDefault();
-            SelectedGame = ListOfGame.LastOrDefault();
+            SelectedGame = ListOfGame.FirstOrDefault();
+            //SelectedGame = ListOfGame.LastOrDefault();
         }
 
         public void Dispose()

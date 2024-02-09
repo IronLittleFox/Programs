@@ -16,6 +16,8 @@ using SudokuMauiGame.View;
 using SudokuMauiGame.ViewModel;
 using GoMauiGame.View;
 using GoMauiGame.ViewModel;
+using ImportantDatesMauiGame.View;
+using ImportantDatesMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -62,7 +64,9 @@ namespace GameMauiApp
                 .AddTransient<SudokuView>()
                 .AddTransient<SudokuViewModel>()
                 .AddTransient<GoView>()
-                .AddTransient<GoViewModel>();
+                .AddTransient<GoViewModel>()
+                .AddTransient<ImportantDatesView>()
+                .AddTransient<ImportantDatesViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
