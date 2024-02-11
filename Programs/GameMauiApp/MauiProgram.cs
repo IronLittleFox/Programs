@@ -18,6 +18,8 @@ using GoMauiGame.View;
 using GoMauiGame.ViewModel;
 using ImportantDatesMauiGame.View;
 using ImportantDatesMauiGame.ViewModel;
+using CalculatorMauiGame.View;
+using CalculatorMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -66,7 +68,9 @@ namespace GameMauiApp
                 .AddTransient<GoView>()
                 .AddTransient<GoViewModel>()
                 .AddTransient<ImportantDatesView>()
-                .AddTransient<ImportantDatesViewModel>();
+                .AddTransient<ImportantDatesViewModel>()
+                .AddTransient<MainCalculatorView>()
+                .AddTransient<MainCalculatorViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();

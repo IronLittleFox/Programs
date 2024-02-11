@@ -65,6 +65,7 @@
 
 
 	<ItemGroup>
+	  <ProjectReference Include="..\CalculatorMauiGame\CalculatorMauiGame.csproj" />
 	  <ProjectReference Include="..\CheckersMauiGame\CheckersMauiGame.csproj" />
 	  <ProjectReference Include="..\ConnectFourMauiGame\ConnectFourMauiGame.csproj" />
 	  <ProjectReference Include="..\GoMauiGame\GoMauiGame.csproj" />

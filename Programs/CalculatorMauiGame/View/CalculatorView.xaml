@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalculatorMauiGame.View.CalculatorView">
+    <ContentView.Resources>
+        <Style x:Key="baseButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontSize" Value="40"/>
+            <!--<Setter Property="TextColor" Value="White"/>-->
+            <Style.Triggers>
+                <Trigger TargetType="Button" Property="IsEnabled" Value="True">
+                    <Setter Property="TextColor" Value="Green" />
+                </Trigger>
+                <!--<Trigger TargetType="Button" Property="IsEnabled" Value="False">
+                    <Setter Property="TextColor" Value="Red" />
+                </Trigger>-->
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="numericButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource baseButtonStyle}">
+            <Setter Property="Background" Value="Bisque"/>
+        </Style>
+
+        <Style x:Key="arithmeticOperationsButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource baseButtonStyle}">
+            <Setter Property="Background" Value="AliceBlue"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="clearButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource baseButtonStyle}">
+            <Setter Property="Background" Value="Beige"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="backButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource baseButtonStyle}">
+            <Setter Property="Background" Value="Azure"/>
+            <Setter Property="FontAttributes" Value="Italic"/>
+        </Style>
+
+        <Style TargetType="{x:Type Entry}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+    </ContentView.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Entry Margin="10,10,10,10"
+               Grid.Column="0"
+               Grid.Row="0"
+               Grid.ColumnSpan="6"
+               IsReadOnly="True"
+               Text="{Binding ShowValue, Mode=OneWay}"
+               HorizontalTextAlignment="End"
+               FontSize="45"
+               VerticalTextAlignment="Center"/>
+        <Button Text="1"
+                Grid.Column="0"
+                Grid.Row="1"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="1"/>
+        <Button Text="2"
+                Grid.Column="1"
+                Grid.Row="1"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="2"/>
+        <Button Text="3"
+                Grid.Column="2"
+                Grid.Row="1"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="3"/>
+        <Button Text="4"
+                Grid.Column="0"
+                Grid.Row="2"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="4"/>
+        <Button Text="5"
+                Grid.Column="1"
+                Grid.Row="2"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="5"/>
+        <Button Text="6"
+                Grid.Column="2"
+                Grid.Row="2"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="6"/>
+        <Button Text="7"
+                Grid.Column="0"
+                Grid.Row="3"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="7"/>
+        <Button Text="8"
+                Grid.Column="1"
+                Grid.Row="3"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="8"/>
+        <Button Text="9"
+                Grid.Column="2"
+                Grid.Row="3"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="9"/>
+        <Button Text="0"
+                Grid.Column="0"
+                Grid.Row="4"
+                Grid.ColumnSpan="3"
+                Style="{StaticResource numericButtonStyle}"
+                Command="{Binding NumberCommand}"
+                CommandParameter="0"/>
+        <Button Text="+"
+                Grid.Column="3"
+                Grid.Row="1"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding ArithmeticOperationsCommand}"
+                CommandParameter="+"/>
+        <Button Text="-"
+                Grid.Column="4"
+                Grid.Row="1"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding ArithmeticOperationsCommand}"
+                CommandParameter="-"/>
+        <Button Text="("
+                Grid.Column="5"
+                Grid.Row="1"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding OpenParenthesisOperationsCommand}"
+                CommandParameter="("
+                IsEnabled ="{Binding IsParenthesisAvailable}"/>
+        <Button Text="*"
+                Grid.Column="3"
+                Grid.Row="2"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding ArithmeticOperationsCommand}"
+                CommandParameter="*"/>
+        <Button Text="/"
+                Grid.Column="4"
+                Grid.Row="2"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding ArithmeticOperationsCommand}"
+                CommandParameter="/"/>
+        <Button Text=")"
+                Grid.Column="5"
+                Grid.Row="2"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding CloseParenthesisOperationsCommand}"
+                CommandParameter=")"
+                IsEnabled ="{Binding IsParenthesisAvailable}"/>
+        <Button Text="%"
+                Grid.Column="3"
+                Grid.Row="3"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding ArithmeticOperationsCommand}"
+                CommandParameter="%"/>
+        <Button Text="C"
+                Grid.Column="4"
+                Grid.Row="3"
+                Style="{StaticResource clearButtonStyle}"
+                Command="{Binding ClearCommand}"/>
+        <Button Text="^"
+                Grid.Column="5"
+                Grid.Row="3"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding ArithmeticOperationsCommand}"
+                CommandParameter="^"/>
+        <Button Text="="
+                Grid.Column="3"
+                Grid.Row="4"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding EqualCommand}"/>
+        <Button Text="B"
+                Grid.Column="4"
+                Grid.Row="4"
+                Style="{StaticResource backButtonStyle}"
+                Command="{Binding BackCommand}"/>
+        <Button Text="+/-"
+                Grid.Column="5"
+                Grid.Row="4"
+                Style="{StaticResource arithmeticOperationsButtonStyle}"
+                Command="{Binding FunctionCommand}"
+                CommandParameter="neg"/>
+    </Grid>
+</ContentView>

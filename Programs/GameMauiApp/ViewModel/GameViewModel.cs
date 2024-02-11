@@ -1,4 +1,5 @@
-﻿using CheckersMauiGame.View;
+﻿using CalculatorMauiGame.View;
+using CheckersMauiGame.View;
 using ConnectFourMauiGame.View;
 using GameMauiApp.Model;
 using GoMauiGame.View;
@@ -51,6 +52,7 @@ namespace GameMauiApp.ViewModel
             ListOfGame = new ObservableCollection<GameInfo>();
 
             ListOfGame.Add(new GameInfo() { NameOfGame = "Ważne daty", GameType = typeof(ImportantDatesView) });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Kalkulator", GameType = typeof(MainCalculatorView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Kółko i krzyżyk", GameType = typeof(TicTacToeView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Saper", GameType = typeof(MinesweeperView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Memory", GameType = typeof(MemoryView) });
