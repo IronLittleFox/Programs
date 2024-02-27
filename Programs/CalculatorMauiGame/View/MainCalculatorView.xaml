@@ -9,7 +9,9 @@
                 ItemsSource="{Binding ListOfViewModel}"
                 SelectedItem="{Binding ChoseVM}"
                 ItemDisplayBinding="{Binding NameOfViewModel}"/>
-        <local:CalculatorView BindingContext="{Binding ChoseVM}"/>
+        <local:CalculatorView BindingContext="{Binding ChoseVM}"
+                              HorizontalOptions="FillAndExpand"
+                              VerticalOptions="FillAndExpand"/>
         <!--<usercontrol:CalculatorUC DataContext="{Binding ChoseVM}"/>-->
     </StackLayout>
 </ContentView>

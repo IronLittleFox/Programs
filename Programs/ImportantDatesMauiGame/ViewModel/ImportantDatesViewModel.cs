@@ -98,222 +98,172 @@ namespace ImportantDatesMauiGame.ViewModel
             }
         }
 
-        private Task? timeToEasterTask;
-        private Task? timeToIssuingGradesRorFifthGradesTask;
-        private Task? timeUntilTheEndOfTheSchoolYearForFifthGradersTask;
-        private Task? timeUntilTheLongMayWeekendTask;
-        private Task? timeUntilTheExamsStartTask;
-        private Task? timeToIssueGradesForTheRemainingClassesTask;
-        private Task? timeUntilTheEndOfTheSchoolYearForTheRemainingClassesTask;
-        private Task? timeUntilTheEndOfTheHolidayTask;
+        private Task? countTimeTask;
         private bool stopTasks = false;
         public ImportantDatesViewModel()
         {
-            timeToEasterTask = Task.Run(CountTimeToEaster);
-            timeToIssuingGradesRorFifthGradesTask = Task.Run(CountTimeToIssuingGradesRorFifthGrades);
-            timeUntilTheEndOfTheSchoolYearForFifthGradersTask = Task.Run(CountTimeUntilTheEndOfTheSchoolYearForFifthGraders);
-            timeUntilTheLongMayWeekendTask = Task.Run(CountTimeUntilTheLongMayWeekend);
-            timeUntilTheExamsStartTask = Task.Run(CountTimeUntilTheExamsStart);
-            timeToIssueGradesForTheRemainingClassesTask = Task.Run(CountTimeToIssueGradesForTheRemainingClasses);
-            timeUntilTheEndOfTheSchoolYearForTheRemainingClassesTask = Task.Run(CountTimeUntilTheEndOfTheSchoolYearForTheRemainingClasses);
-            timeUntilTheEndOfTheHolidayTask = Task.Run(CountTimeUntilTheEndOfTheHoliday);
+            countTimeTask = Task.Run(CountTime);
+        }
+
+        private void CountTime()
+        {
+            while (!stopTasks)
+            {
+                CountTimeToEaster();
+                CountTimeToIssuingGradesRorFifthGrades();
+                CountTimeUntilTheEndOfTheSchoolYearForFifthGraders();
+                CountTimeUntilTheLongMayWeekend();
+                CountTimeUntilTheExamsStart();
+                CountTimeToIssueGradesForTheRemainingClasses();
+                CountTimeUntilTheEndOfTheSchoolYearForTheRemainingClasses();
+                CountTimeUntilTheEndOfTheHoliday();
+                Thread.Sleep(1);
+            }
         }
 
         private void CountTimeUntilTheEndOfTheHoliday()
         {
             DateTime time = new DateTime(2024, 9, 2);
-            while (!stopTasks)
+
+            TimeSpan t = time - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeUntilTheEndOfTheHoliday = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = time - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeUntilTheEndOfTheHoliday = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeUntilTheEndOfTheHoliday = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeUntilTheEndOfTheHoliday = "Czas minął.";
             }
+
         }
 
         private void CountTimeUntilTheEndOfTheSchoolYearForTheRemainingClasses()
         {
             DateTime time = new DateTime(2024, 6, 21, 10, 0, 0);
-            while (!stopTasks)
+            TimeSpan t = time - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeUntilTheEndOfTheSchoolYearForTheRemainingClasses = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = time - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeUntilTheEndOfTheSchoolYearForTheRemainingClasses = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeUntilTheEndOfTheSchoolYearForTheRemainingClasses = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeUntilTheEndOfTheSchoolYearForTheRemainingClasses = "Czas minął.";
             }
         }
 
         private void CountTimeToIssueGradesForTheRemainingClasses()
         {
             DateTime time = new DateTime(2024, 6, 15);
-            while (!stopTasks)
+            TimeSpan t = time - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeToIssueGradesForTheRemainingClasses = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = time - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeToIssueGradesForTheRemainingClasses = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeToIssueGradesForTheRemainingClasses = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeToIssueGradesForTheRemainingClasses = "Czas minął.";
             }
         }
 
         private void CountTimeUntilTheExamsStart()
         {
             DateTime time = new DateTime(2024, 5, 5);
-            while (!stopTasks)
+            TimeSpan t = time - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeUntilTheExamsStart = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = time - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeUntilTheExamsStart = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeUntilTheExamsStart = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeUntilTheExamsStart = "Czas minął.";
             }
         }
 
         private void CountTimeUntilTheLongMayWeekend()
         {
             DateTime time = new DateTime(2024, 4, 30);
-            while (!stopTasks)
+            TimeSpan t = time - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeUntilTheLongMayWeekend = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = time - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeUntilTheLongMayWeekend = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeUntilTheLongMayWeekend = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeUntilTheLongMayWeekend = "Czas minął.";
             }
         }
 
         private void CountTimeUntilTheEndOfTheSchoolYearForFifthGraders()
         {
             DateTime time = new DateTime(2024, 4, 26, 10, 0, 0);
-            while (!stopTasks)
+            TimeSpan t = time - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeUntilTheEndOfTheSchoolYearForFifthGraders = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = time - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeUntilTheEndOfTheSchoolYearForFifthGraders = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeUntilTheEndOfTheSchoolYearForFifthGraders = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeUntilTheEndOfTheSchoolYearForFifthGraders = "Czas minął.";
             }
         }
 
         private void CountTimeToIssuingGradesRorFifthGrades()
         {
             DateTime time = new DateTime(2024, 4, 20);
-            while (!stopTasks)
+            TimeSpan t = time - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeToIssuingGradesRorFifthGrades = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = time - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeToIssuingGradesRorFifthGrades = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeToIssuingGradesRorFifthGrades = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeToIssuingGradesRorFifthGrades = "Czas minął.";
             }
         }
 
         private void CountTimeToEaster()
         {
             DateTime easterTime = new DateTime(2024, 3, 28);
-            while (!stopTasks)
+            TimeSpan t = easterTime - DateTime.Now;
+            if (t >= TimeSpan.Zero)
+                TimeToEaster = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
+                                                        t.Days,
+                                                        t.Hours,
+                                                        t.Minutes,
+                                                        t.Seconds,
+                                                        t.Milliseconds);
+            else
             {
-                TimeSpan t = easterTime - DateTime.Now;
-                if (t >= TimeSpan.Zero)
-                    TimeToEaster = string.Format("{0:D2}d:{1:D2}h:{2:D2}m:{3:D2}s:{4:D3}ms",
-                                                            t.Days,
-                                                            t.Hours,
-                                                            t.Minutes,
-                                                            t.Seconds,
-                                                            t.Milliseconds);
-                else
-                {
-                    TimeToEaster = "Czas minął.";
-                    break;
-                }
-                Thread.Sleep(1);
+                TimeToEaster = "Czas minął.";
             }
         }
 
         public void Dispose()
         {
             stopTasks = true;
-            if (timeToEasterTask != null)
-                timeToEasterTask.Wait();
-            if (timeToIssuingGradesRorFifthGradesTask != null)
-                timeToIssuingGradesRorFifthGradesTask.Wait();
-            if (timeUntilTheEndOfTheSchoolYearForFifthGradersTask != null)
-                timeUntilTheEndOfTheSchoolYearForFifthGradersTask.Wait();
-            if (timeUntilTheLongMayWeekendTask != null)
-                timeUntilTheLongMayWeekendTask.Wait();
-            if (timeUntilTheExamsStartTask != null)
-                timeUntilTheExamsStartTask.Wait();
-            if (timeToIssueGradesForTheRemainingClassesTask != null)
-                timeToIssueGradesForTheRemainingClassesTask.Wait();
-            if (timeUntilTheEndOfTheSchoolYearForTheRemainingClassesTask != null)
-                timeUntilTheEndOfTheSchoolYearForTheRemainingClassesTask.Wait();
-            if (timeUntilTheEndOfTheHolidayTask != null)
-                timeUntilTheEndOfTheHolidayTask.Wait();
+            if (countTimeTask != null)
+                countTimeTask.Wait();
         }
     }
 }

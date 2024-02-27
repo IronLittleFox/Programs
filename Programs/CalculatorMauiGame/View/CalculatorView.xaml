@@ -41,7 +41,8 @@
             <Setter Property="FontAttributes" Value="Bold"/>
         </Style>
     </ContentView.Resources>
-    <Grid>
+    
+    <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>

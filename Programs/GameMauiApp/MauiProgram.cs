@@ -22,6 +22,7 @@ using CalculatorMauiGame.View;
 using CalculatorMauiGame.ViewModel;
 using ChessMauiGame.View;
 using ChessMauiGame.ViewModel;
+using Microsoft.Maui.LifecycleEvents;
 
 namespace GameMauiApp
 {
@@ -48,7 +49,7 @@ namespace GameMauiApp
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
-                .Services.AddTransientPopup< TicTacToePopupPage, TicTacToePopupViewModel>()
+                .Services.AddTransientPopup<TicTacToePopupPage, TicTacToePopupViewModel>()
                 .AddTransientPopup<MinesweeperPopupView, MinesweeperPopupViewModel>()
                 .AddTransientPopup<ConnectFourPopupView, ConnectFourPopupViewModel>()
                 .AddTransientPopup<CheckersPopupView, CheckersPopupViewModel>()
@@ -79,7 +80,31 @@ namespace GameMauiApp
                 .AddTransient<ChessViewModel>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
+#endif
+
+#if WINDOWS
+            builder.ConfigureLifecycleEvents(events =>
+            {
+                // Make sure to add "using Microsoft.Maui.LifecycleEvents;" in the top of the file 
+                events.AddWindows(windowsLifecycleBuilder =>
+                {
+                    windowsLifecycleBuilder.OnWindowCreated(window =>
+                    {
+                        window.ExtendsContentIntoTitleBar = false;
+                        var handle = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                        var id = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(handle);
+                        var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(id);
+                        switch (appWindow.Presenter)
+                        {
+                            case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
+                                overlappedPresenter.SetBorderAndTitleBar(false, false);
+                                overlappedPresenter.Maximize();
+                                break;
+                        }
+                    });
+                });
+            });
 #endif
 
             //return builder.Build();
@@ -87,6 +112,7 @@ namespace GameMauiApp
 
             //we must initialize our service helper before using it
             ServiceHelper.Initialize(app.Services);
+
 
             return app;
         }
