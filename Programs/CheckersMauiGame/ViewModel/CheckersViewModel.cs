@@ -154,10 +154,7 @@ namespace CheckersMauiGame.ViewModel
                                 chooseBoardSquare = null;
                             }
                         }
-                        )
-                    {
-
-                    };
+                        );
                 return squareCommand;
             }
         }

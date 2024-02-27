@@ -1,5 +1,6 @@
 ﻿using CalculatorMauiGame.View;
 using CheckersMauiGame.View;
+using ChessMauiGame.View;
 using ConnectFourMauiGame.View;
 using GameMauiApp.Model;
 using GoMauiGame.View;
@@ -60,9 +61,10 @@ namespace GameMauiApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "Warcaby", GameType = typeof(CheckersView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Sudoku", GameType=typeof(SudokuView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Go", GameType = typeof(GoView) });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Szachy", GameType = typeof(ChessView) });
 
-            SelectedGame = ListOfGame.FirstOrDefault();
-            //SelectedGame = ListOfGame.LastOrDefault();
+            //SelectedGame = ListOfGame.FirstOrDefault();
+            SelectedGame = ListOfGame.LastOrDefault();
         }
 
         public void Dispose()

@@ -20,6 +20,8 @@ using ImportantDatesMauiGame.View;
 using ImportantDatesMauiGame.ViewModel;
 using CalculatorMauiGame.View;
 using CalculatorMauiGame.ViewModel;
+using ChessMauiGame.View;
+using ChessMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -51,6 +53,8 @@ namespace GameMauiApp
                 .AddTransientPopup<ConnectFourPopupView, ConnectFourPopupViewModel>()
                 .AddTransientPopup<CheckersPopupView, CheckersPopupViewModel>()
                 .AddTransientPopup<SudokuPopupView, SudokuPopupViewModel>()
+                .AddTransientPopup<ChessPawnPomotionPopupView, ChessPawnPomotionPopupViewModel>()
+                .AddTransientPopup<ChessMessagePopupView, ChessMessagePopupViewModel>()
                 .AddTransient<GamePage>()
                 .AddTransient<GameViewModel>()
                 .AddTransient<TicTacToeViewModel>()
@@ -70,7 +74,9 @@ namespace GameMauiApp
                 .AddTransient<ImportantDatesView>()
                 .AddTransient<ImportantDatesViewModel>()
                 .AddTransient<MainCalculatorView>()
-                .AddTransient<MainCalculatorViewModel>();
+                .AddTransient<MainCalculatorViewModel>()
+                .AddTransient<ChessView>()
+                .AddTransient<ChessViewModel>();
 
 #if DEBUG
     		builder.Logging.AddDebug();

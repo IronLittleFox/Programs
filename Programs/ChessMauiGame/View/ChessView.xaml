@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChessMauiGame.View.ChessView"
+             xmlns:utils="clr-namespace:UtilsMaui.Utils;assembly=UtilsMaui"
+             xmlns:converters="clr-namespace:ChessMauiGame.Converters">
+    <ContentView.Resources>
+        <converters:PawnDataToImageName x:Key="PawnDataToImageName"/>
+        <converters:ColorToSolidColorBrush x:Key="ColorToSolidColorBrush"/>
+        <converters:ColorNameToColor x:Key="ColorNameToColor"/>
+    </ContentView.Resources>
+    <StackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Text="Nowa gra"
+                    HeightRequest="50"
+                    Margin="10"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Command="{Binding NewGameCommand}"/>
+            <Label Text="Aktualny gracz:" 
+                   Grid.Row="0"
+                   Grid.Column="1"/>
+            <Border Grid.Column="1"
+                    Grid.Row="1"
+                    Stroke="Black" 
+                    StrokeThickness="1"
+                    Margin="5">
+                <Rectangle Fill="{Binding CurrentGamePlayer.PlayerColor, Converter={StaticResource ColorToSolidColorBrush}}"/>
+            </Border>
+            <Grid Grid.Column="1"
+                  Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Text="Roszada krótka (dodane w przyszłości)"
+                        Grid.Column="0"/>
+                <Button Text="Roszada długa (dodane w przyszłości)"
+                        Grid.Column="1"/>
+                <Label Text="Bicie w przelocie (dodane w przyszłości)"
+                       Grid.Column="2"/>
+            </Grid>
+        </Grid>
+        <Grid utils:GridHelpers.ColumnCount="{Binding ColumnCount}"
+              utils:GridHelpers.RowCount="{Binding RowCount}"
+              BindableLayout.ItemsSource="{Binding Board}"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <Border Stroke="Transparent"
+                            StrokeThickness="3"
+                            Grid.Column="{Binding ColumnIndex}"
+                            Grid.Row="{Binding RowIndex}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding IsPossibleMove}" 
+                                         Value="true">
+                                <Setter Property="Stroke" Value="Blue"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Border"
+                                         Binding="{Binding IsChessPieceMustMove}" 
+                                         Value="true">
+                                <Setter Property="Stroke" Value="Green"/>
+                            </DataTrigger>
+                        </Border.Triggers>
+                        <ImageButton Command="{Binding SquareCommand}"
+                                     CommandParameter="{Binding}"
+                                     BackgroundColor="{Binding SquareColor}">
+                            <ImageButton.Source>
+                                <MultiBinding Converter="{StaticResource PawnDataToImageName}">
+                                    <Binding Path="ChessPiece.Color"/>
+                                    <Binding Path="ChessPiece.Type"/>
+                                </MultiBinding>
+                            </ImageButton.Source>
+                        </ImageButton>
+                    </Border>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+    </StackLayout>
+</ContentView>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctk:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           x:Class="ChessMauiGame.View.ChessPawnPomotionPopupView"
+           xmlns:ctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+           xmlns:utils="clr-namespace:UtilsMaui.Utils;assembly=UtilsMaui"
+           xmlns:converters="clr-namespace:ChessMauiGame.Converters"
+           CanBeDismissedByTappingOutsideOfPopup="false">
+    <ctk:Popup.Resources>
+        <converters:PawnDataToImageName x:Key="PawnDataToImageName"/>
+    </ctk:Popup.Resources>
+    <StackLayout>
+        <Label Text="Gratulacje!!!!"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
+        <Label Text="Wybierz na jaką figure promujesz pionka:"
+               VerticalOptions="Center" 
+               HorizontalOptions="Center" />
+
+        <ctk:UniformItemsLayout BindableLayout.ItemsSource="{Binding PieceNames}"
+                                Grid.Column="1"
+                                Grid.Row="1"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <ImageButton Command="{Binding CloseCommand}"
+                                 CommandParameter="{Binding}"
+                                 HeightRequest="50"
+                                 WidthRequest="50"
+                                 Margin="10">
+                        <ImageButton.Source>
+                            <MultiBinding Converter="{StaticResource PawnDataToImageName}">
+                                <Binding Path="Color"/>
+                                <Binding Path="Type"/>
+                            </MultiBinding>
+                        </ImageButton.Source>
+
+                    </ImageButton>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </ctk:UniformItemsLayout>
+    </StackLayout>
+</ctk:Popup>
