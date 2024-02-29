@@ -83,10 +83,9 @@ namespace ChessMauiGame.ViewModel
                                 return;
 
                             //jeśli kliknięto na pole które nie jest pionkiem które może sie ruszyć
-                            if (!currentPlayerBoardSquaresToMove.Any(x => x.boardSquare == chooseBoardSquare))
-                                return;
                             //jeśli kliknięto na pole które nie znajduje się na liście pól możliwych do ruchu
-                            if (!currentPlayerBoardSquaresToMove.Any(x => x.listOfBoardSquareMove.Any(y => y == chooseBoardSquare && y.IsPossibleMove)))
+                            if (!(currentPlayerBoardSquaresToMove.Any(x => x.boardSquare == chooseBoardSquare)
+                            || currentPlayerBoardSquaresToMove.Any(x => x.listOfBoardSquareMove.Any(y => y == chooseBoardSquare && y.IsPossibleMove))))
                                 return;
 
                             //kliknięto na pole z pionkiem który może się ruszyć
@@ -193,9 +192,12 @@ namespace ChessMauiGame.ViewModel
                                 }
                             }
 
+                            GamePlayer prevPlayer2 = CurrentGamePlayer;
                             CurrentGamePlayer = gamePlayers.GetNext();
 
-                            currentPlayerBoardSquaresToMove = FindAllPawnToMove(board, CurrentGamePlayer);
+                            //currentPlayerBoardSquaresToMove = FindAllPawnToMove(board, CurrentGamePlayer);
+                            //pobieramy ruchy dla aktualnego gracza ale takie aby nie można było odsłonić własnego króla
+                            currentPlayerBoardSquaresToMove = GetPossibleKingDefenseMoves(prevPlayer2);
 
                             //jeśli lista ruchów jest pusta
                             if (currentPlayerBoardSquaresToMove.Count == 0)
@@ -211,14 +213,137 @@ namespace ChessMauiGame.ViewModel
 
                             currentPlayerBoardSquaresToMove.ForAll(x => x.boardSquare.IsChessPieceMustMove = true);
                             selectedPawnOnBoardSquare = null;
+
+                            KingsideCastling = CheckKingsideCastling(prevPlayer2);
+                            QueensideCastling = CheckQueensideCastling(prevPlayer2);
                         });
                 return squareCommand;
+            }
+        }
+        
+        private bool kingsideCastling;
+
+        public bool KingsideCastling
+        {
+            get
+            {
+                return kingsideCastling;
+            }
+            set
+            {
+                kingsideCastling = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool queensideCastling;
+        public bool QueensideCastling
+        {
+            get
+            {
+                return queensideCastling;
+            }
+            set
+            {
+                queensideCastling = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ICommand? kingsideCastlingCommand = null;
+        public ICommand KingsideCastlingCommand
+        {
+            get
+            {
+                if (kingsideCastlingCommand == null)
+                    kingsideCastlingCommand = new Command<object>(
+                        o =>
+                        {
+                            BoardSquare? boardSquareWidthKing = board.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
+                                                                        && bs.ChessPiece is King);
+
+                            BoardSquare kingMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                          && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex + 2);
+
+                            kingMove.ChessPiece = boardSquareWidthKing.ChessPiece;
+                            kingMove.ChessPiece.IsFirstMove = false;
+                            boardSquareWidthKing.ChessPiece = falseChessPiece;
+
+                            BoardSquare? boardSquareWidthKingRook = board.FirstOrDefault(bs => bs.ColumnIndex == ColumnCount - 1
+                                                                                  && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+
+                            BoardSquare rookMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                                           && bs.ColumnIndex == kingMove.ColumnIndex - 1);
+                            
+
+                            currentPlayerBoardSquaresToMove.ForAll(x => x.boardSquare.IsChessPieceMustMove = false);
+                            currentPlayerBoardSquaresToMove
+                                    .Where(x => x.boardSquare == selectedPawnOnBoardSquare)
+                                    .ForAll(x => x.listOfBoardSquareMove.ForAll(z => z.IsPossibleMove = false));
+
+                            rookMove.IsPossibleMove = true;
+                            selectedPawnOnBoardSquare = boardSquareWidthKingRook;
+                            currentPlayerBoardSquaresToMove = new List<(BoardSquare boardSquare, List<BoardSquare> listOfBoardSquareMove)>()
+                            {
+                                (selectedPawnOnBoardSquare, new List<BoardSquare>(){rookMove})
+                            };
+
+                            squareCommand.Execute(rookMove);
+                        }
+                        );
+                return kingsideCastlingCommand;
+            }
+        }
+
+        private ICommand? queensideCastlingCommand = null;
+        public ICommand QueensideCastlingCommand
+        {
+            get
+            {
+                if (queensideCastlingCommand == null)
+                    queensideCastlingCommand = new Command<object>(
+                        o =>
+                        {
+                            BoardSquare? boardSquareWidthKing = board.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
+                                                                        && bs.ChessPiece is King);
+
+                            BoardSquare kingMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                          && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex - 2);
+
+                            kingMove.ChessPiece = boardSquareWidthKing.ChessPiece;
+                            kingMove.ChessPiece.IsFirstMove = false;
+                            boardSquareWidthKing.ChessPiece = falseChessPiece;
+
+                            BoardSquare? boardSquareWidthQeenRook = board.FirstOrDefault(bs => bs.ColumnIndex == 0
+                                                                                               && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+
+                            BoardSquare rookMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                                           && bs.ColumnIndex == kingMove.ColumnIndex + 1);
+
+
+                            currentPlayerBoardSquaresToMove.ForAll(x => x.boardSquare.IsChessPieceMustMove = false);
+                            currentPlayerBoardSquaresToMove
+                                    .Where(x => x.boardSquare == selectedPawnOnBoardSquare)
+                                    .ForAll(x => x.listOfBoardSquareMove.ForAll(z => z.IsPossibleMove = false));
+
+                            rookMove.IsPossibleMove = true;
+                            selectedPawnOnBoardSquare = boardSquareWidthQeenRook;
+                            currentPlayerBoardSquaresToMove = new List<(BoardSquare boardSquare, List<BoardSquare> listOfBoardSquareMove)>()
+                            {
+                                (selectedPawnOnBoardSquare, new List<BoardSquare>(){rookMove})
+                            };
+
+                            squareCommand.Execute(rookMove);
+                        }
+                        );
+                return queensideCastlingCommand;
             }
         }
 
         private IPopupService popupService;
         private CircularObservableCollection<GamePlayer> gamePlayers;
         private Dictionary<GamePlayer, int> endOfPlayerRow;
+        private Dictionary<GamePlayer, int> startOfPlayerRow;
         private bool isEndGame = false;
         private string whiteColorField = "White";
         private string darkColorField = "#FFC5C5C5";
@@ -240,6 +365,7 @@ namespace ChessMauiGame.ViewModel
                 new GamePlayer() {PlayerColor = "black", ChessPieces = new List<ChessPiece>() }
             };
             endOfPlayerRow = new Dictionary<GamePlayer, int>() { { gamePlayers[0], RowCount - 1 }, { gamePlayers[1], 0 } };
+            startOfPlayerRow = new Dictionary<GamePlayer, int>() { { gamePlayers[0], 0 }, { gamePlayers[1], RowCount - 1 } };
 
             listOfChessPiecesFirstRow =
             [
@@ -307,6 +433,7 @@ namespace ChessMauiGame.ViewModel
             currentPlayerBoardSquaresToMove = FindAllPawnToMove(board, CurrentGamePlayer);
             currentPlayerBoardSquaresToMove.ForAll(x => x.boardSquare.IsChessPieceMustMove = true);
             selectedPawnOnBoardSquare = null;
+            KingsideCastling = false;
         }
 
         private List<(BoardSquare boardSquare, List<BoardSquare> listOfBoardSquareMove)> FindAllPawnToMove(ObservableCollection<BoardSquare> boardToCheck, GamePlayer gamePlayer)
@@ -396,6 +523,160 @@ namespace ChessMauiGame.ViewModel
 
             return returns;
         }
+
+        private bool CheckKingsideCastling(GamePlayer prevPlayer)
+        {
+            BoardSquare? boardSquareWidthKing = board.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
+                                                                        && bs.ChessPiece is King);
+
+            BoardSquare? boardSquareWidthKingRook = board.FirstOrDefault(bs => bs.ColumnIndex == ColumnCount - 1
+                                                                  && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+            //król nie wykonał ruchu od początku partii,
+            if (boardSquareWidthKing is null
+                || !boardSquareWidthKing.ChessPiece.IsFirstMove)
+                return false;
+
+            //wieża uczestnicząca w roszadzie nie wykonała ruchu od początku partii,
+            if (boardSquareWidthKingRook is null
+                || boardSquareWidthKingRook.ChessPiece is not Rook
+                || !boardSquareWidthKingRook.ChessPiece.IsFirstMove)
+                return false;
+
+            //pomiędzy królem i tą wieżą nie ma innych bierek,
+            IEnumerable<BoardSquare> boardSquaresBeetwen = board.Where(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                                            && bs.ColumnIndex > boardSquareWidthKing.ColumnIndex
+                                                                            && bs.ColumnIndex < boardSquareWidthKingRook.ColumnIndex);
+
+            if (boardSquaresBeetwen.Any(bs => bs.ChessPiece != falseChessPiece))
+                return false;
+
+            //król nie jest szachowany,
+            //ta metoda będzie wywołana kiedy król nie jest szachowany
+
+            //pole, przez które przejdzie król nie jest atakowane przez bierki przeciwnika,
+            var prevPlayerBoardSquaresToMove = FindAllPawnToMove(board, prevPlayer);
+
+            IEnumerable<BoardSquare> kingRightMove = board.Where(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                                && bs.ColumnIndex > boardSquareWidthKing.ColumnIndex
+                                                                && bs.ColumnIndex < boardSquareWidthKing.ColumnIndex + 3);
+
+            if (prevPlayerBoardSquaresToMove.Any(x => x.listOfBoardSquareMove.Any(y => kingRightMove.Contains(y))))
+                return false;
+
+            //roszada nie spowoduje, że król znajdzie się pod szachem.
+            ObservableCollection<BoardSquare> copyOfBoard = new ObservableCollection<BoardSquare>();
+            foreach (BoardSquare bs in board)
+            {
+                copyOfBoard.Add(new BoardSquare()
+                {
+                    ColumnIndex = bs.ColumnIndex,
+                    RowIndex = bs.RowIndex,
+                    ChessPiece = bs.ChessPiece,
+                });
+            }
+
+            BoardSquare? copyBoardSquareWidthKing = copyOfBoard.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
+                                                                                  && bs.ChessPiece is King);
+
+            BoardSquare? copyBoardSquareWidthKingRook = copyOfBoard.FirstOrDefault(bs => bs.ColumnIndex == ColumnCount - 1
+                                                                                      && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+
+            BoardSquare kingMove = copyOfBoard.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                          && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex + 2);
+            BoardSquare rookMove = copyOfBoard.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                           && bs.ColumnIndex == kingMove.ColumnIndex - 1);
+
+            kingMove.ChessPiece = copyBoardSquareWidthKing.ChessPiece;
+            copyBoardSquareWidthKing.ChessPiece = falseChessPiece;
+
+            rookMove.ChessPiece = copyBoardSquareWidthKingRook.ChessPiece;
+            copyBoardSquareWidthKingRook.ChessPiece = falseChessPiece;
+
+            var listOfMovesToCheck = FindAllPawnToMove(copyOfBoard, prevPlayer);
+
+            if (listOfMovesToCheck.Any(x => x.listOfBoardSquareMove.Any(y => y == kingMove)))
+                return false;
+
+            return true;
+        }
+
+        private bool CheckQueensideCastling(GamePlayer prevPlayer)
+        {
+
+            BoardSquare? boardSquareWidthKing = board.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
+                                                                        && bs.ChessPiece is King);
+
+            BoardSquare? boardSquareWidthQeenRook = board.FirstOrDefault(bs => bs.ColumnIndex == 0
+                                                                  && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+            //król nie wykonał ruchu od początku partii,
+            if (boardSquareWidthKing is null
+                || !boardSquareWidthKing.ChessPiece.IsFirstMove)
+                return false;
+
+            //wieża uczestnicząca w roszadzie nie wykonała ruchu od początku partii,
+            if (boardSquareWidthQeenRook is null
+                || boardSquareWidthQeenRook.ChessPiece is not Rook
+                || !boardSquareWidthQeenRook.ChessPiece.IsFirstMove)
+                return false;
+
+            //pomiędzy królem i tą wieżą nie ma innych bierek,
+            IEnumerable<BoardSquare> boardSquaresBeetwen = board.Where(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                                            && bs.ColumnIndex < boardSquareWidthKing.ColumnIndex
+                                                                            && bs.ColumnIndex > boardSquareWidthQeenRook.ColumnIndex);
+
+            if (boardSquaresBeetwen.Any(bs => bs.ChessPiece != falseChessPiece))
+                return false;
+
+            //król nie jest szachowany,
+            //ta metoda będzie wywołana kiedy król nie jest szachowany
+
+            //pole, przez które przejdzie król nie jest atakowane przez bierki przeciwnika,
+            var prevPlayerBoardSquaresToMove = FindAllPawnToMove(board, prevPlayer);
+
+            IEnumerable<BoardSquare> kingLeftMove = board.Where(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                                && bs.ColumnIndex < boardSquareWidthKing.ColumnIndex
+                                                                && bs.ColumnIndex > boardSquareWidthKing.ColumnIndex - 3);
+
+            if (prevPlayerBoardSquaresToMove.Any(x => x.listOfBoardSquareMove.Any(y => kingLeftMove.Contains(y))))
+                return false;
+
+            //roszada nie spowoduje, że król znajdzie się pod szachem.
+            ObservableCollection<BoardSquare> copyOfBoard = new ObservableCollection<BoardSquare>();
+            foreach (BoardSquare bs in board)
+            {
+                copyOfBoard.Add(new BoardSquare()
+                {
+                    ColumnIndex = bs.ColumnIndex,
+                    RowIndex = bs.RowIndex,
+                    ChessPiece = bs.ChessPiece,
+                });
+            }
+
+            BoardSquare? copyBoardSquareWidthKing = copyOfBoard.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
+                                                                                  && bs.ChessPiece is King);
+
+            BoardSquare? copyBoardSquareWidthKingRook = copyOfBoard.FirstOrDefault(bs => bs.ColumnIndex == 0
+                                                                                      && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+
+            BoardSquare kingMove = copyOfBoard.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                          && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex - 2);
+            BoardSquare rookMove = copyOfBoard.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
+                                                           && bs.ColumnIndex == kingMove.ColumnIndex + 1);
+
+            kingMove.ChessPiece = copyBoardSquareWidthKing.ChessPiece;
+            copyBoardSquareWidthKing.ChessPiece = falseChessPiece;
+
+            rookMove.ChessPiece = copyBoardSquareWidthKingRook.ChessPiece;
+            copyBoardSquareWidthKingRook.ChessPiece = falseChessPiece;
+
+            var listOfMovesToCheck = FindAllPawnToMove(copyOfBoard, prevPlayer);
+
+            if (listOfMovesToCheck.Any(x => x.listOfBoardSquareMove.Any(y => y == kingMove)))
+                return false;
+
+            return true;
+        }
+
 
         public void Dispose()
         {

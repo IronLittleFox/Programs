@@ -98,8 +98,8 @@ namespace GameMauiApp
                         switch (appWindow.Presenter)
                         {
                             case Microsoft.UI.Windowing.OverlappedPresenter overlappedPresenter:
-                                overlappedPresenter.SetBorderAndTitleBar(false, false);
-                                overlappedPresenter.Maximize();
+                                //overlappedPresenter.SetBorderAndTitleBar(false, false);
+                                //overlappedPresenter.Maximize();
                                 break;
                         }
                     });

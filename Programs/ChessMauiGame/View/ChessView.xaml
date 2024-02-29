@@ -44,10 +44,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Text="Roszada krótka (dodane w przyszłości)"
-                        Grid.Column="0"/>
-                <Button Text="Roszada długa (dodane w przyszłości)"
-                        Grid.Column="1"/>
+                <Button Text="Roszada krótka"
+                        Grid.Column="0"
+                        IsEnabled="{Binding KingsideCastling}"
+                        Command="{Binding KingsideCastlingCommand}"/>
+                <Button Text="Roszada długa"
+                        Grid.Column="1"
+                        IsEnabled="{Binding QueensideCastling}"
+                        Command="{Binding QueensideCastlingCommand}"/>
                 <Label Text="Bicie w przelocie (dodane w przyszłości)"
                        Grid.Column="2"/>
             </Grid>
