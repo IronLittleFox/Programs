@@ -46,7 +46,7 @@ namespace ConnectFourMauiGame.ViewModel
             }
         }
 
-        private ObservableCollection<PlayingField>? _listOfField = null;
+        private ObservableCollection<PlayingField> _listOfField = new();
         public ObservableCollection<PlayingField> ListOfPlayingField
         {
             get { return _listOfField; }
@@ -120,7 +120,7 @@ namespace ConnectFourMauiGame.ViewModel
             }
         }
 
-        private ICommand newGameCommand;
+        private ICommand? newGameCommand;
         public ICommand NewGameCommand
         {
             get
@@ -147,7 +147,7 @@ namespace ConnectFourMauiGame.ViewModel
             }
         }
 
-        private ObservableCollection<int> listOfRows;
+        private ObservableCollection<int> listOfRows = new();
         public ObservableCollection<int> ListOfRows
         {
             get { return listOfRows; }
@@ -169,7 +169,7 @@ namespace ConnectFourMauiGame.ViewModel
             }
         }
 
-        private ObservableCollection<int> listOfCols;
+        private ObservableCollection<int> listOfCols = new();
         public ObservableCollection<int> ListOfCols
         {
             get { return listOfCols; }
@@ -198,7 +198,7 @@ namespace ConnectFourMauiGame.ViewModel
             _players = new List<Player>();
             _players.Add(new Player() { PlayerColor = "Red" });
             _players.Add(new Player() { PlayerColor = "Blue" });
-            CurrentPlayer = _players.First();
+            CurrentPlayer = currentPlayer = _players.First();
 
             NewGame();
         }

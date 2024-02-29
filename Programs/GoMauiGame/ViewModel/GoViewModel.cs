@@ -48,7 +48,7 @@ namespace GoMauiGame.ViewModel
         }
 
 
-        private ObservableDictionary<string, int> playersPoints;
+        private ObservableDictionary<string, int> playersPoints = new();
         public ObservableDictionary<string, int> PlayersPoints
         {
             get { return playersPoints; }
@@ -60,7 +60,7 @@ namespace GoMauiGame.ViewModel
         }
 
 
-        private string currentPlayerColor;
+        private string currentPlayerColor = "";
         public string CurrentPlayerColor
         {
             get { return currentPlayerColor; }
@@ -71,8 +71,8 @@ namespace GoMauiGame.ViewModel
             }
         }
 
-        private ICommand newGameCommand;
-        public ICommand NewGameCommand
+        private ICommand? newGameCommand;
+        public ICommand? NewGameCommand
         {
             get
             {
@@ -88,7 +88,7 @@ namespace GoMauiGame.ViewModel
         }
 
 
-        private ICommand boardFieldCommand;
+        private ICommand? boardFieldCommand;
         public ICommand BoardFieldCommand
         {
             get
@@ -128,14 +128,14 @@ namespace GoMauiGame.ViewModel
 
         private CircularObservableCollection<string> playersSign;
         private Dictionary<string, string> playersColor;
-        private string currentPlayerSign;
-        private string opponentPlayerSign;
+        private string currentPlayerSign = "";
+        private string opponentPlayerSign = "";
 
         public GoViewModel()
         {
             ColumnCount = 19;
             RowCount = 19;
-            GoBoard = new ObservableCollection<GoField>();
+            GoBoard = goBoard = new ObservableCollection<GoField>();
 
             playersSign = new CircularObservableCollection<string>() { "B", "C" };
             playersColor = new Dictionary<string, string>

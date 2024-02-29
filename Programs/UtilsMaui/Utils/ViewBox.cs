@@ -103,7 +103,9 @@ namespace UtilsMaui.Utils
     {
         private ViewBox _viewBox;
 
+#pragma warning disable CS8603 // Possible null reference return.
         private Microsoft.Maui.Controls.View InternalChild => _viewBox.Children.FirstOrDefault() as Microsoft.Maui.Controls.View;
+#pragma warning restore CS8603 // Possible null reference return.
 
         public ViewBoxLayoutManager(ViewBox viewBox)
         {

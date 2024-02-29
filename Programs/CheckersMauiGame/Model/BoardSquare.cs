@@ -26,7 +26,9 @@ namespace CheckersMauiGame.Model
 
         public ICommand? SquareCommand { get; set; } = null;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private CheckerPiece checkerPiece;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public CheckerPiece CheckerPiece
         {
             get { return checkerPiece; }

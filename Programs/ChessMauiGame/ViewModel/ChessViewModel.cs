@@ -70,7 +70,7 @@ namespace ChessMauiGame.ViewModel
             }
         }
 
-        private ICommand squareCommand;
+        private ICommand? squareCommand;
         public ICommand SquareCommand
         {
             get
@@ -146,9 +146,11 @@ namespace ChessMauiGame.ViewModel
                                     });
 
                                     //podmieniamy tego pionka na wybranego
-                                    if (result is Type)
+                                    if (result is Type type)
                                     {
-                                        var newPiece = Activator.CreateInstance(result as Type, CurrentGamePlayer.PlayerColor) as ChessPiece;
+                                        var newPiece = Activator.CreateInstance(type, CurrentGamePlayer.PlayerColor) as ChessPiece;
+                                        if (newPiece is null)
+                                            throw new Exception("Błąd tworzenia pionka");
                                         CurrentGamePlayer.ChessPieces.Remove(chooseBoardSquare.ChessPiece);
                                         chooseBoardSquare.ChessPiece = newPiece;
                                         CurrentGamePlayer.ChessPieces.Add(newPiece);
@@ -220,7 +222,7 @@ namespace ChessMauiGame.ViewModel
                 return squareCommand;
             }
         }
-        
+
         private bool kingsideCastling;
 
         public bool KingsideCastling
@@ -262,6 +264,9 @@ namespace ChessMauiGame.ViewModel
                             BoardSquare? boardSquareWidthKing = board.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
                                                                         && bs.ChessPiece is King);
 
+                            if (boardSquareWidthKing is null)
+                                throw new Exception("Błąd. Nie znaleziono króla dla roszady");
+
                             BoardSquare kingMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
                                                           && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex + 2);
 
@@ -272,9 +277,12 @@ namespace ChessMauiGame.ViewModel
                             BoardSquare? boardSquareWidthKingRook = board.FirstOrDefault(bs => bs.ColumnIndex == ColumnCount - 1
                                                                                   && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
 
+                            if (boardSquareWidthKingRook is null)
+                                throw new Exception("Błąd. Nie znaleziono wieży dla roszady");
+
                             BoardSquare rookMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
                                                                            && bs.ColumnIndex == kingMove.ColumnIndex - 1);
-                            
+
 
                             currentPlayerBoardSquaresToMove.ForAll(x => x.boardSquare.IsChessPieceMustMove = false);
                             currentPlayerBoardSquaresToMove
@@ -288,7 +296,7 @@ namespace ChessMauiGame.ViewModel
                                 (selectedPawnOnBoardSquare, new List<BoardSquare>(){rookMove})
                             };
 
-                            squareCommand.Execute(rookMove);
+                            squareCommand?.Execute(rookMove);
                         }
                         );
                 return kingsideCastlingCommand;
@@ -307,6 +315,9 @@ namespace ChessMauiGame.ViewModel
                             BoardSquare? boardSquareWidthKing = board.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
                                                                         && bs.ChessPiece is King);
 
+                            if (boardSquareWidthKing is null)
+                                throw new Exception("Błąd. Nie znaleziono króla dla roszady");
+
                             BoardSquare kingMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
                                                           && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex - 2);
 
@@ -316,6 +327,9 @@ namespace ChessMauiGame.ViewModel
 
                             BoardSquare? boardSquareWidthQeenRook = board.FirstOrDefault(bs => bs.ColumnIndex == 0
                                                                                                && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+
+                            if (boardSquareWidthQeenRook is null)
+                                throw new Exception("Błąd. Nie znaleziono wieży dla roszady");
 
                             BoardSquare rookMove = board.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
                                                                            && bs.ColumnIndex == kingMove.ColumnIndex + 1);
@@ -333,7 +347,7 @@ namespace ChessMauiGame.ViewModel
                                 (selectedPawnOnBoardSquare, new List<BoardSquare>(){rookMove})
                             };
 
-                            squareCommand.Execute(rookMove);
+                            squareCommand?.Execute(rookMove);
                         }
                         );
                 return queensideCastlingCommand;
@@ -349,7 +363,7 @@ namespace ChessMauiGame.ViewModel
         private string darkColorField = "#FFC5C5C5";
         private ChessPiece falseChessPiece = new Pawn("empty", 0);
         private List<Type> listOfChessPiecesFirstRow;
-        private List<(BoardSquare boardSquare, List<BoardSquare> listOfBoardSquareMove)> currentPlayerBoardSquaresToMove;
+        private List<(BoardSquare boardSquare, List<BoardSquare> listOfBoardSquareMove)> currentPlayerBoardSquaresToMove = new();
         private BoardSquare? selectedPawnOnBoardSquare = null;
 
         public ChessViewModel(IPopupService popupService)
@@ -378,6 +392,8 @@ namespace ChessMauiGame.ViewModel
                 typeof(Knight),
                 typeof(Rook),
             ];
+
+            CurrentGamePlayer = currentGamePlayer = gamePlayers.First();
 
             NewGame();
         }
@@ -414,8 +430,12 @@ namespace ChessMauiGame.ViewModel
             });
             board.Where(bs => bs.RowIndex == 0).ForAll(bs =>
             {
+#pragma warning disable CS8601 // Possible null reference assignment.
                 bs.ChessPiece = Activator.CreateInstance(listOfChessPiecesFirstRow[bs.ColumnIndex], gamePlayers[0].PlayerColor) as ChessPiece;
+#pragma warning disable CS8604 // Possible null reference argument.
                 gamePlayers[0].ChessPieces.Add(bs.ChessPiece);
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8601 // Possible null reference assignment.
             });
 
 
@@ -426,8 +446,12 @@ namespace ChessMauiGame.ViewModel
             });
             board.Where(bs => bs.RowIndex == RowCount - 1).ForAll(bs =>
             {
+#pragma warning disable CS8601 // Possible null reference assignment.
                 bs.ChessPiece = Activator.CreateInstance(listOfChessPiecesFirstRow[bs.ColumnIndex], gamePlayers[1].PlayerColor) as ChessPiece;
+#pragma warning disable CS8604 // Possible null reference argument.
                 gamePlayers[1].ChessPieces.Add(bs.ChessPiece);
+#pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8601 // Possible null reference assignment.
             });
 
             currentPlayerBoardSquaresToMove = FindAllPawnToMove(board, CurrentGamePlayer);
@@ -578,8 +602,14 @@ namespace ChessMauiGame.ViewModel
             BoardSquare? copyBoardSquareWidthKing = copyOfBoard.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
                                                                                   && bs.ChessPiece is King);
 
+            if (copyBoardSquareWidthKing is null)
+                throw new Exception("Błąd. Nie znaleziono króla dla roszady");
+
             BoardSquare? copyBoardSquareWidthKingRook = copyOfBoard.FirstOrDefault(bs => bs.ColumnIndex == ColumnCount - 1
                                                                                       && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+
+            if (copyBoardSquareWidthKingRook is null)
+                throw new Exception("Błąd. Nie znaleziono wieży dla roszady");
 
             BoardSquare kingMove = copyOfBoard.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
                                                           && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex + 2);
@@ -655,8 +685,14 @@ namespace ChessMauiGame.ViewModel
             BoardSquare? copyBoardSquareWidthKing = copyOfBoard.FirstOrDefault(bs => bs.ChessPiece.Color == CurrentGamePlayer.PlayerColor
                                                                                   && bs.ChessPiece is King);
 
+            if (copyBoardSquareWidthKing is null)
+                throw new Exception("Błąd. Nie znaleziono króla dla roszady");
+
             BoardSquare? copyBoardSquareWidthKingRook = copyOfBoard.FirstOrDefault(bs => bs.ColumnIndex == 0
                                                                                       && bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]);
+
+            if (copyBoardSquareWidthKingRook is null)
+                throw new Exception("Błąd. Nie znaleziono wieży dla roszady");
 
             BoardSquare kingMove = copyOfBoard.First(bs => bs.RowIndex == startOfPlayerRow[CurrentGamePlayer]
                                                           && bs.ColumnIndex == boardSquareWidthKing.ColumnIndex - 2);

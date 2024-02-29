@@ -13,8 +13,10 @@ namespace UtilsMaui.Utils
     public class ObservableKeyValuePair<TKey, TValue> : INotifyPropertyChanged
     {
         #region properties
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private TKey key;
         private TValue value;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         public TKey Key
         {
@@ -40,11 +42,11 @@ namespace UtilsMaui.Utils
         #region INotifyPropertyChanged Members
 
         [field: NonSerialized]
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public void OnPropertyChanged(string name)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            PropertyChangedEventHandler? handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(name));
         }
 
@@ -100,7 +102,9 @@ namespace UtilsMaui.Utils
 
         public bool TryGetValue(TKey key, out TValue value)
         {
+#pragma warning disable CS8601 // Possible null reference assignment.
             value = default(TValue);
+#pragma warning restore CS8601 // Possible null reference assignment.
             var r = GetKvpByTheKey(key);
             if (Equals(r, default(ObservableKeyValuePair<TKey, TValue>)))
             {
@@ -110,9 +114,9 @@ namespace UtilsMaui.Utils
             return true;
         }
 
-        private ObservableKeyValuePair<TKey, TValue> GetKvpByTheKey(TKey key)
+        private ObservableKeyValuePair<TKey, TValue>? GetKvpByTheKey(TKey key)
         {
-            return ThisAsCollection().FirstOrDefault((i) => i.Key.Equals(key));
+            return ThisAsCollection().FirstOrDefault((i) => i.Key?.Equals(key) ?? false);
         }
 
         public ICollection<TValue> Values
@@ -135,7 +139,9 @@ namespace UtilsMaui.Utils
             {
                 if (ContainsKey(key))
                 {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     GetKvpByTheKey(key).Value = value;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
                 else
                 {
@@ -196,7 +202,7 @@ namespace UtilsMaui.Utils
             return (from i in ThisAsCollection() select new KeyValuePair<TKey, TValue>(i.Key, i.Value)).ToList().GetEnumerator();
         }
 
-       
+
 
         #endregion
     }

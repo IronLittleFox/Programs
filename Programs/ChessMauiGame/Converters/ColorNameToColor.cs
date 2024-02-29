@@ -15,7 +15,7 @@ namespace ChessMauiGame.Converters
             string colorName = value?.ToString() ?? "";
 
             ColorTypeConverter converter = new ColorTypeConverter();
-            Color color = converter.ConvertFromInvariantString(colorName) as Color;
+            Color? color = converter.ConvertFromInvariantString(colorName) as Color;
             return color;
         }
 

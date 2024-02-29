@@ -11,9 +11,9 @@ namespace ChessMauiGame.ViewModel
 {
     public class InfoAboutPiece
     {
-        public string Color { get; set; }
-        public string Type { get; set; }
-        public Type PieceType { get; set; }
+        public string Color { get; set; } = "";
+        public string Type { get; set; } = "";
+        public Type PieceType { get; set; } = typeof(ChessPiece);
         public ICommand? CloseCommand { get; set; } = null;
     }
 

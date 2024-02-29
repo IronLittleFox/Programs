@@ -55,7 +55,7 @@ namespace CheckersMauiGame.ViewModel
             }
         }
 
-        private ICommand squareCommand;
+        private ICommand? squareCommand;
         public ICommand SquareCommand
         {
             get
@@ -81,8 +81,9 @@ namespace CheckersMauiGame.ViewModel
                             }
 
                             //kliknięto na pole na które można się poruszyć
-                            if (boardSquaresToMove.Where(x => x.boardSquare == chooseBoardSquare)
-                                .Any(x => x.diagonals.Any(y => y.diagonal.Contains(boardSquare)))
+                            if (chooseBoardSquare != null
+                                && boardSquaresToMove.Where(x => x.boardSquare == chooseBoardSquare)
+                                     .Any(x => x.diagonals.Any(y => y.diagonal.Contains(boardSquare)))
                                 && boardSquare.CheckerPiece == falseCheckerPiece)
                             {
                                 //odznaczamy możliwe ruchy
@@ -182,8 +183,8 @@ namespace CheckersMauiGame.ViewModel
         private CheckerPiece falseCheckerPiece = new CheckerPawn("empty", new List<(TypeOfDirection typeOfDirection, int col, int row)>());
         private string whiteColorField = "white";
         private string darkColorField = "#FFC5C5C5";
-        private List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSquaresToMove;
-        private BoardSquare chooseBoardSquare;
+        private List<(BoardSquare boardSquare, List<(TypeOfDirection typeOfDirection, List<BoardSquare> diagonal)> diagonals)> boardSquaresToMove = new();
+        private BoardSquare? chooseBoardSquare;
         private bool isEndGame = false;
         private IPopupService popupService;
 
@@ -227,7 +228,7 @@ namespace CheckersMauiGame.ViewModel
                                     }}
             };
 
-            CurrentGamePlayer = gamePlayers.First();
+            CurrentGamePlayer = currentGamePlayer = gamePlayers.First();
 
             NewGame();
         }

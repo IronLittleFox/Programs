@@ -14,7 +14,7 @@ namespace SudokuMauiGame.ViewModel
 {
     public class SudokuViewModel : BindableObject, IGameViewModel
     {
-        private ObservableCollection<SquareField> listOfSqure;
+        private ObservableCollection<SquareField> listOfSqure = new();
         public ObservableCollection<SquareField> ListOfSqure
         {
             get { return listOfSqure; }
@@ -25,7 +25,7 @@ namespace SudokuMauiGame.ViewModel
             }
         }
 
-        private ObservableCollection<NumberToChoose> listOfNumbers;
+        private ObservableCollection<NumberToChoose> listOfNumbers = new();
         public ObservableCollection<NumberToChoose> ListOfNumbers
         {
             get { return listOfNumbers; }
@@ -36,7 +36,7 @@ namespace SudokuMauiGame.ViewModel
             }
         }
 
-        private ICommand boardFieldCommand;
+        private ICommand? boardFieldCommand;
         public ICommand BoardFieldCommand
         {
             get
@@ -83,7 +83,7 @@ namespace SudokuMauiGame.ViewModel
             }
         }
 
-        private ICommand numberToChooseCommand;
+        private ICommand? numberToChooseCommand;
         public ICommand NumberToChooseCommand
         {
             get
@@ -101,7 +101,7 @@ namespace SudokuMauiGame.ViewModel
             }
         }
 
-        private ICommand resetBoardCommand;
+        private ICommand? resetBoardCommand;
         public ICommand ResetBoardCommand
         {
             get
@@ -118,7 +118,7 @@ namespace SudokuMauiGame.ViewModel
             }
         }
 
-        private ICommand newGameCommand;
+        private ICommand? newGameCommand;
         public ICommand NewGameCommand
         {
             get

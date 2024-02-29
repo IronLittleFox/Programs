@@ -14,10 +14,8 @@ namespace CalculatorMauiGame.ViewModel
     {
         public MainCalculatorViewModel()
         {
-            ChoseVM = new CalculatorOnpViewModel();
-            ListOfViewModel = new List<ICalculatorViewModel>();
-            ListOfViewModel.Add(ChoseVM);
-            ListOfViewModel.Add(new CalculatorRegularViewModel());
+            ChoseVM = _choseVM = new CalculatorOnpViewModel();
+            ListOfViewModel = [ChoseVM, new CalculatorRegularViewModel()];
             //ListOfViewModel.Add(new CodeLockVM());
         }
 
@@ -35,7 +33,7 @@ namespace CalculatorMauiGame.ViewModel
             }
         }
 
-        private List<ICalculatorViewModel> _listOfViewModel;
+        private List<ICalculatorViewModel> _listOfViewModel = new List<ICalculatorViewModel>();
         public List<ICalculatorViewModel> ListOfViewModel
         {
             get { return _listOfViewModel; }

@@ -10,7 +10,7 @@ namespace GoMauiGame.Converters
             string colorName = value?.ToString() ?? "";
 
             ColorTypeConverter converter = new ColorTypeConverter();
-            Color color = converter.ConvertFromInvariantString(colorName) as Color;
+            Color? color = converter.ConvertFromInvariantString(colorName) as Color;
             Brush brush = new SolidColorBrush(color);
             
             return brush;

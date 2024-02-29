@@ -33,7 +33,7 @@ namespace GoMauiGame.Model
             }
         }
 
-        private string sign;
+        private string sign = "";
         public string Sign
         {
             get { return sign; }
@@ -44,7 +44,7 @@ namespace GoMauiGame.Model
             }
         }
 
-        private string colorPawn;
+        private string colorPawn = "";
         public string ColorPawn
         {
             get { return colorPawn; }
@@ -55,6 +55,6 @@ namespace GoMauiGame.Model
             }
         }
 
-        public ICommand BoardFieldCommand { get; set; }
+        public ICommand? BoardFieldCommand { get; set; }
     }
 }

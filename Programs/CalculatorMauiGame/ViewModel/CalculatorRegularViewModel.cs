@@ -43,10 +43,10 @@ namespace CalculatorMauiGame.ViewModel
             get
             {
                 if (_numberCommand == null)
-                    _numberCommand = new Command<object>(
-                        (object o) =>
+                    _numberCommand = new Command<string>(
+                        (string o) =>
                         {
-                            int value = int.Parse(o.ToString());
+                            int value = int.Parse(o);
 
                             if (operatorCommandFlag)
                             {
@@ -74,10 +74,10 @@ namespace CalculatorMauiGame.ViewModel
             get
             {
                 if (_arithmeticOperationsCommand == null)
-                    _arithmeticOperationsCommand = new Command<object>(
-                        (object o) =>
+                    _arithmeticOperationsCommand = new Command<string>(
+                        (string o) =>
                         {
-                            string selectOperator = o.ToString();
+                            string selectOperator = o;
 
                             if (operatorEqualFlag)
                             {
@@ -217,7 +217,9 @@ namespace CalculatorMauiGame.ViewModel
             }
         }
 
-        public ICommand CloseParenthesisOperationsCommand => null;
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
+        public ICommand? CloseParenthesisOperationsCommand => null;
+#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
 
         private ICommand? _functionCommand;
         public ICommand FunctionCommand
@@ -244,7 +246,9 @@ namespace CalculatorMauiGame.ViewModel
             }
         }
 
+#pragma warning disable CS8603 // Possible null reference return.
         public ICommand OpenParenthesisOperationsCommand => null;
+#pragma warning restore CS8603 // Possible null reference return.
 
         public CalculatorRegularViewModel()
         {
