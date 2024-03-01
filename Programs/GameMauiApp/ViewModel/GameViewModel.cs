@@ -63,8 +63,8 @@ namespace GameMauiApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "Go", GameType = typeof(GoView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Szachy", GameType = typeof(ChessView) });
 
-            //SelectedGame = ListOfGame.FirstOrDefault();
-            SelectedGame = ListOfGame.LastOrDefault();
+            SelectedGame = ListOfGame.FirstOrDefault();
+            //SelectedGame = ListOfGame.LastOrDefault();
         }
 
         public void Dispose()
