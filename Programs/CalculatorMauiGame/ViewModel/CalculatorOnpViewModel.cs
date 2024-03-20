@@ -129,15 +129,16 @@ namespace CalculatorMauiGame.ViewModel
                         {
                             stackOfCommands.Push(Command.OpenParenthesis);
                             countOfNonCloseParenthesis++;
-                            ShowValue += o.ToString() + " "; 
+                            ShowValue += o.ToString() + " ";
                         },
-                        o => {
+                        o =>
+                        {
 
                             var x = stackOfCommands.Count == 0
                                  || stackOfCommands.Peek() == Command.ArithmeticOperations
                                  || stackOfCommands.Peek() == Command.OpenParenthesis;
-                                 return x;
-                                 }
+                            return x;
+                        }
 
                         );
                 return _openParenthesisOperationsCommand;
@@ -422,7 +423,7 @@ namespace CalculatorMauiGame.ViewModel
             else if (operatorToDo == "*")
                 return leftNumber * rightNumber;
             else if (operatorToDo == "/")
-                return leftNumber / rightNumber;
+                return rightNumber != 0 ? leftNumber / rightNumber : 0;
             else if (operatorToDo == "%")
                 return leftNumber % rightNumber;
             else if (operatorToDo == "neg")

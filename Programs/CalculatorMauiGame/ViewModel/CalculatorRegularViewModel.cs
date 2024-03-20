@@ -264,7 +264,7 @@ namespace CalculatorMauiGame.ViewModel
             else if (previewOperator == "*")
                 return previewValue * currentValue;
             else if (previewOperator == "/")
-                return previewValue / currentValue;
+                return currentValue != 0 ? previewValue / currentValue : 0;
             else if (previewOperator == "%")
                 return previewValue % currentValue;
             else if (previewOperator == "^")

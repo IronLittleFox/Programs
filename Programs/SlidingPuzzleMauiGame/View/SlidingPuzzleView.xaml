@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SlidingPuzzleMauiGame.View.SlidingPuzzleView"
+             xmlns:utils="clr-namespace:UtilsMaui.Utils;assembly=UtilsMaui">
+    <StackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Text="New game" 
+                    Command="{Binding NewGameCommand}"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"/>
+            <utils:ViewBox Stretch="Fill"
+                           Grid.Row="0"
+                           Grid.Column="1"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           Margin="10">
+                <Label Text="Wybierz ilość wierszy:"/>
+            </utils:ViewBox>
+            <Picker Grid.Column="1"
+                    Grid.Row="1"
+                    ItemsSource="{Binding ListOfRows}"
+                    SelectedItem="{Binding SelectedOptionRow}"
+                    HorizontalTextAlignment="Center"
+                    Margin="10"
+                    FontSize="30">
+            </Picker>
+            <utils:ViewBox Stretch="Fill"
+                           Grid.Row="0"
+                           Grid.Column="2"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Fill"
+                           Margin="10">
+                <Label Text="Wybierz ilość kolumn:"/>
+            </utils:ViewBox>
+            <Picker Grid.Column="2"
+                    Grid.Row="1"
+                    ItemsSource="{Binding ListOfCols}"
+                    SelectedItem="{Binding SelectedOptionCol}"
+                    HorizontalTextAlignment="Center"
+                    Margin="10"
+                    FontSize="30">
+            </Picker>
+            <Label Text="Należy tak przesuwać (klikać) kafelki aby liczby ułożone były po koleji w wierszach zaczynając od lewego górnego."
+                   Grid.Column="0"
+                   Grid.Row="2"
+                   Grid.ColumnSpan="3"/>
+        </Grid>
+
+        <Grid utils:GridHelpers.RowCount="{Binding RowCount}"
+              utils:GridHelpers.ColumnCount="{Binding ColumnCount}"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand"
+              BindableLayout.ItemsSource="{Binding ListOfPlayingField}">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <utils:ViewBox Stretch="Fill"
+                                   Grid.Column="{Binding ColumnIndex}"
+                                   Grid.Row="{Binding RowIndex}"
+                                   HorizontalOptions="Fill"
+                                   VerticalOptions="Fill"
+                                   Margin="1">
+                        <Button Text="{Binding Text}"
+                                Command="{Binding BoardFieldCommand}"
+                                CommandParameter="{Binding}"
+                                Background="BlanchedAlmond"
+                                TextColor="Black">
+                        </Button>
+                    </utils:ViewBox>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+    </StackLayout>
+</ContentView>

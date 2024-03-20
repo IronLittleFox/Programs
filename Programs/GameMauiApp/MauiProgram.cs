@@ -23,6 +23,8 @@ using CalculatorMauiGame.ViewModel;
 using ChessMauiGame.View;
 using ChessMauiGame.ViewModel;
 using Microsoft.Maui.LifecycleEvents;
+using SlidingPuzzleMauiGame.View;
+using SlidingPuzzleMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -56,6 +58,7 @@ namespace GameMauiApp
                 .AddTransientPopup<SudokuPopupView, SudokuPopupViewModel>()
                 .AddTransientPopup<ChessPawnPomotionPopupView, ChessPawnPomotionPopupViewModel>()
                 .AddTransientPopup<ChessMessagePopupView, ChessMessagePopupViewModel>()
+                .AddTransientPopup<SlidingPuzzlePopupView, SlidingPuzzlePopupViewModel>()
                 .AddTransient<GamePage>()
                 .AddTransient<GameViewModel>()
                 .AddTransient<TicTacToeViewModel>()
@@ -77,7 +80,9 @@ namespace GameMauiApp
                 .AddTransient<MainCalculatorView>()
                 .AddTransient<MainCalculatorViewModel>()
                 .AddTransient<ChessView>()
-                .AddTransient<ChessViewModel>();
+                .AddTransient<ChessViewModel>()
+                .AddTransient<SlidingPuzzleView>()
+                .AddTransient<SlidingPuzzleViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();

@@ -8,6 +8,7 @@ using ImportantDatesMauiGame.View;
 using MemoryMauiGame.View;
 using Microsoft.Maui.Controls;
 using MinesweeperMauiGame.View;
+using SlidingPuzzleMauiGame.View;
 using SudokuMauiGame.View;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,7 @@ namespace GameMauiApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "Sudoku", GameType=typeof(SudokuView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Go", GameType = typeof(GoView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Szachy", GameType = typeof(ChessView) });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "Przesuwane puzle", GameType = typeof(SlidingPuzzleView) });
 
             SelectedGame = ListOfGame.FirstOrDefault();
             //SelectedGame = ListOfGame.LastOrDefault();

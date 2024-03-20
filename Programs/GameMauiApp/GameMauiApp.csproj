@@ -73,6 +73,7 @@
 	  <ProjectReference Include="..\ImportantDatesMauiGame\ImportantDatesMauiGame.csproj" />
 	  <ProjectReference Include="..\MemoryMauiGame\MemoryMauiGame.csproj" />
 	  <ProjectReference Include="..\MinesweeperMauiGame\MinesweeperMauiGame.csproj" />
+	  <ProjectReference Include="..\SlidingPuzzleMauiGame\SlidingPuzzleMauiGame.csproj" />
 	  <ProjectReference Include="..\SudokuMauiGame\SudokuMauiGame.csproj" />
 	  <ProjectReference Include="..\TicTacToeMauiGame\TicTacToeMauiGame.csproj" />
 	  <ProjectReference Include="..\UtilsMaui\UtilsMaui.csproj" />
