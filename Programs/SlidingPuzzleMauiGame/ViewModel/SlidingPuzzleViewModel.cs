@@ -167,21 +167,10 @@ namespace SlidingPuzzleMauiGame.ViewModel
             }
         }
 
-        private ImageSource image;
-
-        public ImageSource  Image1
-        {
-            get { return image; }
-            set { image = value; OnPropertyChanged(); }
-        }
-
-
         IPopupService popupService;
 
         public SlidingPuzzleViewModel(IPopupService popupService)
         {
-            Image1 = ImageSource.FromResource("SlidingPuzzleMauiGame.Resources.Images.sliding_puzzle_image.png", typeof(SlidingPuzzleViewModel).GetTypeInfo().Assembly);
-
             this.popupService = popupService;
 
             IsEndGame = false;
@@ -231,46 +220,6 @@ namespace SlidingPuzzleMauiGame.ViewModel
                 }
         }
 
-       /*private void Test()
-        {
-            ImageSource image = ImageSource.FromResource("SlidingPuzzleMauiGame.Resources.Images.sliding_puzzle_image.png", typeof(SlidingPuzzleViewModel).GetTypeInfo().Assembly);
-
-            Image myImage = Image1.Stream
-            // Definicja rozmiaru siatki
-            int rows = 3;
-            int columns = 3;
-
-            // Obliczenie rozmiarów pojedynczego kafelka w siatce
-            int tileWidth = Image.Width / columns;
-            int tileHeight = Image.Height / rows;
-
-            // Tworzenie siatki obrazków
-            Image[,] imageGrid = new Image[rows, columns];
-
-            // Podział obrazka na kafelki i zapisanie ich w siatce
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    // Tworzenie nowego obrazka dla danego kafelka
-                    Bitmap tile = new Bitmap(tileWidth, tileHeight);
-
-                    // Definiowanie obszaru do wycięcia z oryginalnego obrazka
-                    Rectangle sourceRectangle = new Rectangle(j * tileWidth, i * tileHeight, tileWidth, tileHeight);
-
-                    // Tworzenie grafiki z nowego obrazka
-                    using (Graphics g = Graphics.FromImage(tile))
-                    {
-                        // Kopiowanie fragmentu oryginalnego obrazka do nowego obrazka
-                        g.DrawImage(originalImage, new Rectangle(0, 0, tile.Width, tile.Height), sourceRectangle, GraphicsUnit.Pixel);
-                    }
-
-                    // Zapisanie kafelka w siatce
-                    imageGrid[i, j] = tile;
-                }
-            }
-        }
-        */
         public void Dispose()
         {
         }
