@@ -173,12 +173,14 @@ namespace UtilsMaui.Utils
                     {
                         LayoutAlignment.Start => 0,
                         LayoutAlignment.End => bounds.Height - arrangeSize.Height,
+                        LayoutAlignment.Fill => 0,
                         _ => (bounds.Height - arrangeSize.Height) / 2.0,
                     };
                     xOffset = child.HorizontalOptions.Alignment switch
                     {
                         LayoutAlignment.Start => 0,
                         LayoutAlignment.End => bounds.Width - arrangeSize.Width,
+                        LayoutAlignment.Fill => 0,
                         _ => (bounds.Width - arrangeSize.Width) / 2.0,
                     };
 

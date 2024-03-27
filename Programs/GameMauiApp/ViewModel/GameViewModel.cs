@@ -2,6 +2,7 @@
 using CheckersMauiGame.View;
 using ChessMauiGame.View;
 using ConnectFourMauiGame.View;
+using Create2048MauiGame.View;
 using GameMauiApp.Model;
 using GoMauiGame.View;
 using ImportantDatesMauiGame.View;
@@ -64,6 +65,7 @@ namespace GameMauiApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "Go", GameType = typeof(GoView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Szachy", GameType = typeof(ChessView) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Przesuwane puzle", GameType = typeof(SlidingPuzzleView) });
+            ListOfGame.Add(new GameInfo() { NameOfGame = "2048", GameType = typeof(Create2048View) });
 
             SelectedGame = ListOfGame.FirstOrDefault();
             //SelectedGame = ListOfGame.LastOrDefault();

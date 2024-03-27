@@ -25,6 +25,8 @@ using ChessMauiGame.ViewModel;
 using Microsoft.Maui.LifecycleEvents;
 using SlidingPuzzleMauiGame.View;
 using SlidingPuzzleMauiGame.ViewModel;
+using Create2048MauiGame.ViewModel;
+using Create2048MauiGame.View;
 
 namespace GameMauiApp
 {
@@ -82,7 +84,9 @@ namespace GameMauiApp
                 .AddTransient<ChessView>()
                 .AddTransient<ChessViewModel>()
                 .AddTransient<SlidingPuzzleView>()
-                .AddTransient<SlidingPuzzleViewModel>();
+                .AddTransient<SlidingPuzzleViewModel>()
+                .AddTransient<Create2048View>()
+                .AddTransient<Create2048ViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();
