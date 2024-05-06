@@ -60,11 +60,12 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.6" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
 	</ItemGroup>
 
 
 	<ItemGroup>
+	  <ProjectReference Include="..\AchiMauiGame\AchiMauiGame.csproj" />
 	  <ProjectReference Include="..\CalculatorMauiGame\CalculatorMauiGame.csproj" />
 	  <ProjectReference Include="..\CheckersMauiGame\CheckersMauiGame.csproj" />
 	  <ProjectReference Include="..\ChessMauiGame\ChessMauiGame.csproj" />
@@ -84,6 +85,10 @@
 	  <MauiXaml Update="Pages\GamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.6" />
 	</ItemGroup>
 
 </Project>

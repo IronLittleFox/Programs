@@ -27,6 +27,8 @@ using SlidingPuzzleMauiGame.View;
 using SlidingPuzzleMauiGame.ViewModel;
 using Create2048MauiGame.ViewModel;
 using Create2048MauiGame.View;
+using AchiMauiGame.View;
+using AchiMauiGame.ViewModel;
 
 namespace GameMauiApp
 {
@@ -86,7 +88,9 @@ namespace GameMauiApp
                 .AddTransient<SlidingPuzzleView>()
                 .AddTransient<SlidingPuzzleViewModel>()
                 .AddTransient<Create2048View>()
-                .AddTransient<Create2048ViewModel>();
+                .AddTransient<Create2048ViewModel>()
+                .AddTransient<AchiView>()
+                .AddTransient<AchiViewModel>();
 
 #if DEBUG
             builder.Logging.AddDebug();
@@ -121,7 +125,6 @@ namespace GameMauiApp
 
             //we must initialize our service helper before using it
             ServiceHelper.Initialize(app.Services);
-
 
             return app;
         }

@@ -17,6 +17,26 @@ namespace GameMauiApp.WinUI
         public App()
         {
             this.InitializeComponent();
+
+            UnhandledException += (sender, error) =>
+            {
+                try
+                {
+                    string filePath = "errors.txt";
+                    using (StreamWriter writer = File.AppendText(filePath))
+                    {
+                        writer.WriteLine("Wykryto nowy błąd o godzinie " + DateTime.Now);
+                        writer.WriteLine(error.Message);
+                        writer.WriteLine(error.Exception.StackTrace);
+                        writer.WriteLine(Environment.NewLine);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            };
         }
 
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
