@@ -17,6 +17,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button Text="Nowa gra"
                     Margin="10"
@@ -33,16 +34,13 @@
                 <Label Text="Aktualny gracz:"/>
             </utils:ViewBox>
             <ImageButton Source="{Binding CurrentGamePlayer.PlayerColor,Converter={StaticResource PawnDataToImageName}}"
-                             Grid.Column="1"
-                            Grid.Row="1"
-                   />
-                <!--<Border Grid.Column="1"
-                    Grid.Row="1"
-                    Stroke="Black" 
-                    StrokeThickness="1"
-                    Margin="5">
-                <Rectangle Fill="{Binding CurrentGamePlayer.PlayerColor, Converter={StaticResource ColorToSolidColorBrush}}"/>
-            </Border>-->
+                         Grid.Column="1"
+                         Grid.Row="1"/>
+            <Label Text="Gra polega na umieszczaniu naprzemiennie swoich czterech symboli na planszy, a następnie naprzemienne przemieszczanie swoich symboli na puste pole znajdujące się obok. Grę wygrywa gracz który ułoży swoje trzy symbole w lini pionowej, poziomej lub po skosie."
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   Grid.Row="2"
+                   LineBreakMode="WordWrap"/>
         </Grid>
 
         <Grid utils:GridHelpers.ColumnCount="{Binding ColumnCount}"
@@ -52,27 +50,26 @@
               HorizontalOptions="FillAndExpand">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <ImageButton Command="{Binding SquareCommand}"
-                                 CommandParameter="{Binding}"
-                                 BackgroundColor="{Binding SquareColor}"
-                                 Grid.Column="{Binding ColumnIndex}"
-                                 Grid.Row="{Binding RowIndex}"
-                                 Source="{Binding GamePawn.Color,Converter={StaticResource PawnDataToImageName}}"
-                                 Background="BlanchedAlmond"
-                                 Margin="10">
-                        <ImageButton.Triggers>
-                            <DataTrigger TargetType="ImageButton"
+                    <Border Stroke="Transparent"
+                            StrokeThickness="3"
+                            Grid.Column="{Binding ColumnIndex}"
+                            Grid.Row="{Binding RowIndex}">
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border"
                                          Binding="{Binding IsChoose}" 
                                          Value="true">
-                                <Setter Property="BackgroundColor" Value="yellow"/>
+                                <Setter Property="Stroke" Value="Blue"/>
                             </DataTrigger>
-                            <!--<DataTrigger TargetType="ImageButton"
-                                         Binding="{Binding IsCheckerPieceMustMove}" 
-                                         Value="true">
-                                <Setter Property="BackgroundColor" Value="red"/>
-                            </DataTrigger>-->
-                        </ImageButton.Triggers>
-                    </ImageButton>
+                        </Border.Triggers>
+                        <ImageButton Command="{Binding SquareCommand}"
+                                     CommandParameter="{Binding}"
+                                     BackgroundColor="{Binding SquareColor}"
+                                     Grid.Column="{Binding ColumnIndex}"
+                                     Grid.Row="{Binding RowIndex}"
+                                     Source="{Binding GamePawn.Color,Converter={StaticResource PawnDataToImageName}}"
+                                     Background="BlanchedAlmond"
+                                     Margin="10"/>
+                    </Border>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </Grid>

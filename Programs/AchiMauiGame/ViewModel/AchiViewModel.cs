@@ -88,13 +88,46 @@ namespace AchiMauiGame.ViewModel
                             }
                             else
                             {
-                                if (chooseBoardSquare == null
+                                if (boardSquare.GamePawn.Color == currentGamePlayer.PlayerColor)
+                                {
+                                    BoardSquare? emptyPlace = board.Where(bs => bs.ColumnIndex >= boardSquare.ColumnIndex - 1
+                                                        && bs.ColumnIndex <= boardSquare.ColumnIndex + 1
+                                                        && bs.RowIndex >= boardSquare.RowIndex - 1
+                                                        && bs.RowIndex <= boardSquare.RowIndex + 1
+                                                        && bs.GamePawn == falsePawn).FirstOrDefault();
+
+                                    if (emptyPlace == null)
+                                        return;
+
+                                    emptyPlace.GamePawn = boardSquare.GamePawn;
+                                    boardSquare.GamePawn = falsePawn;
+
+                                    if (CheckWin())
+                                    {
+                                        isEndGame = true;
+                                        popupService.ShowPopupAsync<AchiPopupViewModel>(
+                                            onPresenting: vm =>
+                                            {
+                                                vm.Message = "Koniec gry.\nWygrywa:\n";
+                                                vm.ImageSymbol = CurrentGamePlayer.PlayerColor;
+                                            });
+                                        return;
+                                    }
+
+                                    CurrentGamePlayer = gamePlayers.GetNext();
+                                }
+
+
+
+                                /*if (chooseBoardSquare == null
                                     && boardSquare.GamePawn.Color != currentGamePlayer.PlayerColor)
                                     return;
 
                                 if (chooseBoardSquare == null
                                     || boardSquare.GamePawn.Color == currentGamePlayer.PlayerColor)
                                 {
+                                    if (chooseBoardSquare != null)
+                                        chooseBoardSquare.IsChoose = false;
                                     chooseBoardSquare = boardSquare;
                                     boardSquare.IsChoose = true;
                                     return;
@@ -108,12 +141,26 @@ namespace AchiMauiGame.ViewModel
                                                         && bs.RowIndex <= chooseBoardSquare.RowIndex + 1)
                                             .Any(bs => bs == boardSquare))
                                 {
+                                    chooseBoardSquare.IsChoose = false;
                                     boardSquare.GamePawn = chooseBoardSquare.GamePawn;
                                     chooseBoardSquare.GamePawn = falsePawn;
                                     chooseBoardSquare = null;
+
+                                    if (CheckWin())
+                                    {
+                                        isEndGame = true;
+                                        popupService.ShowPopupAsync<AchiPopupViewModel>(
+                                            onPresenting: vm =>
+                                            {
+                                                vm.Message = "Koniec gry.\nWygrywa:\n";
+                                                vm.ImageSymbol = CurrentGamePlayer.PlayerColor;
+                                            });
+                                        return;
+                                    }
+
                                     CurrentGamePlayer = gamePlayers.GetNext();
                                 }
-
+                                */
                             }
                         }
                         );
@@ -143,7 +190,7 @@ namespace AchiMauiGame.ViewModel
         private Pawn falsePawn = new Pawn("empty");
         private IPopupService popupService;
 
-        private const int MAX_PAWNS_FOR_PLAYERS = 3;
+        private const int MAX_PAWNS_FOR_PLAYERS = 4;
         private GamePhase gamePhase;
         private BoardSquare? chooseBoardSquare = null;
 
@@ -191,6 +238,34 @@ namespace AchiMauiGame.ViewModel
             gamePlayers.ForAll(gp => gp.Pawns.Clear());
         }
 
+        private bool CheckWin()
+        {
+            foreach (var columbGroup in Board.GroupBy(x => x.ColumnIndex))
+            {
+                if (CheckLineWin(columbGroup.ToList()))
+                    return true;
+            }
+
+            foreach (var rowGroup in Board.GroupBy(x => x.RowIndex))
+            {
+                if (CheckLineWin(rowGroup.ToList()))
+                    return true;
+            }
+
+            if (CheckLineWin(Board.Where(x => x.RowIndex == x.ColumnIndex).ToList()))
+                return true;
+
+            if (CheckLineWin(Board.Where(
+                x => x.ColumnIndex == Math.Sqrt(Board.Count) - 1 - x.RowIndex).ToList()))
+                return true;
+
+            return false;
+        }
+
+        private bool CheckLineWin(List<BoardSquare> line)
+        {
+            return line.All(playingField => playingField.GamePawn.Color == CurrentGamePlayer.PlayerColor);
+        }
 
         public void Dispose()
         {

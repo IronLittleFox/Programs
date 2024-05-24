@@ -63,6 +63,7 @@ namespace GameMauiApp
                 .AddTransientPopup<ChessPawnPomotionPopupView, ChessPawnPomotionPopupViewModel>()
                 .AddTransientPopup<ChessMessagePopupView, ChessMessagePopupViewModel>()
                 .AddTransientPopup<SlidingPuzzlePopupView, SlidingPuzzlePopupViewModel>()
+                .AddTransientPopup<AchiPopupView, AchiPopupViewModel>()
                 .AddTransient<GamePage>()
                 .AddTransient<GameViewModel>()
                 .AddTransient<TicTacToeViewModel>()

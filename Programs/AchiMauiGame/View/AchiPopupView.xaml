@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ctk:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           x:Class="AchiMauiGame.View.AchiPopupView"
+           xmlns:ctk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+           xmlns:converter ="clr-namespace:AchiMauiGame.Converters">
+    <ctk:Popup.Resources>
+        <converter:PawnDataToImageName x:Key="PawnDataToImageName"/>
+    </ctk:Popup.Resources>
+    <VerticalStackLayout>
+        <Label Text="Informacja"
+                FontSize="20"
+                HorizontalOptions="Center" />
+        <Label Text="{Binding Message}"
+               HorizontalOptions="Center"/>
+        <Image Source="{Binding ImageSymbol,Converter={StaticResource PawnDataToImageName}}"
+               HeightRequest="200"/>
+    </VerticalStackLayout>
+</ctk:Popup>
