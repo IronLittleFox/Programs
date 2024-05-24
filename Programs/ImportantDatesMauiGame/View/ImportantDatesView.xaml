@@ -4,61 +4,22 @@
              x:Class="ImportantDatesMauiGame.View.ImportantDatesView">
     <ScrollView>
         <StackLayout>
-            <Label Text="Czas do przerwy świątecznej (wielkanocnej)"
-                HorizontalOptions="Center" />
-            <Label Text="{Binding TimeToEaster}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
-
-            <Label Text="Czas do wystawienia ocen klas piątych"
-               HorizontalOptions="Center" />
-            <Label Text="{Binding TimeToIssuingGradesRorFifthGrades}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
-
-            <Label Text="Czas do zakończenia roku szkolnego dla klas piątych"
-               HorizontalOptions="Center" />
-            <Label Text="{Binding TimeUntilTheEndOfTheSchoolYearForFifthGraders}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
-
-            <Label Text="Czas do długiego majowego weekendu"
-               HorizontalOptions="Center" />
-            <Label Text="{Binding TimeUntilTheLongMayWeekend}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
-
-            <Label Text="Czas do rozpoczęcia matur"
-               HorizontalOptions="Center" />
-            <Label Text="{Binding TimeUntilTheExamsStart}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
-
-            <Label Text="Czas do wystawienia ocen dla klas 1-4"
-               HorizontalOptions="Center" />
-            <Label Text="{Binding TimeToIssueGradesForTheRemainingClasses}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
-
-            <Label Text="Czas do zakończenia roku szkolnego dla klas 1-4"
-               HorizontalOptions="Center" />
-            <Label Text="{Binding TimeUntilTheEndOfTheSchoolYearForTheRemainingClasses}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
-
-            <Label Text="Czas do rozpoczęcia roku szkolnego 2024/2025 (czyli koniec wakacji)"
-               HorizontalOptions="Center" />
-            <Label Text="{Binding TimeUntilTheEndOfTheHoliday}"
-               HorizontalOptions="Center"
-               FontSize="30"
-               Margin="0,0,0,10"/>
+            <StackLayout BindableLayout.ItemsSource="{Binding ImportandDates}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding Description}"
+                                   HorizontalOptions="Center" />
+                            <Label Text="{Binding RemainingTime}"
+                                   HorizontalOptions="Center"
+                                   FontSize="30"
+                                   Margin="0,0,0,10"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </StackLayout>
+            <Label VerticalOptions="EndAndExpand"
+                   Text="Chcesz dodać termin do licznika. Zgłoś to do nauczyciela: Łukasz Felisek sala 213"/>
         </StackLayout>
     </ScrollView>
 </ContentView>

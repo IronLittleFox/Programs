@@ -69,8 +69,8 @@ namespace GameMauiApp.ViewModel
             ListOfGame.Add(new GameInfo() { NameOfGame = "2048", GameType = typeof(Create2048View) });
             ListOfGame.Add(new GameInfo() { NameOfGame = "Achi", GameType = typeof(AchiView) });
 
-            //SelectedGame = ListOfGame.FirstOrDefault();
-            SelectedGame = ListOfGame.LastOrDefault();
+            SelectedGame = ListOfGame.FirstOrDefault();
+            //SelectedGame = ListOfGame.LastOrDefault();
         }
 
         public void Dispose()
