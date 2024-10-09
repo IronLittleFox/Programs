@@ -22,21 +22,6 @@ namespace ImportantDatesMauiGame.ViewModel
             [
                 new ImportandDate()
                 {
-                    Description = "Czas do wystawienia ocen dla klas 1-4",
-                    TimeToEvent = new DateTime(2024, 6, 15)
-                },
-                new ImportandDate()
-                {
-                    Description = "Czas do zakończenia roku szkolnego dla klas 1-4",
-                    TimeToEvent = new DateTime(2024, 6, 21, 10, 0, 0)
-                },
-                new ImportandDate()
-                {
-                    Description = "Czas do rozpoczęcia roku szkolnego 2024/2025 (czyli koniec wakacji)",
-                    TimeToEvent = new DateTime(2024, 9, 2, 10, 0,0)
-                },
-                new ImportandDate()
-                {
                     Description = "Dzień Edukacji Narodowej",
                     TimeToEvent = new DateTime(2024, 10, 14)
                 },
@@ -52,13 +37,48 @@ namespace ImportantDatesMauiGame.ViewModel
                 },
                 new ImportandDate()
                 {
+                    Description = "Termin wystawienia ocen dla klas maturalnych semestr 1",
+                    TimeToEvent = new DateTime(2024, 12, 14)
+                },
+                new ImportandDate()
+                {
                     Description = "Ferie bożonarodzeniowe",
                     TimeToEvent = new DateTime(2024, 12, 21)
                 },
                 new ImportandDate()
                 {
+                    Description = "Święto Trzech Króli",
+                    TimeToEvent = new DateTime(2025, 1, 6)
+                },
+                new ImportandDate()
+                {
                     Description = "Ferie",
                     TimeToEvent = new DateTime(2025, 01, 18)
+                },
+                new ImportandDate()
+                {
+                    Description = "Termin wystawienia ocen dla klas 1-4 semestr 1",
+                    TimeToEvent = new DateTime(2025, 2, 8)
+                },
+                new ImportandDate()
+                {
+                    Description = "Wiosenna przerwa świąteczna (Wielkanoc)",
+                    TimeToEvent = new DateTime(2025, 4, 17)
+                },
+                new ImportandDate()
+                {
+                    Description = "Długi majowy weekend",
+                    TimeToEvent = new DateTime(2025, 5, 1)
+                },
+                new ImportandDate()
+                {
+                    Description = "Rozpoczęcie matur",
+                    TimeToEvent = new DateTime(2025, 5, 5)
+                },
+                new ImportandDate()
+                {
+                    Description = "Rozpoczęcie wakacji",
+                    TimeToEvent = new DateTime(2025, 6, 28)
                 },
             ];
             countTimeTask = Task.Run(CountTime);

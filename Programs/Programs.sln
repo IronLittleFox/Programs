@@ -149,7 +149,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Create2048MauiGame", "Creat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NfcConsoleApp", "NfcConsoleApp\NfcConsoleApp.csproj", "{2DB40318-FBE8-462E-BABC-D7C0BE6AFB64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AchiMauiGame", "AchiMauiGame\AchiMauiGame.csproj", "{0EABA1CF-3A6C-4333-B621-DA297B8F94CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AchiMauiGame", "AchiMauiGame\AchiMauiGame.csproj", "{0EABA1CF-3A6C-4333-B621-DA297B8F94CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

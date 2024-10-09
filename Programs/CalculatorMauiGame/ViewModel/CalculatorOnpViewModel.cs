@@ -87,6 +87,15 @@ namespace CalculatorMauiGame.ViewModel
                     _numberCommand = new Command<object>(
                         (object o) =>
                         {
+                            if (ShowValue != null
+                            && ShowValue.Length > 0)
+                            {
+                                string strCurrNumber = ShowValue.Split(" ").Last();
+                                strCurrNumber += o.ToString();
+                                if (!long.TryParse(strCurrNumber, out _))
+                                    return;
+                            }
+
                             stackOfCommands.Push(Command.Number);
                             ShowValue += o.ToString();
                         },
@@ -178,6 +187,11 @@ namespace CalculatorMauiGame.ViewModel
                         (object o) =>
                         {
                             ShowValue = CalculateOnp(GenerateOnp(ShowValue));
+                            stackOfCommands.Clear();
+                            foreach(var d in ShowValue)
+                            {
+                                stackOfCommands.Push(Command.Number);
+                            }
                         },
                         o => stackOfCommands.Count != 0
                              && (stackOfCommands.Peek() == Command.Number
@@ -321,23 +335,23 @@ namespace CalculatorMauiGame.ViewModel
         private string CalculateOnp(string onpStr)
         {
             List<string> listOfElements = onpStr.Split(" ").ToList();
-            Stack<int> stackOfNumbers = new Stack<int>();
+            Stack<long> stackOfNumbers = new Stack<long>();
 
             foreach (string element in listOfElements)
             {
-                if (int.TryParse(element, out int number))
+                if (long.TryParse(element, out long number))
                 {
                     stackOfNumbers.Push(number);
                 }
                 else
                 {
-                    int rightNumber = stackOfNumbers.Pop();
+                    long rightNumber = stackOfNumbers.Pop();
 
-                    int leftNumber = 0;
+                    long leftNumber = 0;
                     if (!funtionList.Contains(element))
                         leftNumber = stackOfNumbers.Pop();
 
-                    int result = Calculate(leftNumber, rightNumber, element);
+                    long result = Calculate(leftNumber, rightNumber, element);
 
                     stackOfNumbers.Push(result);
                 }
@@ -356,7 +370,7 @@ namespace CalculatorMauiGame.ViewModel
             //konwersja showValue na ONP
             foreach (string element in listOfElements)
             {
-                if (int.TryParse(element, out _))
+                if (long.TryParse(element, out _))
                 {
                     //dodajemy na listę wyjściową liczbę lub funkcję
                     outputList.Add(element);
@@ -414,7 +428,7 @@ namespace CalculatorMauiGame.ViewModel
             return string.Join(" ", outputList);
         }
 
-        private int Calculate(int leftNumber, int rightNumber, string operatorToDo)
+        private long Calculate(long leftNumber, long rightNumber, string operatorToDo)
         {
             if (operatorToDo == "+")
                 return leftNumber + rightNumber;
