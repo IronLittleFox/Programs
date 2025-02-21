@@ -27,6 +27,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
@@ -61,6 +62,16 @@
                 Grid.RowSpan="3"
                 Margin="10"
                 Command="{Binding StartGameCommand}"/>
+            <StackLayout Orientation="Horizontal"
+                         Grid.Row="0"
+                         Grid.Column="3"
+                         Grid.RowSpan="2">
+                <CheckBox IsChecked="{Binding IsDecayingMoves}"/>
+                <Label Text="Kółko i krzyżyk z wygaszającymi się ruchami"
+                       VerticalOptions="Center"
+                       LineBreakMode="WordWrap"/>
+
+            </StackLayout>
         </Grid>
 
         <Grid utils:GridHelpers.RowCount="{Binding RowCount}"
@@ -70,13 +81,16 @@
               BindableLayout.ItemsSource="{Binding ListOfField}">
             <BindableLayout.ItemTemplate>
                 <DataTemplate>
-                    <ImageButton Source="{Binding Text, Converter={StaticResource DataToImageName}}"
-                                 Grid.Column="{Binding ColumnIndex}"
-                                 Grid.Row="{Binding RowIndex}"
+                    <Border Stroke="{Binding BackgroundColor}"
+                            StrokeThickness="3"
+                            Grid.Column="{Binding ColumnIndex}"
+                            Grid.Row="{Binding RowIndex}">
+                        <ImageButton Source="{Binding Text, Converter={StaticResource DataToImageName}}"
                                  Command="{Binding BoardFieldCommand}"
                                  CommandParameter="{Binding}"
                                  Margin="10"
                                  Background="BlanchedAlmond"/>
+                    </Border>
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </Grid>

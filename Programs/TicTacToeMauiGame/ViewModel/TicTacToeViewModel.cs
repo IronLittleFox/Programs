@@ -1,11 +1,5 @@
 ﻿using CommunityToolkit.Maui.Core;
-using Microsoft.Maui.Controls;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using TicTacToeMauiGame.Model;
 using UtilsMaui.Interfaces;
@@ -124,6 +118,17 @@ namespace TicTacToeMauiGame.ViewModel
 
                             playingField.Text = currentPlayer.Name;
 
+                            if (isDecayingMovesInGame
+                                && queueOfSelectedField.Count == rowCount + rowCount)
+                            {
+                                PlayingField pf = queueOfSelectedField.Dequeue();
+                                pf.Text = "";
+                                pf.BackgroundColor = Colors.Transparent;
+                                
+                            }
+
+                            queueOfSelectedField.Enqueue(playingField);
+
                             if (CheckWin(currentPlayer.Name))
                             {
                                 StartGame = false;
@@ -150,6 +155,11 @@ namespace TicTacToeMauiGame.ViewModel
                             }
 
                             currentPlayer = ListOfPlayers.GetNext();
+                            if (isDecayingMovesInGame
+                                && queueOfSelectedField.Count == rowCount + rowCount)
+                            {
+                                queueOfSelectedField.Peek().BackgroundColor = Colors.Red;
+                            }
                         }
                         );
                 return boardFieldCommand;
@@ -167,8 +177,23 @@ namespace TicTacToeMauiGame.ViewModel
             }
         }
 
+        private bool isDecayingMoves;
+
+        public bool IsDecayingMoves
+        {
+            get { return isDecayingMoves; }
+            set 
+            { 
+                isDecayingMoves = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         private Player currentPlayer = new Player();
         IPopupService popupService;
+        Queue<PlayingField> queueOfSelectedField;
+        bool isDecayingMovesInGame = false;
 
         public TicTacToeViewModel(IPopupService popupService)
         {
@@ -206,9 +231,13 @@ namespace TicTacToeMauiGame.ViewModel
                         ColumnIndex = col,
                         RowIndex = row,
                         Text = "",
+                        BackgroundColor = Colors.Transparent,
                         BoardFieldCommand = BoardFieldCommand
-                    }); ;
+                    }) ;
                 }
+
+            queueOfSelectedField = new Queue<PlayingField>();
+            isDecayingMovesInGame = IsDecayingMoves;
         }
 
         private bool CheckDraw()

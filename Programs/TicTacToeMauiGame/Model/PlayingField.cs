@@ -18,6 +18,19 @@ namespace TicTacToeMauiGame.Model
             }
         }
 
+        private Color backgroundColor;
+
+        public Color BackgroundColor
+        {
+            get { return backgroundColor; }
+            set 
+            { 
+                backgroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public ICommand BoardFieldCommand { get; set; } = new Command<object>(o => { });
     }
 }
